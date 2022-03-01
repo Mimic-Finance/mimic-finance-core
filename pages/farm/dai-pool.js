@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import { FaCalculator } from "react-icons/fa";
 import CountUp from "react-countup";
+import Portfolio from "../../components/FarmV1/Portfolio";
 
 import { Panel } from "../../components/FarmV1/Panel";
 
@@ -44,15 +45,15 @@ const FarmV1 = () => {
             <GridItem colSpan={1}>
               <Box>
                 <Image
-                  src={"/assets/images/pools/defi-friend.png"}
-                  alt="defi-friends"
-                  width={150}
+                  src={"/assets/images/daiToken.png"}
+                  alt="DAI Staking"
+                  width={100}
                 />
               </Box>
             </GridItem>
             <GridItem colSpan={7}>
               <Text fontSize="4xl">
-                <b>Farm V1</b>
+                <b>DAI Pool (Stable Coin)</b>
               </Text>
             </GridItem>
             <GridItem colSpan={2} style={{ textAlign: "right" }}>
@@ -70,12 +71,10 @@ const FarmV1 = () => {
           <Grid templateColumns="repeat(10, 1fr)" gap={10} mt={7}>
             <GridItem colSpan={6}>
               <Text fontSize="xl">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Lorem ipsum
-                dolor sit amet, consectetur adipiscing elit. Donec ligula ante,
-                commodo et arcu ac, mollis pretium eros. Nunc ornare ut eros eu
-                tempus. Maecenas aliquet malesuada convallis. In vel lacus sed
-                tellus ullamcorper mattis id id neque. Curabitur elit sem,
-                cursus sed mollis et, lobortis ac ex.
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Dai is a
+                stablecoin whose value is pegged to the U.S. dollar, which means
+                it is shielded from the wild swings in prices that are typically
+                associated with a cryptocurrency.
               </Text>
 
               <Box mt={10}>
@@ -89,33 +88,7 @@ const FarmV1 = () => {
             </GridItem>
             <GridItem colSpan={4}>
               <Panel info={info} />
-              <Box mt={5}>
-                <Text fontSize="xl">
-                  <b>Portfolio</b>
-                </Text>
-                <Box mt={2} p={4} className="portfolio-box">
-                  <Grid templateColumns="repeat(9, 1fr)" gap={6}>
-                    <GridItem colSpan={3}>
-                      <Text fontSize="l">Balance</Text>
-                      <Text mt={2} fontSize="m">
-                        $ 753.23
-                      </Text>
-                    </GridItem>
-                    <GridItem colSpan={3}>
-                      <Text fontSize="l">Reward</Text>
-                      <Text mt={2} fontSize="m">
-                        $ 5.23
-                      </Text>
-                    </GridItem>
-                    <GridItem colSpan={3}>
-                      <Text fontSize="l">Totals</Text>
-                      <Text mt={2} fontSize="m">
-                        $ 758.46
-                      </Text>
-                    </GridItem>
-                  </Grid>
-                </Box>
-              </Box>
+              {/* <Portfolio></Portfolio> */}
             </GridItem>
           </Grid>
         </>

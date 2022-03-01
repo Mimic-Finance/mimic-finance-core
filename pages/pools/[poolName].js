@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 
@@ -21,12 +20,11 @@ import { useEffect, useState } from "react";
 import { FaCalculator } from "react-icons/fa";
 import CountUp from "react-countup";
 
-import PoolInfo from "../../interfaces/Pool/PoolInfo";
 import { Panel } from "../../components/FarmPanel/Panel";
 
-const DeFiFriendsPage: NextPage = () => {
+const DeFiFriendsPage = () => {
   const { poolName } = useRouter().query;
-  const [poolInfo, setPoolInfo] = useState<PoolInfo>();
+  const [poolInfo, setPoolInfo] = useState();
 
   useEffect(() => {
     fetch("/api/pools/" + poolName)

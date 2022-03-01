@@ -1,4 +1,3 @@
-
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { Text, Grid, Container, Button } from "@chakra-ui/react";
@@ -30,16 +29,14 @@ const Home = () => {
         </Text>
 
         <Grid templateColumns="repeat(2, 1fr)" gap={20} pt={5}>
-          <a href="/farm/v1">
-            <Pool
-              poolName="Farm V1"
-              description=" Test Farm on test-network"
-              token="Token: DAI"
-              apy={122.32}
-              label="defi-friend"
-              color="#FFEA7B"
-            />
-          </a>
+          <Pool
+            poolName="DAI Pool"
+            description="The Frist stable coin pool"
+            token="Token: DAI"
+            apy={122.32}
+            label="dai-pool"
+            color="#FFEA7B"
+          />
 
           {/* <Pool
             poolName="Meme Master"

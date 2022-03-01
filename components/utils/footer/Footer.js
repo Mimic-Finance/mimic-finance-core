@@ -15,7 +15,7 @@ export const Footer = () => (
     px={{ base: "4", md: "8" }}
   >
     <Stack spacing="10" divider={<StackDivider />}>
-      <Stack
+      {/* <Stack
         direction={{ base: "column", lg: "row" }}
         spacing={{ base: "10", lg: "28" }}
       >
@@ -29,7 +29,7 @@ export const Footer = () => (
           <LinkGrid spacing={{ base: "10", md: "20", lg: "28" }} flex="1" />
           <SubscribeForm width={{ base: "full", md: "sm" }} />
         </Stack>
-      </Stack>
+      </Stack> */}
       <Stack
         direction={{ base: "column-reverse", md: "row" }}
         justifyContent="space-between"

@@ -14,6 +14,7 @@ export const Pool = (props) => {
         src={"/assets/images/pools/" + props.label + ".png"}
         alt={props.label}
         className="pool-logo"
+        width={100}
       />
       <Text fontWeight="bold" fontSize="2xl">
         {props.poolName}
@@ -23,7 +24,7 @@ export const Pool = (props) => {
       <Text pt={3} fontWeight="bold">
         APY : {props.apy} %
       </Text>
-      <Link href={"/pools/" + props.label} passHref>
+      <Link href={"/farm/" + props.label} passHref>
         <Button
           leftIcon={<FaGavel />}
           mt={4}
