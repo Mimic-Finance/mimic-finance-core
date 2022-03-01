@@ -15,6 +15,7 @@
     "@emotion/styled": "^11",
     "@ethersproject/units": "^5.5.0",
     "@fontsource/montserrat": "^4.5.1",
+    "@truffle/hdwallet-provider": "^2.0.3",
     "@usedapp/core": "^0.7.1",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
