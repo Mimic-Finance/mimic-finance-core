@@ -2,6 +2,7 @@ import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 import Web3 from "web3";
 import { useRouter } from "next/router";
+import TVD from "../../components/FarmV1/TVD";
 
 import {
   Text,
@@ -81,9 +82,7 @@ const FarmV1 = () => {
                 <Text fontSize="xl">
                   <b>Total Value Deposited</b>
                 </Text>
-                <Text fontSize="5xl">
-                  $ <CountUp duration={2} end={1244354} separator="," />
-                </Text>
+                <TVD></TVD>
               </Box>
             </GridItem>
             <GridItem colSpan={4}>
