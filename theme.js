@@ -14,22 +14,22 @@ const theme = extendTheme({
   },
 
   styles: {
-    global: () => ({
+    global: (props) => ({
       body: {
-        color: mode("gray.800", "whiteAlpha.900"),
+        color: mode("gray.800", "whiteAlpha.900")(props),
         lineHeight: "base",
       },
       /**
        * Text Color Section
        */
       ".text-primary": {
-        color: mode(PRIMARY_LIGHT, PRIAMRY_DARK),
+        color: mode(PRIMARY_LIGHT, PRIAMRY_DARK)(props),
       },
       "text-white": {
-        color: mode(PRIAMRY_DARK, PRIAMRY_DARK),
+        color: mode(PRIAMRY_DARK, PRIAMRY_DARK)(props),
       },
       ".text-normal": {
-        color: mode(NORMAL_LIGHT, NORMAL_DARK),
+        color: mode(NORMAL_LIGHT, NORMAL_DARK)(props),
       },
       ".home-title": {
         fontWeight: 900,
@@ -45,13 +45,13 @@ const theme = extendTheme({
       },
       ".btn-launch-app": {},
       ".community-box": {
-        color: mode(NORMAL_LIGHT, NORMAL_DARK),
+        color: mode(NORMAL_LIGHT, NORMAL_DARK)(props),
         bg: mode("#ffffff", "#222d3b"),
         textAlign: "center",
         border: "2px solid rgba(0, 0, 0, 0.05)",
       },
       ".portfolio-box": {
-        color: mode(NORMAL_LIGHT, NORMAL_DARK),
+        color: mode(NORMAL_LIGHT, NORMAL_DARK)(props),
         bg: mode("#ffffff", "#222d3b"),
         textAlign: "center",
         borderRadius: "10px",
