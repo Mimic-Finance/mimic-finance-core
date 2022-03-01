@@ -79,16 +79,16 @@ contract('TokenFarm', ([owner, investor]) => {
             //Ensure that the owner can be the one that can call issue token function
             await tokenFarm.issueTokens({from:investor}).should.be.rejected;
             //Unstake
-            await tokenFarm.unstakeTokens({from:investor})
+            await tokenFarm.unstakeTokens(tokens('10'),{from:investor})
             //Check mDai balance in wallet
             result = await daiToken.balanceOf(investor)
-            assert.equal(result.toString(),tokens('100'),'investor mDai wallet balance after staking')
+            assert.equal(result.toString(),tokens('10'),'asdasdinvestor mDai wallet balance after staking')
             //Check mDai balance in Token farm
             result = await daiToken.balanceOf(tokenFarm.address)
-            assert.equal(result.toString(), tokens('0'), 'token mDai balance correct')
+            assert.equal(result.toString(), tokens('90'), 'token mDai balance correct')
             //Check Staking Balance
             result = await tokenFarm.stakingBalance(investor)
-            assert.equal(result.toString(),tokens('0'),'investor staking balance correct')
+            assert.equal(result.toString(),tokens('90'),'investor staking balance correct')
             //Check Staking Status
             result = await tokenFarm.isStaking(investor)
             assert.equal(result.toString(),'false','investor staking status correct')

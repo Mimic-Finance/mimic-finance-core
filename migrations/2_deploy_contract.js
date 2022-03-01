@@ -13,8 +13,7 @@ module.exports = async function(deployer, network, accounts) {
   const tokenFarm = await TokenFarm.deployed();
 
   await dappToken.transfer(tokenFarm.address, "1000000000000000000000000");
-  await daiToken.transfer(
-    "0x152D671b5E858d8039ce1B63FDEd676ac31Ef999",
+  await daiToken.transfer(accounts[1],
     "100000000000000000000"
   );
 };
