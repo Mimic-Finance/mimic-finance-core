@@ -1,5 +1,5 @@
 {
-  "mode": "development",
+  "mode": "production",
   "ganacheHost": "127.0.0.1",
   "ganachePort": "8545",
   "ganacheNetworkId": "*",
@@ -9,5 +9,5 @@
 
   "testerAddress": "0x152D671b5E858d8039ce1B63FDEd676ac31Ef999",
   "liveHost": "https://devnet.kmutt.me",
-  "liveNetworkId": "*"
+  "liveNetworkId": "8000"
 }
