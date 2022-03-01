@@ -82,7 +82,7 @@ contract('TokenFarm', ([owner, investor]) => {
             await tokenFarm.unstakeTokens(tokens('10'),{from:investor})
             //Check mDai balance in wallet
             result = await daiToken.balanceOf(investor)
-            assert.equal(result.toString(),tokens('10'),'asdasdinvestor mDai wallet balance after staking')
+            assert.equal(result.toString(),tokens('10'),'investor mDai wallet balance after staking correct')
             //Check mDai balance in Token farm
             result = await daiToken.balanceOf(tokenFarm.address)
             assert.equal(result.toString(), tokens('90'), 'token mDai balance correct')
