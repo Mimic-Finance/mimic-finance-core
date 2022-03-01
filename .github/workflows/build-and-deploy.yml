@@ -30,7 +30,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/cpe35-kmutt/comcamp33:latest
+          tags: ghcr.io/mimic-finance/mimic-farm-v2:latest
           secrets: |
             "dotenv=${{ secrets.DOTENV }}"
 
@@ -42,7 +42,7 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
             echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u USERNAME --password-stdin
-            docker stop comcamp33 || true && docker rm comcamp33 || true
-            docker rmi ghcr.io/cpe35-kmutt/comcamp33:latest
-            docker pull ghcr.io/cpe35-kmutt/comcamp33:latest
-            docker run -p 3000:3000 -d --name comcamp33 ghcr.io/cpe35-kmutt/comcamp33:latest
+            docker stop mimic-farm-v2 || true && docker rm mimic-farm-v2 || true
+            docker rmi ghcr.io/mimic-finance/mimic-farm-v2:latest
+            docker pull ghcr.io/mimic-finance/mimic-farm-v2:latest
+            docker run -p 3000:3000 -d --name mimic-farm-v2 ghcr.io/mimic-finance/mimic-farm-v2:latest
