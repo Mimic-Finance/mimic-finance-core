@@ -1,5 +1,5 @@
 {
-  "mode": "production",
+  "mode": "development",
   "ganacheHost": "127.0.0.1",
   "ganachePort": "8545",
   "ganacheNetworkId": "*",
