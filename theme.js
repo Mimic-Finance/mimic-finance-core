@@ -1,6 +1,12 @@
 import { extendTheme } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 
+const PRIMARY_LIGHT = "#466dec";
+const PRIAMRY_DARK = "#8bc4ff";
+
+const NORMAL_LIGHT = "gray.700";
+const NORMAL_DARK = "whiteAlpha.900";
+
 const theme = extendTheme({
   fonts: {
     heading: "Montserrat",
@@ -17,13 +23,13 @@ const theme = extendTheme({
        * Text Color Section
        */
       ".text-primary": {
-        color: mode(Color.PRIMARY_LIGHT, Color.PRIAMRY_DARK),
+        color: mode(PRIMARY_LIGHT, PRIAMRY_DARK),
       },
       "text-white": {
-        color: mode(Color.PRIAMRY_DARK, Color.PRIAMRY_DARK),
+        color: mode(PRIAMRY_DARK, PRIAMRY_DARK),
       },
       ".text-normal": {
-        color: mode(Color.NORMAL_LIGHT, Color.NORMAL_DARK),
+        color: mode(NORMAL_LIGHT, NORMAL_DARK),
       },
       ".home-title": {
         fontWeight: 900,
@@ -39,13 +45,13 @@ const theme = extendTheme({
       },
       ".btn-launch-app": {},
       ".community-box": {
-        color: mode(Color.NORMAL_LIGHT, Color.NORMAL_DARK),
+        color: mode(NORMAL_LIGHT, NORMAL_DARK),
         bg: mode("#ffffff", "#222d3b"),
         textAlign: "center",
         border: "2px solid rgba(0, 0, 0, 0.05)",
       },
       ".portfolio-box": {
-        color: mode(Color.NORMAL_LIGHT, Color.NORMAL_DARK),
+        color: mode(NORMAL_LIGHT, NORMAL_DARK),
         bg: mode("#ffffff", "#222d3b"),
         textAlign: "center",
         borderRadius: "10px",
