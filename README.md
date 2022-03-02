@@ -11,7 +11,7 @@ First, run the development server:
 
 - Clone this repository with SSH 
 ```bash
-git clone git@github.com:Mimic-Finance/mimic-farm-v2.git
+git clone -b develop git@github.com:Mimic-Finance/mimic-farm-v2.git
 ```
 - Install Dependency
 ```bash
