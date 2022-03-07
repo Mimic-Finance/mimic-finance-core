@@ -6,7 +6,7 @@ Requirements
 - Truffle
 - Metamask
 - yarn
-- open openzeppelin
+- OpenZeppelin
 
 First, run the development server:
 
