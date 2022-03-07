@@ -1,4 +1,6 @@
-pragma solidity ^0.5.0;
+// SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.4;
 
 import "./Dapptoken.sol";
 import "./Daitoken.sol";
@@ -6,17 +8,17 @@ import "./Daitoken.sol";
 contract TokenFarm {
     string public name = "Dapp Token Farm";
     address public owner;
-    DappToken public dappToken;
-    DaiToken public daiToken;
+    ERC20 public dappToken;
+    ERC20 public daiToken;
 
     address[] public stakers;
     mapping(address => uint256) public stakingBalance;
     mapping(address => bool) public hasStaked;
     mapping(address => bool) public isStaking;
 
-    constructor(DappToken _dappToken, DaiToken _daiToken) public {
-        dappToken = _dappToken;
-        daiToken = _daiToken;
+    constructor(address _dappToken, address _daiToken) public {
+        dappToken = ERC20(_dappToken);
+        daiToken = ERC20(_daiToken);
         owner = msg.sender;
     }
 

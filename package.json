@@ -40,6 +40,7 @@
     "web3": "1.2.11"
   },
   "devDependencies": {
+    "@openzeppelin/contracts": "^4.5.0",
     "eslint": "8.10.0",
     "eslint-config-next": "12.1.0"
   }
