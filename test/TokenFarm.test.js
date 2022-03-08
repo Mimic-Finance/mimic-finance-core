@@ -25,46 +25,54 @@ contract('TokenFarm', ([owner, investor]) => {
         await daiToken.transfer(investor,tokens('100'),{from: owner})
     })
 
-    describe('Mock DAI deployment', async () => {
-        it('has a name', async () => {
+    describe('Dai Token deployment', async () => {
+        it('Check Dai Token prerequisite', async () => {
             const name = await daiToken.name()
-            assert.equal(name, 'Mock DAI Token')
+            assert.equal(name, 'Mock DAI Token',"mDai Contract name correct")
+            const sym = await daiToken.symbol()
+            assert.equal(sym,'mDAI',"mDai Contract symbol correct")
+            let supply = await daiToken.totalSupply()
+            assert.equal(supply.toString(), tokens('1000000'),"mDai Contract total supply correct")
         })
     })
 
     describe('Dapp Token deployment', async () => {
-        it('has a name', async () => {
+        it('Check Dapp Token prerequisite', async () => {
             const name = await dappToken.name()
-            assert.equal(name, 'DApp Token')
+            assert.equal(name, 'DApp Token',"Dapp token name correct")
+            const sym = await dappToken.symbol()
+            assert.equal(sym,'DAPP',"Dapp token symbol correct")
+            let supply = await dappToken.totalSupply()
+            assert.equal(supply.toString(),tokens('1000000'),"Dapp token total supply correct")
         })
     })
 
     describe('Token Farm deployment', async () => {
-        it('has a name', async () => {
+        it('Check Token Farm deployment', async () => {
             const name = await tokenFarm.name()
-            assert.equal(name, 'Dapp Token Farm')
+            assert.equal(name, 'Dapp Token Farm',"Dapp Token Farm name correct")
         })
-        it('contract has tokens', async () => {
+        it('Token Farm contract has Dapp tokens', async () => {
             let balance = await dappToken.balanceOf(tokenFarm.address)
-            assert.equal(balance.toString(), tokens('1000000'))
+            assert.equal(balance.toString(), tokens('1000000'),"Token Farm contract have Dapp tokens")
         })
     })
     
     describe('Farming Token',async () => {
-        it('rewards investors for staking mDai tokens',async() =>{
+        it('Check Token Farm functions',async() =>{
             let result
             //check investor balance
             result = await daiToken.balanceOf(investor)
-            assert.equal(result.toString(),tokens('100'),'investor Mdai balance correct')
+            assert.equal(result.toString(),tokens('100'),'investor mDai balance correct')
             //Stake mDai
             await daiToken.approve(tokenFarm.address,tokens('100'),{from:investor})
             await tokenFarm.stakeTokens(tokens('100'),{from:investor})
             //check investor wallet balance 
             result = await daiToken.balanceOf(investor)
-            assert.equal(result.toString(), tokens('0'), 'investor Mdai balance correct')
+            assert.equal(result.toString(), tokens('0'), 'investor mDai balance correct')
             //check farming balance
             result = await daiToken.balanceOf(tokenFarm.address)
-            assert.equal(result.toString(), tokens('100'), 'Token Farm Mdai balance correct')
+            assert.equal(result.toString(), tokens('100'), 'Token Farm mDai balance correct')
             //check investor staking balance 
             result = await tokenFarm.stakingBalance(investor)
             assert.equal(result.toString(), tokens('100'), 'investor staking balance correct')
@@ -82,10 +90,10 @@ contract('TokenFarm', ([owner, investor]) => {
             await tokenFarm.unstakeTokens(tokens('10'),{from:investor})
             //Check mDai balance in wallet
             result = await daiToken.balanceOf(investor)
-            assert.equal(result.toString(),tokens('10'),'investor mDai wallet balance after staking correct')
+            assert.equal(result.toString(),tokens('10'),'investor mDai wallet balance correct after unstake')
             //Check mDai balance in Token farm
             result = await daiToken.balanceOf(tokenFarm.address)
-            assert.equal(result.toString(), tokens('90'), 'token mDai balance correct')
+            assert.equal(result.toString(), tokens('90'), 'Token farm mDai balance correct after unstake')
             //Check Staking Balance
             result = await tokenFarm.stakingBalance(investor)
             assert.equal(result.toString(),tokens('90'),'investor staking balance correct')
