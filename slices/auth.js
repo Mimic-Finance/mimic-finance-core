@@ -100,7 +100,7 @@ const authSlice = createSlice({
       state.daiToken = action.payload.daiToken;
       state.daiTokenBalance = action.payload.daiTokenBalance;
       state.dAppToken = action.payload.dappToken;
-      state.dAppTokenBalance = action.payload.dAppTokenBalance;
+      state.dAppTokenBalance = action.payload.dappTokenBalance;
       state.farmToken = action.payload.farmToken;
       state.stakingBalance = action.payload.stakingBalance;
     },
