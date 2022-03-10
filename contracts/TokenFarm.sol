@@ -59,10 +59,10 @@ contract TokenFarm {
         _;
     }
     //Issuing Token
-    function issueTokens() external updateReward(msg.sender) {
-        uint256 reward = rewards[msg.sender];
-        rewards[msg.sender]=0;
-        dappToken.transfer(msg.sender,reward);
+    function issueTokens(address account) external updateReward(msg.sender) {
+        uint256 reward = rewards[account];
+        rewards[account]=0;
+        dappToken.transfer(account,reward);
     }
 
     //Unstake with amount
