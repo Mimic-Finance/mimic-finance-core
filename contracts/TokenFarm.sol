@@ -4,6 +4,7 @@ pragma solidity ^0.8.4;
 
 import "./Dapptoken.sol";
 import "./Daitoken.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract TokenFarm {
     string public name = "Dapp Token Farm";
@@ -15,15 +16,21 @@ contract TokenFarm {
     mapping(address => uint256) public stakingBalance;
     mapping(address => bool) public hasStaked;
     mapping(address => bool) public isStaking;
+    mapping(address => uint256) public userRewardPaid;
+    mapping(address => uint256) public rewards;
 
-    constructor(address _dappToken, address _daiToken) public {
+    uint256 public rewardRate = 100;
+    uint256 public lastUpdate = block.timestamp;
+    uint256 public rewardStore;
+
+    constructor(address _dappToken, address _daiToken){
         dappToken = ERC20(_dappToken);
         daiToken = ERC20(_daiToken);
         owner = msg.sender;
     }
 
     //Stake Token
-    function stakeTokens(uint256 _amount) public {
+    function stakeTokens(uint256 _amount) external updateReward(msg.sender) {
         require(_amount > 0, "amount can be 0");
         // Dai -> Token farm
         daiToken.transferFrom(msg.sender, address(this), _amount);
@@ -38,21 +45,28 @@ contract TokenFarm {
         hasStaked[msg.sender] = true;
     }
 
+    function rewardsPerToken() public view returns (uint256){
+      return rewardStore+(((block.timestamp - lastUpdate)*rewardRate* 1e16));
+    }
+    function earned(address account) public view returns(uint256){
+        return (stakingBalance[account]*rewardsPerToken() - userRewardPaid[account]/1e16)+rewards[account];
+    }
+    modifier updateReward(address account) {
+        rewardStore = rewardsPerToken();
+        lastUpdate = block.timestamp;
+        rewards[account]=earned(account);
+        userRewardPaid[account]=rewardStore;
+        _;
+    }
     //Issuing Token
-    function issueTokens() public {
-        //set access to function only owner only
-        require(msg.sender == owner, "call must be the owner");
-        for (uint256 i = 0; i < stakers.length; i++) {
-            address recipient = stakers[i];
-            uint256 balance = stakingBalance[recipient];
-            if (balance > 0) {
-                dappToken.transfer(recipient, balance);
-            }
-        }
+    function issueTokens() external updateReward(msg.sender) {
+        uint256 reward = rewards[msg.sender];
+        rewards[msg.sender]=0;
+        dappToken.transfer(msg.sender,reward);
     }
 
     //Unstake with amount
-    function unstakeTokens(uint256 _amount) public {
+    function unstakeTokens(uint256 _amount) external updateReward(msg.sender) {
         //Fetching staking balance
         uint256 balance = _amount;
 
