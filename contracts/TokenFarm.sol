@@ -23,7 +23,7 @@ contract TokenFarm {
     uint256 public lastUpdate = block.timestamp;
     uint256 public rewardStore;
 
-    constructor(address _dappToken, address _daiToken){
+    constructor(address _dappToken, address _daiToken) {
         dappToken = ERC20(_dappToken);
         daiToken = ERC20(_daiToken);
         owner = msg.sender;
@@ -45,24 +45,38 @@ contract TokenFarm {
         hasStaked[msg.sender] = true;
     }
 
-    function rewardsPerToken() public view returns (uint256){
-      return rewardStore+(((block.timestamp - lastUpdate)*rewardRate* 1e16));
+    function rewardsPerToken() public view returns (uint256) {
+        return
+            rewardStore +
+            (((block.timestamp - lastUpdate) * rewardRate * 1e16));
     }
-    function earned(address account) public view returns(uint256){
-        return (stakingBalance[account]*rewardsPerToken() - userRewardPaid[account]/1e16)+rewards[account];
+
+    function earned(address account) public view returns (uint256) {
+        return
+            (stakingBalance[account] *
+                rewardsPerToken() -
+                userRewardPaid[account] /
+                1e16) + rewards[account];
     }
+
     modifier updateReward(address account) {
         rewardStore = rewardsPerToken();
         lastUpdate = block.timestamp;
-        rewards[account]=earned(account);
-        userRewardPaid[account]=rewardStore;
+        rewards[account] = earned(account);
+        userRewardPaid[account] = rewardStore;
         _;
     }
+
+    //check Reward
+    function checkReward(address account) public view returns (uint256) {
+        return rewards[account];
+    }
+
     //Issuing Token
-    function issueTokens(address account) external updateReward(msg.sender) {
-        uint256 reward = rewards[account];
-        rewards[account]=0;
-        dappToken.transfer(account,reward);
+    function issueTokens() external updateReward(msg.sender) {
+        uint256 reward = rewards[msg.sender];
+        rewards[msg.sender] = 0;
+        dappToken.transfer(msg.sender, reward);
     }
 
     //Unstake with amount
