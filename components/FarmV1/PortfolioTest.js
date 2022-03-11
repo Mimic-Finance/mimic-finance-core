@@ -18,7 +18,7 @@ const Portfolio = ({ balance, reward, total }) => {
 
   const checkReward = async () => {
     console.log("check Reward");
-    const reward = await farmToken.methods.checkReward(account).call();
+    const reward = await farmToken.methods.checkReward().call();
     console.log(reward);
   };
 
