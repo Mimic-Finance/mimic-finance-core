@@ -32,7 +32,7 @@ contract('TokenFarm', ([owner, investor]) => {
             const sym = await daiToken.symbol()
             assert.equal(sym,'mDAI',"mDai Contract symbol correct")
             let supply = await daiToken.totalSupply()
-            assert.equal(supply.toString(), tokens('1000000'),"mDai Contract total supply correct")
+            assert.equal(supply.toString(), tokens('10000000'),"mDai Contract total supply correct")
         })
     })
 
