@@ -29,6 +29,7 @@ import {
 
 import Image from "next/image";
 import LinkNext from "next/link";
+import NAV_ITEMS from "../../constants/Menu";
 
 import ConnectButton from "./button/ConnectButton";
 
@@ -72,16 +73,18 @@ const Navbar = () => {
             color={useColorModeValue("gray.800", "white")}
           >
             <LinkNext href="/" passHref>
-              <Image
-                src={
-                  colorMode === "dark"
-                    ? "/assets/images/logo.png"
-                    : "/assets/images/logo-light.png"
-                }
-                width={150}
-                height={46}
-                alt="Mimic Finance Logo"
-              />
+              <a>
+                <Image
+                  src={
+                    colorMode === "dark"
+                      ? "/assets/images/logo.png"
+                      : "/assets/images/logo-light.png"
+                  }
+                  width={150}
+                  height={46}
+                  alt="Mimic Finance Logo"
+                />
+              </a>
             </LinkNext>
           </Text>
 
@@ -130,17 +133,19 @@ const DesktopNav = () => {
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
               <LinkNext href={navItem.href ?? "#"} passHref>
-                <Text
-                  fontSize={"md"}
-                  fontWeight={500}
-                  color={linkColor}
-                  _hover={{
-                    textDecoration: "none",
-                    color: linkHoverColor,
-                  }}
-                >
-                  {navItem.label}
-                </Text>
+                <a>
+                  <Text
+                    fontSize={"md"}
+                    fontWeight={500}
+                    color={linkColor}
+                    _hover={{
+                      textDecoration: "none",
+                      color: linkHoverColor,
+                    }}
+                  >
+                    {navItem.label}
+                  </Text>
+                </a>
               </LinkNext>
             </PopoverTrigger>
 
@@ -273,24 +278,5 @@ const MobileNavItem = ({ label, children, href }) => {
     </Stack>
   );
 };
-
-const NAV_ITEMS = [
-  {
-    label: "Home",
-    href: "/",
-  },
-  {
-    label: "Vault",
-    href: "/vault",
-  },
-  {
-    label: "Faucet",
-    href: "/faucet",
-  },
-  {
-    label: "Documents",
-    href: "/document",
-  },
-];
 
 export default Navbar;

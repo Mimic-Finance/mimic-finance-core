@@ -1,4 +1,4 @@
-name: Build & Deploy
+name: Deploy to staging
 
 on:
   push:
@@ -8,7 +8,7 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  build-and-deploy:
+  deploy-to-staging:
     runs-on: ubuntu-latest
 
     steps:

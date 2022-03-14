@@ -2,7 +2,7 @@ import { Box, Text, Grid, GridItem, Button } from "@chakra-ui/react";
 import useAppSelector from "../../hooks/useAppSelector";
 
 const Portfolio = ({ balance, reward, total }) => {
-  const { account, farmToken } = useAppSelector((state) => state.auth);
+  const { account, farmToken } = useAppSelector((state) => state.contracts);
 
   const claimReward = async () => {
     console.log("CALL");

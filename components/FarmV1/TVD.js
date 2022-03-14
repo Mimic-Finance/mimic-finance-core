@@ -7,7 +7,7 @@ import useAppSelector from "../../hooks/useAppSelector";
 import CountUp from "react-countup";
 
 const TVD = () => {
-  const { farmToken, daiToken } = useAppSelector((state) => state.auth);
+  const { farmToken, daiToken } = useAppSelector((state) => state.contracts);
   //TVD
   const [tvd, setTVD] = useState(0);
 

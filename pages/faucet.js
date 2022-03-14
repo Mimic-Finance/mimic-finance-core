@@ -6,7 +6,9 @@ import Swal from "sweetalert2";
 import useAppSelector from "../hooks/useAppSelector";
 
 const Faucet = () => {
-  const { faucetContract, account } = useAppSelector((state) => state.auth);
+  const { faucetContract, account } = useAppSelector(
+    (state) => state.contracts
+  );
 
   const claimToken = async () => {
     await faucetContract.methods

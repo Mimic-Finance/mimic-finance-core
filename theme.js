@@ -46,13 +46,35 @@ const theme = extendTheme({
       ".btn-launch-app": {},
       ".community-box": {
         color: mode(NORMAL_LIGHT, NORMAL_DARK)(props),
-        bg: mode("#ffffff", "#222d3b"),
+        bg: mode("#ffffff", "#222d3b")(props),
         textAlign: "center",
         border: "2px solid rgba(0, 0, 0, 0.05)",
       },
+      ".swap-box": {
+        color: mode(NORMAL_LIGHT, NORMAL_DARK)(props),
+        bg: mode("#ffffff", "#222d3b")(props),
+        textAlign: "center",
+        borderRadius: "20px",
+        boxShadow:
+          "rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px;",
+        border: "0px solid rgba(0, 0, 0, 0.05)",
+      },
+      ".currency-box": {
+        padding: "20px",
+        color: mode(NORMAL_LIGHT, NORMAL_DARK)(props),
+        bg: mode("#ffffff", "#2e3948")(props),
+        textAlign: "center",
+        borderRadius: "20px",
+        border: "1px solid rgba(0, 0, 0, 0.05)",
+      },
+      ".swap-button": {
+        marginTop: "20px",
+        padding: "20px",
+        borderRadius: "20px",
+      },
       ".portfolio-box": {
         color: mode(NORMAL_LIGHT, NORMAL_DARK)(props),
-        bg: mode("#ffffff", "#222d3b"),
+        bg: mode("#ffffff", "#222d3b")(props),
         textAlign: "center",
         borderRadius: "10px",
         border: "2px solid rgba(0, 0, 0, 0.05)",
