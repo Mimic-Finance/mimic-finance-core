@@ -1,5 +1,5 @@
-import { createContext, useState, useCallback, useEffect } from "react";
-import { setBlockchainData, loadBlockchainData } from "../slices/auth";
+import { createContext, useState, useEffect } from "react";
+import { setContractData, loadContractData } from "../slices/contracts";
 import useAppDispatch from "../hooks/useAppDispatch";
 import Web3 from "web3";
 
@@ -26,8 +26,8 @@ export const Web3Provider = ({ children }) => {
   useEffect(() => {
     const Loader = async () => {
       await loadWeb3();
-      const blockchainData = await loadBlockchainData();
-      dispatch(setBlockchainData(blockchainData));
+      const contractData = await loadContractData();
+      dispatch(setContractData(contractData));
     };
     Loader();
   }, [dispatch]);

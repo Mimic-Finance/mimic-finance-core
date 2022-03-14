@@ -16,7 +16,7 @@ import useAppSelector from "../../hooks/useAppSelector";
 
 const WithDraw = () => {
   const { account, dAppTokenBalance, farmToken, stakingBalance } =
-    useAppSelector((state) => state.auth);
+    useAppSelector((state) => state.contracts);
 
   //widraw Value
   const [withDrawValue, setWithdrawValue] = useState(0);

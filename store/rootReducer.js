@@ -1,9 +1,9 @@
 import { combineReducers } from "redux";
 
-import authReducer from "../slices/auth";
+import contractsReducer from "../slices/contracts";
 
 const rootReducer = combineReducers({
-  auth: authReducer,
+  contracts: contractsReducer,
 });
 
 export default rootReducer;

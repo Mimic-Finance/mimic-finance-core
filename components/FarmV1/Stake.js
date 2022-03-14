@@ -24,7 +24,7 @@ const Stake = () => {
     dAppTokenBalance,
     farmToken,
     stakingBalance,
-  } = useAppSelector((state) => state.auth);
+  } = useAppSelector((state) => state.contracts);
 
   //Stake Value
   const [stakeValue, setStakeValue] = useState(0);

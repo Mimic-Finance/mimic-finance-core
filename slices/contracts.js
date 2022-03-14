@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import DaiToken from "../abis/DaiToken.json";
-import DappToken from "../abis/DappToken.json";
-import TokenFarm from "../abis/TokenFarm.json";
+import DaiTokenContract from "../abis/DaiToken.json";
+import DappTokenContract from "../abis/DappToken.json";
+import TokenFarmContract from "../abis/TokenFarm.json";
 import FaucetContract from "../abis/Faucet.json";
 
 const initialState = {
@@ -17,7 +17,7 @@ const initialState = {
   faucetContract: {},
 };
 
-export const loadBlockchainData = async () => {
+export const loadContractData = async () => {
   try {
     const web3 = window.web3;
 
@@ -38,10 +38,10 @@ export const loadBlockchainData = async () => {
     const networkId = await web3.eth.net.getId();
 
     // Load DaiToken
-    const daiTokenData = DaiToken.networks[networkId];
+    const daiTokenData = DaiTokenContract.networks[networkId];
     if (daiTokenData) {
       const daiToken = new web3.eth.Contract(
-        DaiToken.abi,
+        DaiTokenContract.abi,
         daiTokenData.address
       );
 
@@ -55,10 +55,10 @@ export const loadBlockchainData = async () => {
     }
 
     // Load DappToken
-    const dappTokenData = DappToken.networks[networkId];
+    const dappTokenData = DappTokenContract.networks[networkId];
     if (dappTokenData) {
       const dappToken = new web3.eth.Contract(
-        DappToken.abi,
+        DappTokenContract.abi,
         dappTokenData.address
       );
       response.dappToken = dappToken;
@@ -71,10 +71,10 @@ export const loadBlockchainData = async () => {
     }
 
     // Load TokenFarm
-    const tokenFarmData = TokenFarm.networks[networkId];
+    const tokenFarmData = TokenFarmContract.networks[networkId];
     if (tokenFarmData) {
       const tokenFarm = new web3.eth.Contract(
-        TokenFarm.abi,
+        TokenFarmContract.abi,
         tokenFarmData.address
       );
       response.farmToken = tokenFarm;
@@ -106,11 +106,11 @@ export const loadBlockchainData = async () => {
   return Promise.reject(new Error("Error Load Blockchain Data"));
 };
 
-const authSlice = createSlice({
-  name: "authSlice",
+const contractSlice = createSlice({
+  name: "contractsSlice",
   initialState,
   reducers: {
-    setBlockchainData(state, action) {
+    setContractData(state, action) {
       state.account = action.payload.account;
       state.daiToken = action.payload.daiToken;
       state.daiTokenBalance = action.payload.daiTokenBalance;
@@ -123,5 +123,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setBlockchainData: setBlockchainData } = authSlice.actions;
-export default authSlice.reducer;
+export const { setContractData: setContractData } = contractSlice.actions;
+export default contractSlice.reducer;
