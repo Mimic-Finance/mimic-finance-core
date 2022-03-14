@@ -15,5 +15,8 @@ jobs:
       - name: Install dependency
         run: yarn install
 
+      - name: Install Truffle
+        run: npm install -g truffle
+
       - name: Compile smart contract
         run: truffle compile
