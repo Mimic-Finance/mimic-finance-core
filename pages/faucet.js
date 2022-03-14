@@ -7,7 +7,6 @@ import useAppSelector from "../hooks/useAppSelector";
 
 const Faucet = () => {
   const { faucetContract, account } = useAppSelector((state) => state.auth);
-  console.log(faucetContract);
 
   const claimToken = async () => {
     await faucetContract.methods
