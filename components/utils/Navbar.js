@@ -280,6 +280,10 @@ const NAV_ITEMS = [
     href: "/",
   },
   {
+    label: "Swap",
+    href: "/swap",
+  },
+  {
     label: "Vault",
     href: "/vault",
   },
