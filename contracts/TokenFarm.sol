@@ -7,16 +7,15 @@ import "./Daitoken.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-
 contract TokenFarm {
     string public name = "Dapp Token Farm";
     ERC20 public dappToken;
     ERC20 public daiToken;
 
     mapping(address => uint256) public stakingBalance;
-    mapping (address => uint256) public lastUpdate;
+    mapping(address => uint256) public lastUpdate;
 
-    uint256 public rewardRate = SafeMath.mul(3234193,1e11);
+    uint256 public rewardRate = 10;
 
     constructor(address _dappToken, address _daiToken) {
         dappToken = ERC20(_dappToken);
@@ -42,7 +41,9 @@ contract TokenFarm {
     function issueTokens() public {
         uint256 balance = stakingBalance[msg.sender];
         uint256 update = SafeMath.sub(block.timestamp, lastUpdate[msg.sender]);
-        uint256 reward = SafeMath.mul(update, rewardRate);
+        uint256 rewardB = SafeMath.mul(update, rewardRate);
+        uint256 divbal = SafeMath.div(balance,1e4);
+        uint256 reward = SafeMath.mul(divbal, rewardB);
         if (balance > 0) {
                 dappToken.transfer(msg.sender,reward);
             }
