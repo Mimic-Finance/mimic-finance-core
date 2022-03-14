@@ -8,7 +8,7 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  build-and-deploy:
+  deploy-to-staging:
     runs-on: ubuntu-latest
 
     steps:
