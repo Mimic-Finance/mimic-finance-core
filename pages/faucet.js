@@ -16,7 +16,7 @@ const Faucet = () => {
       .on("transactionHash", (hash) => {
         Swal.fire({
           icon: "success",
-          title: "Claim mDAI Success 10,000 mDAI",
+          title: "Claim Success",
           showConfirmButton: false,
           timer: 1500,
         });
