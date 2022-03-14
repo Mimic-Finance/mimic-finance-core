@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.4;
 
-import "./Dapptoken.sol";
-import "./Daitoken.sol";
+import "./DappToken.sol";
+import "./DaiToken.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
@@ -26,7 +26,10 @@ contract TokenFarm {
     function stakeTokens(uint256 _amount) public {
         require(_amount > 0, "amount can not be 0");
         daiToken.transferFrom(msg.sender, address(this), _amount);
-        stakingBalance[msg.sender] = SafeMath.add(stakingBalance[msg.sender], _amount);
+        stakingBalance[msg.sender] = SafeMath.add(
+            stakingBalance[msg.sender],
+            _amount
+        );
         lastUpdate[msg.sender] = block.timestamp;
     }
 
@@ -42,16 +45,16 @@ contract TokenFarm {
         uint256 balance = stakingBalance[msg.sender];
         uint256 update = SafeMath.sub(block.timestamp, lastUpdate[msg.sender]);
         uint256 rewardB = SafeMath.mul(update, rewardRate);
-        uint256 divbal = SafeMath.div(balance,1e4);
+        uint256 divbal = SafeMath.div(balance, 1e4);
         uint256 reward = SafeMath.mul(divbal, rewardB);
         if (balance > 0) {
-                dappToken.transfer(msg.sender,reward);
-            }
+            dappToken.transfer(msg.sender, reward);
+        }
         lastUpdate[msg.sender] = block.timestamp;
     }
 
     //Unstake with amount
-    function unstakeTokens(uint256 _amount) public{
+    function unstakeTokens(uint256 _amount) public {
         uint256 balance = _amount;
         require(balance > 0, "staking balance cannot be 0");
         daiToken.transfer(msg.sender, balance);
