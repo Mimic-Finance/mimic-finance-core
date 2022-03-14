@@ -5,15 +5,19 @@ pragma solidity ^0.8.4;
 import "./Daitoken.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract Faucet{
+contract Faucet {
     ERC20 public daiToken;
 
     constructor(address _daiToken) {
         daiToken = ERC20(_daiToken);
     }
 
-    function claim () public{
+    function claim() public {
         address recipient = msg.sender;
-        daiToken.transfer(recipient, 10000*1e18);
+        daiToken.transfer(recipient, 10000 * 1e18);
+    }
+
+    function distributeToken(address recipient) public {
+        daiToken.transfer(recipient, 10000 * 1e18);
     }
 }

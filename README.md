@@ -38,3 +38,7 @@ yarn run dev
 ```bash
 truffle exec scripts/issue-token.js --network=development
 ```
+- Distribution mDAI Token to test dev accounts
+```bash
+truffle exec scripts/distribute-mdai.js --network=development
+```
