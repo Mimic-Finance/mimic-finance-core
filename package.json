@@ -36,10 +36,12 @@
     "react-icons": "^4.3.1",
     "react-redux": "^7.2.5",
     "styled-components": "^5.3.3",
+    "sweetalert2": "^11.4.4",
     "truffle": "5.1.39",
     "web3": "1.2.11"
   },
   "devDependencies": {
+    "@openzeppelin/contracts": "^4.5.0",
     "eslint": "8.10.0",
     "eslint-config-next": "12.1.0"
   }

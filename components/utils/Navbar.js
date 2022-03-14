@@ -284,6 +284,10 @@ const NAV_ITEMS = [
     href: "/vault",
   },
   {
+    label: "Faucet",
+    href: "/faucet",
+  },
+  {
     label: "Documents",
     href: "/document",
   },

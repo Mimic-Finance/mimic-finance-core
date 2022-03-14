@@ -6,6 +6,7 @@ Requirements
 - Truffle
 - Metamask
 - yarn
+- OpenZeppelin
 
 First, run the development server:
 
@@ -17,6 +18,10 @@ git clone -b develop git@github.com:Mimic-Finance/mimic-farm-v2.git
 ```bash
 yarn install
 ```
+```bash
+npm install --save-dev @openzeppelin/contracts
+```
+
 - Compile Smart Contract and Deploy to Ganache
 ```bash
 truffle compile && truffle migrate --reset --network=development
