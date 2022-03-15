@@ -2,22 +2,22 @@
 
 pragma solidity ^0.8.4;
 
-import "./DaiToken.sol";
+import "./JUSD.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract Faucet {
-    ERC20 public daiToken;
+    ERC20 public JUSDToken;
 
-    constructor(address _daiToken) {
-        daiToken = ERC20(_daiToken);
+    constructor(address _JUSDToken) {
+        JUSDToken = ERC20(_JUSDToken);
     }
 
     function claim() public {
         address recipient = msg.sender;
-        daiToken.transfer(recipient, 10000 * 1e18);
+        JUSDToken.transfer(recipient, 10000 * 1e18);
     }
 
     function distributeToken(address recipient) public {
-        daiToken.transfer(recipient, 10000 * 1e18);
+        JUSDToken.transfer(recipient, 10000 * 1e18);
     }
 }
