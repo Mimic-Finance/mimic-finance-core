@@ -6,12 +6,12 @@ import Swal from "sweetalert2";
 import useAppSelector from "../hooks/useAppSelector";
 
 const Faucet = () => {
-  const { faucetContract, account } = useAppSelector(
+  const { FaucetContract, account } = useAppSelector(
     (state) => state.contracts
   );
 
   const claimToken = async () => {
-    await faucetContract.methods
+    await FaucetContract.methods
       .claim()
       .send({ from: account })
       .on("transactionHash", (hash) => {
