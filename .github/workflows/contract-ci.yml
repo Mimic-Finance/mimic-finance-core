@@ -3,7 +3,7 @@ name: Contract CI
 on:
   push:
     paths:
-      - './contracts'
+      - 'contracts/**'
 
 jobs:
   contract-ci:

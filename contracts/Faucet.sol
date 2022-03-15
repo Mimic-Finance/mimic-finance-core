@@ -17,7 +17,6 @@ contract Faucet {
         daiToken.transfer(recipient, 10000 * 1e18);
     }
 
-    /** Distribute Token with script */
     function distributeToken(address recipient) public {
         daiToken.transfer(recipient, 10000 * 1e18);
     }
