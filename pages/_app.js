@@ -3,12 +3,12 @@ import { Provider as ReduxProvider } from "react-redux";
 import { MimicFinanceProvider } from "../contexts/MimicFinanceContext";
 import store from "../store";
 
-import Nav from "../components/utils/Navbar/Navbar";
+import Nav from "../components/Utils/Navbar/Navbar";
 import "../styles/globals.css";
 import "@fontsource/montserrat/400.css";
 import theme from "../theme";
 
-import { Footer } from "../components/utils/Footer/Footer";
+import { Footer } from "../components/Utils/Footer/Footer";
 
 function MyApp({ Component, pageProps }) {
   return (
