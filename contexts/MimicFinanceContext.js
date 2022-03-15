@@ -4,12 +4,15 @@ import { setAccountData, detectAccount } from "../slices/account";
 import useAppDispatch from "../hooks/useAppDispatch";
 import Loading from "../components/utils/Loading/Loading";
 import Web3 from "web3";
+import useAppSelector from "../hooks/useAppSelector";
 
-export const Web3Context = createContext(false);
+export const MimicFinanceContext = createContext(false);
 
-export const Web3Provider = ({ children }) => {
+export const MimicFinanceProvider = ({ children }) => {
   const [accountLoading, setAccountLoading] = useState(true);
   const [contractLoading, setContractLoading] = useState(true);
+
+  const { account } = useAppSelector((state) => state.account);
 
   const dispatch = useAppDispatch();
 
@@ -40,22 +43,26 @@ export const Web3Provider = ({ children }) => {
       /**
        * Load Contract Data
        */
-      const contractData = await loadContractData();
-      if (contractData) {
-        dispatch(setContractData(contractData));
-        setContractLoading(false);
+      if (account && account !== "0x0") {
+        const contractData = await loadContractData(account);
+        if (contractData) {
+          dispatch(setContractData(contractData));
+          setContractLoading(false);
+        }
       }
     };
     Loader();
-  }, [dispatch]);
+  }, [dispatch, account]);
 
   if (!accountLoading && !contractLoading) {
-    return <Web3Context.Provider>{children}</Web3Context.Provider>;
+    return (
+      <MimicFinanceContext.Provider>{children}</MimicFinanceContext.Provider>
+    );
   } else {
     return (
-      <Web3Context.Provider>
+      <MimicFinanceContext.Provider>
         <Loading />
-      </Web3Context.Provider>
+      </MimicFinanceContext.Provider>
     );
   }
 };

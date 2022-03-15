@@ -1,11 +1,11 @@
 import { extendTheme } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
-
-const PRIMARY_LIGHT = "#466dec";
-const PRIAMRY_DARK = "#8bc4ff";
-
-const NORMAL_LIGHT = "gray.700";
-const NORMAL_DARK = "whiteAlpha.900";
+import {
+  PRIMARY_LIGHT,
+  PRIAMRY_DARK,
+  NORMAL_DARK,
+  NORMAL_LIGHT,
+} from "./constants/Color";
 
 const theme = extendTheme({
   fonts: {

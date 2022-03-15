@@ -8,7 +8,7 @@ const Loading = () => {
       </Center>
       <Center pt="50px">
         <Box>
-          <Text fontSize={"xl"}>Loading Contract</Text>
+          <Text fontSize={"xl"}>Account & Contract Loading</Text>
         </Box>
       </Center>
     </>
