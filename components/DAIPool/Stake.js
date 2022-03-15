@@ -5,43 +5,55 @@ import {
   FormControl,
   Input,
   Button,
-  InputRightElement,
   InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
+
 import { useState } from "react";
-import Portfolio from "./PortfolioTest";
+
+import Portfolio from "./Portfolio";
 
 import Web3 from "web3";
 import useAppSelector from "../../hooks/useAppSelector";
 
-const WithDraw = () => {
-  const { account, dAppTokenBalance, farmToken, stakingBalance } =
-    useAppSelector((state) => state.contracts);
+const Stake = () => {
+  const { account } = useAppSelector((state) => state.account);
+  const {
+    DAITokenContract,
+    FarmTokenContract,
+    daiTokenBalance,
+    dAppTokenBalance,
+    stakingBalance,
+  } = useAppSelector((state) => state.contracts);
 
-  //widraw Value
-  const [withDrawValue, setWithdrawValue] = useState(0);
-  // const [withdrawSuccess, setWithdrawSuccess] = useState(0);
+  //Stake Value
+  const [stakeValue, setStakeValue] = useState(0);
 
-  const unstakeTokens = (amount) => {
-    farmToken.methods
-      .unstakeTokens(amount)
+  const stakeTokens = async (amount) => {
+    await DAITokenContract.methods
+      .approve(FarmTokenContract._address, amount)
       .send({ from: account })
       .on("transactionHash", (hash) => {
-        // setWithdrawSuccess(withdrawSuccess + 1);
-        // set reload after withdraw
+        FarmTokenContract.methods
+          .stakeTokens(amount)
+          .send({ from: account })
+          .on("transactionHash", (hash) => {
+            //set reload
+          });
       });
   };
-  const setWithdrawValueMax = () => {
-    setWithdrawValue(Web3.utils.fromWei(stakingBalance.toString()));
+
+  const setStakeValueMax = () => {
+    setStakeValue(Web3.utils.fromWei(daiTokenBalance.toString()));
   };
 
-  const handleChangeWithdrawValue = (e) => {
-    setWithdrawValue(e.target.value);
+  const handleChangeStakeValue = (e) => {
+    setStakeValue(e.target.value);
   };
 
   return (
     <>
-      <Grid templateColumns="repeat(10, 1fr)" gap={0} mt={0}>
+      <Grid templateColumns="repeat(10, 1fr)" gap={0}>
         <GridItem colSpan={3}>
           <Select style={{ borderRadius: "10px 0px 0px 10px" }}>
             <option>mDAI</option>
@@ -54,11 +66,11 @@ const WithDraw = () => {
                 type="number"
                 style={{ borderRadius: "0px 10px 10px 0px" }}
                 placeholder="0.00"
-                value={withDrawValue}
-                onChange={handleChangeWithdrawValue}
+                value={stakeValue}
+                onChange={handleChangeStakeValue}
               />
               <InputRightElement width="4.5rem">
-                <Button h="1.75rem" size="sm" onClick={setWithdrawValueMax}>
+                <Button h="1.75rem" size="sm" onClick={setStakeValueMax}>
                   Max
                 </Button>
               </InputRightElement>
@@ -67,23 +79,22 @@ const WithDraw = () => {
         </GridItem>
       </Grid>
 
-      <div style={{ paddingTop: "20px" }}></div>
-      <hr />
       <Button
         style={{
           color: "#FFFFFF",
           background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
         }}
+        disabled={stakeValue == 0}
         mt={2}
         mb={5}
         w={"100%"}
         onClick={() => {
-          unstakeTokens(Web3.utils.toWei(withDrawValue.toString()));
+          stakeTokens(Web3.utils.toWei(stakeValue.toString()));
         }}
-        disabled={withDrawValue >= stakingBalance && stakingBalance > 0}
       >
-        Withdraw
+        Stake
       </Button>
+
       <Portfolio
         balance={Web3.utils.fromWei(stakingBalance.toString())}
         reward={Web3.utils.fromWei(dAppTokenBalance.toString())}
@@ -96,4 +107,4 @@ const WithDraw = () => {
   );
 };
 
-export default WithDraw;
+export default Stake;

@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 import Web3 from "web3";
 import { useRouter } from "next/router";
-import TVD from "../../components/FarmV1/TVD";
+import TVD from "../../components/DAIPool/TVD";
 
 import {
   Text,
@@ -20,11 +20,11 @@ import {
 import { useEffect, useState } from "react";
 import { FaCalculator } from "react-icons/fa";
 import CountUp from "react-countup";
-import Portfolio from "../../components/FarmV1/Portfolio";
+import Portfolio from "../../components/DAIPool/Portfolio";
 
-import { Panel } from "../../components/FarmV1/Panel";
+import { Panel } from "../../components/DAIPool/Panel";
 
-const FarmV1 = () => {
+const DAIPool = () => {
   const info = {
     poolName: "",
     label: "",
@@ -96,4 +96,4 @@ const FarmV1 = () => {
   );
 };
 
-export default FarmV1;
+export default DAIPool;

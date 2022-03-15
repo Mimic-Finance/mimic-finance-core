@@ -1,25 +1,25 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { Provider as ReduxProvider } from "react-redux";
-import { Web3Provider } from "../contexts/Web3Context";
+import { MimicFinanceProvider } from "../contexts/MimicFinanceContext";
 import store from "../store";
 
-import Nav from "../components/utils/Navbar";
+import Nav from "../components/utils/Navbar/Navbar";
 import "../styles/globals.css";
 import "@fontsource/montserrat/400.css";
 import theme from "../theme";
 
-import { Footer } from "../components/utils/footer/Footer";
+import { Footer } from "../components/utils/Footer/Footer";
 
 function MyApp({ Component, pageProps }) {
   return (
     <ReduxProvider store={store}>
-      <Web3Provider>
-        <ChakraProvider theme={theme}>
+      <ChakraProvider theme={theme}>
+        <MimicFinanceProvider>
           <Nav />
           <Component {...pageProps} />
           <Footer />
-        </ChakraProvider>
-      </Web3Provider>
+        </MimicFinanceProvider>
+      </ChakraProvider>
     </ReduxProvider>
   );
 }

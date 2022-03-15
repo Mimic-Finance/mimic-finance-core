@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.4;
 
-import "./Daitoken.sol";
+import "./DaiToken.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract Faucet {

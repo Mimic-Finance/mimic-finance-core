@@ -7,34 +7,33 @@ import FaucetContract from "../abis/Faucet.json";
 
 const initialState = {
   loading: true,
-  account: "0x0",
-  daiToken: {},
   daiTokenBalance: 0,
-  dAppToken: {},
   dAppTokenBalance: 0,
-  farmToken: {},
   stakingBalance: 0,
-  faucetContract: {},
+
+  DAITokenContract: {},
+  DAPPTokenContract: {},
+  FarmTokenContract: {},
+  FaucetContract: {},
 };
 
-export const loadContractData = async () => {
+export const loadContractData = async (account) => {
   try {
     const web3 = window.web3;
 
     let response = {
-      account: "0x0",
-      daiToken: {},
       daiTokenBalance: 0,
-      dappToken: {},
       dAppTokenBalance: 0,
-      farmToken: {},
       stakingBalance: 0,
-      faucetContract: {},
+
+      DAITokenContract: {},
+      DAPPTokenContract: {},
+      FarmTokenContract: {},
+      FaucetContract: {},
     };
 
-    const accounts = await web3.eth.getAccounts();
-    let currentAccount = accounts[0];
-    response.account = accounts[0];
+    // const accounts = await web3.eth.getAccounts();
+    let currentAccount = account;
     const networkId = await web3.eth.net.getId();
 
     // Load DaiToken
@@ -46,6 +45,7 @@ export const loadContractData = async () => {
       );
 
       response.daiToken = daiToken;
+      response.DAITokenContract = daiToken; //new
       let daiTokenBalance = await daiToken.methods
         .balanceOf(currentAccount)
         .call();
@@ -62,6 +62,7 @@ export const loadContractData = async () => {
         dappTokenData.address
       );
       response.dappToken = dappToken;
+      response.DAPPTokenContract = dappToken; //new
       let dappTokenBalance = await dappToken.methods
         .balanceOf(currentAccount)
         .call();
@@ -78,6 +79,7 @@ export const loadContractData = async () => {
         tokenFarmData.address
       );
       response.farmToken = tokenFarm;
+      response.FarmTokenContract = tokenFarm; //new
       let stakingBalance = await tokenFarm.methods
         .stakingBalance(currentAccount)
         .call();
@@ -94,6 +96,7 @@ export const loadContractData = async () => {
         faucetContractData.address
       );
       response.faucetContract = faucetContract;
+      response.FaucetContract = faucetContract; //new
     } else {
       window.alert("Faucet Contract not deployed to detected network.");
     }
@@ -112,13 +115,14 @@ const contractSlice = createSlice({
   reducers: {
     setContractData(state, action) {
       state.account = action.payload.account;
-      state.daiToken = action.payload.daiToken;
       state.daiTokenBalance = action.payload.daiTokenBalance;
-      state.dAppToken = action.payload.dappToken;
       state.dAppTokenBalance = action.payload.dappTokenBalance;
-      state.farmToken = action.payload.farmToken;
       state.stakingBalance = action.payload.stakingBalance;
-      state.faucetContract = action.payload.faucetContract;
+
+      state.DAITokenContract = action.payload.DAITokenContract;
+      state.DAPPTokenContract = action.payload.DAPPTokenContract;
+      state.FarmTokenContract = action.payload.FarmTokenContract;
+      state.FaucetContract = action.payload.FaucetContract;
     },
   },
 });

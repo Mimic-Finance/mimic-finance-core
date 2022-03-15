@@ -1,0 +1,22 @@
+name: Contract CI
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  contract-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Install dependency
+        run: yarn install
+
+      - name: Install Truffle
+        run: npm install -g truffle
+
+      - name: Compile smart contract
+        run: truffle compile
