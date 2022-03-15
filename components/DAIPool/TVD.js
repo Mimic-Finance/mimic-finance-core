@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import useAppSelector from "../../hooks/useAppSelector";
 import Web3 from "web3";
 import CountUp from "react-countup";
@@ -12,18 +12,18 @@ const TVD = () => {
 
   const [tvd, setTVD] = useState(0);
 
-  const loadTVD = async () => {
+  const loadTVD = useCallback(async () => {
     if (FarmTokenContract._address && DAITokenContract) {
       let _tvd = await DAITokenContract.methods
         .balanceOf(FarmTokenContract._address)
         .call();
       setTVD(_tvd.toString());
     }
-  };
+  }, [DAITokenContract, FarmTokenContract._address]);
 
   useEffect(() => {
     loadTVD();
-  }, [FarmTokenContract]);
+  }, [FarmTokenContract, loadTVD]);
 
   return (
     <Text fontSize="5xl">

@@ -1,8 +1,8 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useCallback } from "react";
 import { setContractData, loadContractData } from "../slices/contracts";
 import { setAccountData, detectAccount } from "../slices/account";
 import useAppDispatch from "../hooks/useAppDispatch";
-import Loading from "../components/utils/Loading/Loading";
+import Loading from "../components/Utils/Loading/Loading";
 import Web3 from "web3";
 import useAppSelector from "../hooks/useAppSelector";
 
@@ -16,7 +16,7 @@ export const MimicFinanceProvider = ({ children }) => {
 
   const dispatch = useAppDispatch();
 
-  const loadWeb3 = async () => {
+  const loadWeb3 = useCallback(async () => {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
@@ -35,7 +35,7 @@ export const MimicFinanceProvider = ({ children }) => {
         "Non-Ethereum browser detected. You should consider trying MetaMask!"
       );
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     const Loader = async () => {
@@ -52,7 +52,7 @@ export const MimicFinanceProvider = ({ children }) => {
       }
     };
     Loader();
-  }, [dispatch, account]);
+  }, [dispatch, account, loadWeb3]);
 
   if (!accountLoading && !contractLoading) {
     return (
