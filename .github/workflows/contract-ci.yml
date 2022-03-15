@@ -2,7 +2,8 @@ name: Contract CI
 
 on:
   push:
-    branches: [ develop ]
+    paths:
+      - './contracts'
 
 jobs:
   contract-ci:
