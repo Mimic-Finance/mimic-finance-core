@@ -47,9 +47,8 @@ contract TokenFarm {
         uint256 rewardB = SafeMath.mul(update, rewardRate);
         uint256 divbal = SafeMath.div(balance, 1e4);
         uint256 reward = SafeMath.mul(divbal, rewardB);
-        if (balance > 0) {
-            dappToken.transfer(msg.sender, reward);
-        }
+        require(reward > 0 && balance > 0);
+        dappToken.transfer(msg.sender, reward);
         lastUpdate[msg.sender] = block.timestamp;
     }
 
