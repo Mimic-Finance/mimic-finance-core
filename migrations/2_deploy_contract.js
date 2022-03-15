@@ -1,26 +1,26 @@
 const config = require("../config.json");
-const DappToken = artifacts.require("DappToken");
-const DaiToken = artifacts.require("Daitoken");
-const TokenFarm = artifacts.require("TokenFarm");
+const MimicToken = artifacts.require("Mimic");
+const JUSDToken = artifacts.require("JUSD");
+const Farming = artifacts.require("Farming");
 const Faucet = artifacts.require("Faucet");
 
 module.exports = async function (deployer, network, accounts) {
-  await deployer.deploy(DaiToken);
-  const daiToken = await DaiToken.deployed();
+  await deployer.deploy(JUSDToken);
+  const jusdToken = await JUSDToken.deployed();
 
-  await deployer.deploy(DappToken);
-  const dappToken = await DappToken.deployed();
+  await deployer.deploy(MimicToken);
+  const mimicToken = await MimicToken.deployed();
 
-  await deployer.deploy(TokenFarm, dappToken.address, daiToken.address);
-  const tokenFarm = await TokenFarm.deployed();
+  await deployer.deploy(Farming, mimicToken.address, jusdToken.address);
+  const farming = await Farming.deployed();
 
-  await deployer.deploy(Faucet,daiToken.address);
+  await deployer.deploy(Faucet,jusdToken.address);
   const faucet = await Faucet.deployed();
 
 
-  await dappToken.transfer(tokenFarm.address, "10000000000000000000000000");
-  await daiToken.transfer(faucet.address,"9000000000000000000000000");
-  await daiToken.transfer(
+  await mimicToken.transfer(farming.address, "10000000000000000000000000");
+  await jusdToken.transfer(faucet.address,"9000000000000000000000000");
+  await jusdToken.transfer(
     config.mode === "development" ? accounts[1] : config.testerAddress,
     "1000000000000000000000"
   );

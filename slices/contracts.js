@@ -1,20 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import DaiTokenContract from "../abis/DaiToken.json";
-import DappTokenContract from "../abis/DappToken.json";
-import TokenFarmContract from "../abis/TokenFarm.json";
-import FaucetContract from "../abis/Faucet.json";
+import JUSD_ABI from "../abis/JUSD.json";
+import Mimic_ABI from "../abis/Mimic.json";
+import Farming_ABI from "../abis/Farming.json";
+import Faucet_ABI from "../abis/Faucet.json";
 
 const initialState = {
+  //Smart Contract loading
   loading: true,
-  daiTokenBalance: 0,
-  dAppTokenBalance: 0,
-  stakingBalance: 0,
 
-  DAITokenContract: {},
-  DAPPTokenContract: {},
-  FarmTokenContract: {},
+  // Contracts
+  JUSDContract: {},
+  MimicContract: {},
+  FarmingContract: {},
   FaucetContract: {},
+
+  // JUSD Pool
+  JUSDBalance: 0,
+  MimicBalance: 0,
+  JUSDStakingBalance: 0,
 };
 
 export const loadContractData = async (account) => {
@@ -22,81 +26,93 @@ export const loadContractData = async (account) => {
     const web3 = window.web3;
 
     let response = {
-      daiTokenBalance: 0,
-      dAppTokenBalance: 0,
-      stakingBalance: 0,
-
-      DAITokenContract: {},
-      DAPPTokenContract: {},
-      FarmTokenContract: {},
+      JUSDContract: {},
+      MimicContract: {},
+      FarmingContract: {},
       FaucetContract: {},
+
+      // JUSD Pool
+      JUSDBalance: 0,
+      MimicBalance: 0,
+      JUSDStakingBalance: 0,
     };
 
     // const accounts = await web3.eth.getAccounts();
     let currentAccount = account;
     const networkId = await web3.eth.net.getId();
 
-    // Load DaiToken
-    const daiTokenData = DaiTokenContract.networks[networkId];
-    if (daiTokenData) {
-      const daiToken = new web3.eth.Contract(
-        DaiTokenContract.abi,
-        daiTokenData.address
+    /**
+     * Load JUSD Contract
+     * JUSD.json
+     */
+    const JUSDTokenData = JUSD_ABI.networks[networkId];
+    if (JUSDTokenData) {
+      const JUSDContract = new web3.eth.Contract(
+        JUSD_ABI.abi,
+        JUSDTokenData.address
       );
 
-      response.daiToken = daiToken;
-      response.DAITokenContract = daiToken; //new
-      let daiTokenBalance = await daiToken.methods
+      response.JUSDContract = JUSDContract;
+      // Get JUSD Balance
+      let JUSDBalance = await JUSDContract.methods
         .balanceOf(currentAccount)
         .call();
-      response.daiTokenBalance = daiTokenBalance.toString();
+      response.JUSDBalance = JUSDBalance.toString();
     } else {
-      window.alert("DaiToken contract not deployed to detected network.");
+      window.alert("JUSD contract not deployed to detected network.");
     }
 
-    // Load DappToken
-    const dappTokenData = DappTokenContract.networks[networkId];
-    if (dappTokenData) {
-      const dappToken = new web3.eth.Contract(
-        DappTokenContract.abi,
-        dappTokenData.address
+    /**
+     * Load Mimic Contract (Gov Token)
+     * Mimic.json
+     */
+    const MimicTokenData = Mimic_ABI.networks[networkId];
+    if (MimicTokenData) {
+      const MimicContract = new web3.eth.Contract(
+        Mimic_ABI.abi,
+        MimicTokenData.address
       );
-      response.dappToken = dappToken;
-      response.DAPPTokenContract = dappToken; //new
-      let dappTokenBalance = await dappToken.methods
+
+      response.MimicContract = MimicContract;
+      let MimicBalance = await MimicContract.methods
         .balanceOf(currentAccount)
         .call();
-      response.dappTokenBalance = dappTokenBalance.toString();
+      response.MimicBalance = MimicBalance.toString();
     } else {
-      window.alert("DappToken contract not deployed to detected network.");
+      window.alert("MimicToken contract not deployed to detected network.");
     }
 
-    // Load TokenFarm
-    const tokenFarmData = TokenFarmContract.networks[networkId];
-    if (tokenFarmData) {
-      const tokenFarm = new web3.eth.Contract(
-        TokenFarmContract.abi,
-        tokenFarmData.address
+    /**
+     * Load Farming Contract (Gov Token)
+     * Farming.json
+     */
+    const FarmingData = Farming_ABI.networks[networkId];
+    if (FarmingData) {
+      const FarmingContract = new web3.eth.Contract(
+        Farming_ABI.abi,
+        FarmingData.address
       );
-      response.farmToken = tokenFarm;
-      response.FarmTokenContract = tokenFarm; //new
-      let stakingBalance = await tokenFarm.methods
+
+      response.FarmingContract = FarmingContract;
+      let JUSDStakingBalance = await FarmingContract.methods
         .stakingBalance(currentAccount)
         .call();
-      response.stakingBalance = stakingBalance.toString();
+      response.JUSDStakingBalance = JUSDStakingBalance.toString();
     } else {
-      window.alert("TokenFarm contract not deployed to detected network.");
+      window.alert("Farming contract not deployed to detected network.");
     }
 
-    // Load Faucet Contract
-    const faucetContractData = FaucetContract.networks[networkId];
+    /**
+     * Load Faucet Contract (Gov Token)
+     * Faucet.json
+     */
+    const faucetContractData = Faucet_ABI.networks[networkId];
     if (faucetContractData) {
       const faucetContract = new web3.eth.Contract(
-        FaucetContract.abi,
+        Faucet_ABI.abi,
         faucetContractData.address
       );
-      response.faucetContract = faucetContract;
-      response.FaucetContract = faucetContract; //new
+      response.FaucetContract = faucetContract;
     } else {
       window.alert("Faucet Contract not deployed to detected network.");
     }
@@ -114,14 +130,13 @@ const contractSlice = createSlice({
   initialState,
   reducers: {
     setContractData(state, action) {
-      state.account = action.payload.account;
-      state.daiTokenBalance = action.payload.daiTokenBalance;
-      state.dAppTokenBalance = action.payload.dappTokenBalance;
-      state.stakingBalance = action.payload.stakingBalance;
+      state.JUSDBalance = action.payload.JUSDBalance;
+      state.MimicBalance = action.payload.MimicBalance;
+      state.JUSDStakingBalance = action.payload.JUSDStakingBalance;
 
-      state.DAITokenContract = action.payload.DAITokenContract;
-      state.DAPPTokenContract = action.payload.DAPPTokenContract;
-      state.FarmTokenContract = action.payload.FarmTokenContract;
+      state.JUSDContract = action.payload.JUSDContract;
+      state.MimicContract = action.payload.MimicContract;
+      state.FarmingContract = action.payload.FarmingContract;
       state.FaucetContract = action.payload.FaucetContract;
     },
   },
