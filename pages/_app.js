@@ -13,13 +13,13 @@ import { Footer } from "../components/utils/footer/Footer";
 function MyApp({ Component, pageProps }) {
   return (
     <ReduxProvider store={store}>
-      <Web3Provider>
-        <ChakraProvider theme={theme}>
+      <ChakraProvider theme={theme}>
+        <Web3Provider>
           <Nav />
           <Component {...pageProps} />
           <Footer />
-        </ChakraProvider>
-      </Web3Provider>
+        </Web3Provider>
+      </ChakraProvider>
     </ReduxProvider>
   );
 }
