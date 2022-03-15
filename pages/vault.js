@@ -28,7 +28,7 @@ const Home = () => {
           Available Pools
         </Text>
 
-        <Grid templateColumns="repeat(2, 1fr)" gap={20} pt={5}>
+        <Grid templateColumns="repeat(1, 1fr)" gap={20} pt={5}>
           <Pool
             poolName="DAI Pool"
             description="The Frist stable coin pool"
