@@ -31,7 +31,7 @@ import Image from "next/image";
 import LinkNext from "next/link";
 import NAV_ITEMS from "../../../constants/Menu";
 
-import ConnectButton from "../button/ConnectButton";
+import ConnectButton from "../Button/ConnectButton";
 
 const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure();
