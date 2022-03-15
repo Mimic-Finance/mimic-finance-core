@@ -6,24 +6,24 @@ import CountUp from "react-countup";
 import { Text } from "@chakra-ui/react";
 
 const TVD = () => {
-  const { FarmTokenContract, DAITokenContract } = useAppSelector(
+  const { FarmingContract, JUSDContract } = useAppSelector(
     (state) => state.contracts
   );
 
   const [tvd, setTVD] = useState(0);
 
   const loadTVD = useCallback(async () => {
-    if (FarmTokenContract._address && DAITokenContract) {
-      let _tvd = await DAITokenContract.methods
-        .balanceOf(FarmTokenContract._address)
+    if (FarmingContract._address && JUSDContract) {
+      let _tvd = await JUSDContract.methods
+        .balanceOf(FarmingContract._address)
         .call();
       setTVD(_tvd.toString());
     }
-  }, [DAITokenContract, FarmTokenContract._address]);
+  }, [FarmingContract._address, JUSDContract]);
 
   useEffect(() => {
     loadTVD();
-  }, [FarmTokenContract, loadTVD]);
+  }, [FarmingContract, loadTVD]);
 
   return (
     <Text fontSize="5xl">

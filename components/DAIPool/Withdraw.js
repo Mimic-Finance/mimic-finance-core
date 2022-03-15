@@ -16,14 +16,15 @@ import useAppSelector from "../../hooks/useAppSelector";
 
 const WithDraw = () => {
   const { account } = useAppSelector((state) => state.account);
-  const { FarmTokenContract, dAppTokenBalance, stakingBalance } =
-    useAppSelector((state) => state.contracts);
+  const { FarmingContract, MimicBalance, JUSDStakingBalance } = useAppSelector(
+    (state) => state.contracts
+  );
 
   //widraw Value
   const [withDrawValue, setWithdrawValue] = useState(0);
 
   const unstakeTokens = (amount) => {
-    FarmTokenContract.methods
+    FarmingContract.methods
       .unstakeTokens(amount)
       .send({ from: account })
       .on("transactionHash", (hash) => {
@@ -31,7 +32,7 @@ const WithDraw = () => {
       });
   };
   const setWithdrawValueMax = () => {
-    setWithdrawValue(Web3.utils.fromWei(stakingBalance.toString()));
+    setWithdrawValue(Web3.utils.fromWei(JUSDStakingBalance.toString()));
   };
 
   const handleChangeWithdrawValue = (e) => {
@@ -79,16 +80,16 @@ const WithDraw = () => {
         onClick={() => {
           unstakeTokens(Web3.utils.toWei(withDrawValue.toString()));
         }}
-        disabled={withDrawValue >= stakingBalance && stakingBalance > 0}
+        disabled={withDrawValue >= JUSDStakingBalance && JUSDStakingBalance > 0}
       >
         Withdraw
       </Button>
       <Portfolio
-        balance={Web3.utils.fromWei(stakingBalance.toString())}
-        reward={Web3.utils.fromWei(dAppTokenBalance.toString())}
+        balance={Web3.utils.fromWei(JUSDStakingBalance.toString())}
+        reward={Web3.utils.fromWei(MimicBalance.toString())}
         total={
-          parseInt(Web3.utils.fromWei(dAppTokenBalance.toString())) +
-          parseInt(Web3.utils.fromWei(stakingBalance.toString()))
+          parseInt(Web3.utils.fromWei(MimicBalance.toString())) +
+          parseInt(Web3.utils.fromWei(JUSDStakingBalance.toString()))
         }
       />
     </>

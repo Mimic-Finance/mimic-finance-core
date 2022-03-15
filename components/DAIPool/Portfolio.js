@@ -2,21 +2,16 @@ import { Box, Text, Grid, GridItem, Button } from "@chakra-ui/react";
 import useAppSelector from "../../hooks/useAppSelector";
 
 const Portfolio = ({ balance, reward, total }) => {
-  const { FarmTokenContract } = useAppSelector((state) => state.contracts);
+  const { FarmingContract } = useAppSelector((state) => state.contracts);
   const { account } = useAppSelector((state) => state.account);
 
   const claimReward = async () => {
-    await FarmTokenContract.methods
+    await FarmingContract.methods
       .issueTokens()
       .send({ from: account })
       .on("transactionHash", (hash) => {
         // set reload after withdraw
       });
-  };
-
-  const checkReward = async () => {
-    const reward = await FarmTokenContract.methods.checkReward().call();
-    console.log(reward);
   };
 
   return (
@@ -46,15 +41,6 @@ const Portfolio = ({ balance, reward, total }) => {
                 colorScheme="purple"
               >
                 Claim
-              </Button>
-              <Button
-                onClick={() => {
-                  checkReward();
-                }}
-                size="xs"
-                colorScheme="orange"
-              >
-                Check Reward
               </Button>
             </Box>
           </GridItem>

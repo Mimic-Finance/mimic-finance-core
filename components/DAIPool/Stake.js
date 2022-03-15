@@ -19,22 +19,24 @@ import useAppSelector from "../../hooks/useAppSelector";
 const Stake = () => {
   const { account } = useAppSelector((state) => state.account);
   const {
-    DAITokenContract,
-    FarmTokenContract,
-    daiTokenBalance,
-    dAppTokenBalance,
-    stakingBalance,
+    JUSDContract,
+    FarmingContract,
+    JUSDBalance,
+    MimicBalance,
+    JUSDStakingBalance,
   } = useAppSelector((state) => state.contracts);
+
+  console.log(FarmingContract);
 
   //Stake Value
   const [stakeValue, setStakeValue] = useState(0);
 
   const stakeTokens = async (amount) => {
-    await DAITokenContract.methods
-      .approve(FarmTokenContract._address, amount)
+    await JUSDContract.methods
+      .approve(FarmingContract._address, amount)
       .send({ from: account })
       .on("transactionHash", (hash) => {
-        FarmTokenContract.methods
+        FarmingContract.methods
           .stakeTokens(amount)
           .send({ from: account })
           .on("transactionHash", (hash) => {
@@ -44,7 +46,7 @@ const Stake = () => {
   };
 
   const setStakeValueMax = () => {
-    setStakeValue(Web3.utils.fromWei(daiTokenBalance.toString()));
+    setStakeValue(Web3.utils.fromWei(JUSDBalance.toString()));
   };
 
   const handleChangeStakeValue = (e) => {
@@ -96,11 +98,11 @@ const Stake = () => {
       </Button>
 
       <Portfolio
-        balance={Web3.utils.fromWei(stakingBalance.toString())}
-        reward={Web3.utils.fromWei(dAppTokenBalance.toString())}
+        balance={Web3.utils.fromWei(JUSDStakingBalance.toString())}
+        reward={Web3.utils.fromWei(MimicBalance.toString())}
         total={
-          parseInt(Web3.utils.fromWei(dAppTokenBalance.toString())) +
-          parseInt(Web3.utils.fromWei(stakingBalance.toString()))
+          parseInt(Web3.utils.fromWei(MimicBalance.toString())) +
+          parseInt(Web3.utils.fromWei(JUSDStakingBalance.toString()))
         }
       />
     </>
