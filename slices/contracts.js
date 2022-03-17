@@ -4,6 +4,7 @@ import JUSD_ABI from "../abis/JUSD.json";
 import Mimic_ABI from "../abis/Mimic.json";
 import Farming_ABI from "../abis/Farming.json";
 import Faucet_ABI from "../abis/Faucet.json";
+import Swap_ABI from "../abis/Swap.json";
 
 const initialState = {
   //Smart Contract loading
@@ -14,6 +15,7 @@ const initialState = {
   MimicContract: {},
   FarmingContract: {},
   FaucetContract: {},
+  SwapContract: {},
 
   // JUSD Pool
   JUSDBalance: 0,
@@ -30,6 +32,7 @@ export const loadContractData = async (account) => {
       MimicContract: {},
       FarmingContract: {},
       FaucetContract: {},
+      SwapContract: {},
 
       // JUSD Pool
       JUSDBalance: 0,
@@ -117,6 +120,21 @@ export const loadContractData = async (account) => {
       window.alert("Faucet Contract not deployed to detected network.");
     }
 
+    /**
+     * Load Swap Contract
+     * Swap.json
+     */
+    const swapContractData = Swap_ABI.networks[networkId];
+    if (swapContractData) {
+      const swapContract = new web3.eth.Contract(
+        Swap_ABI.abi,
+        swapContractData.address
+      );
+      response.SwapContract = swapContract;
+    } else {
+      window.alert("Swap Contract not deployed");
+    }
+
     return response;
   } catch {
     console.log("Cannot Load Blockchain Data");
@@ -138,6 +156,7 @@ const contractSlice = createSlice({
       state.MimicContract = action.payload.MimicContract;
       state.FarmingContract = action.payload.FarmingContract;
       state.FaucetContract = action.payload.FaucetContract;
+      state.SwapContract = action.payload.SwapContract;
     },
   },
 });
