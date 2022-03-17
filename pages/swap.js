@@ -15,28 +15,82 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { ArrowDownIcon } from "@chakra-ui/icons";
-import Swal from "sweetalert2";
+import Toast from "../components/Utils/Toast/Toast";
+import Web3 from "web3";
 
 import useAppSelector from "../hooks/useAppSelector";
+import { useEffect, useState } from "react";
 
 const Faucet = () => {
-  const { faucetContract, account } = useAppSelector(
+  const { account } = useAppSelector((state) => state.account);
+  const { SwapContract, JUSDContract, MimicContract } = useAppSelector(
     (state) => state.contracts
   );
 
-  const claimToken = async () => {
-    await faucetContract.methods
-      .claim()
+  //Token Balance
+  const { MimicBalance, JUSDBalance } = useAppSelector(
+    (state) => state.contracts
+  );
+
+  console.log("Mimic => " + Web3.utils.fromWei(MimicBalance.toString()));
+  console.log("JUSD =>" + Web3.utils.fromWei(JUSDBalance.toString()));
+
+  //Swap State
+  const [MimicSwap, setMimicSwap] = useState(0);
+  const [JUSDSwap, setJUSDSwap] = useState(0);
+
+  // to do fix to use from smartcontract rate
+  const [mockRate, setMockRate] = useState(
+    (Math.random() * (0.99 - 0.1) + 0.1).toFixed(4)
+  );
+
+  const handleChangeMimicSwap = (e) => {
+    if (e.target.value > Web3.utils.fromWei(MimicBalance.toString())) {
+      Swal.fire({
+        icon: "warning",
+        title: "Insufficient of Mimic Balance",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      setMimicSwap(e.target.value);
+      setJUSDSwap(e.target.value * mockRate);
+    }
+  };
+
+  const handleSetMaxMimicSwap = () => {
+    setMimicSwap(Web3.utils.fromWei(MimicBalance.toString()));
+  };
+
+  const handleClickSwap = async () => {
+    console.log(Web3.utils.toWei(MimicSwap.toString()));
+    await MimicContract.methods
+      .approve(SwapContract._address, Web3.utils.toWei(MimicSwap.toString()))
       .send({ from: account })
       .on("transactionHash", (hash) => {
-        Swal.fire({
+        Toast.fire({
           icon: "success",
-          title: "Claim Success",
-          showConfirmButton: false,
-          timer: 1500,
+          title: "Approved Success",
+        }).then(() => {
+          SwapContract.methods
+            .SwapToken(Web3.utils.toWei(MimicSwap.toString()))
+            .send({ from: account })
+            .on("transactionHash", (hash) => {
+              Toast.fire({
+                icon: "success",
+                title: "Swap Success",
+              }).then(() => {
+                setMimicSwap(0);
+                setJUSDSwap(0);
+              });
+            });
         });
       });
   };
+
+  useEffect(() => {
+    setJUSDSwap(MimicSwap * mockRate);
+  }, [MimicBalance, MimicSwap, mockRate]);
 
   return (
     <>
@@ -50,11 +104,11 @@ const Faucet = () => {
         <Text fontSize="4xl" fontWeight="bold" pt={5} align="center">
           Mimic Swap
         </Text>
-        {/* <Text fontSize="md" align="center" pt={0}>
+        <Text fontSize="md" align="center" pt={0}>
           Mimic Finance Decentralize Exchange
-        </Text> */}
+        </Text>
         <Center>
-          <Box w={450} pt={8}>
+          <Box w={450} pt={6}>
             <Box className="swap-box" style={{ textAlign: "center" }} p={5}>
               {/* From */}
               <Box className="currency-box">
@@ -72,9 +126,15 @@ const Faucet = () => {
                           type="number"
                           style={{ border: "0" }}
                           placeholder="0.00"
+                          value={MimicSwap}
+                          onChange={handleChangeMimicSwap}
                         />
                         <InputRightElement width="4.5rem">
-                          <Button h="1.75rem" size="sm">
+                          <Button
+                            h="1.75rem"
+                            size="sm"
+                            onClick={handleSetMaxMimicSwap}
+                          >
                             Max
                           </Button>
                         </InputRightElement>
@@ -83,7 +143,7 @@ const Faucet = () => {
                   </GridItem>
                   <GridItem colSpan={3}>
                     <Select style={{ border: "0" }}>
-                      <option>mDAI</option>
+                      <option>Mimic</option>
                     </Select>
                   </GridItem>
                 </Grid>
@@ -109,18 +169,14 @@ const Faucet = () => {
                           type="number"
                           style={{ border: "0" }}
                           placeholder="0.00"
+                          value={JUSDSwap}
                         />
-                        <InputRightElement width="4.5rem">
-                          <Button h="1.75rem" size="sm">
-                            Max
-                          </Button>
-                        </InputRightElement>
                       </InputGroup>
                     </FormControl>
                   </GridItem>
                   <GridItem colSpan={3}>
                     <Select style={{ border: "0" }}>
-                      <option>TOKEN</option>
+                      <option>JUSD</option>
                     </Select>
                   </GridItem>
                 </Grid>
@@ -133,6 +189,7 @@ const Faucet = () => {
                 colorScheme="pink"
                 height="70px"
                 className="swap-button"
+                onClick={handleClickSwap}
               >
                 Swap
               </Button>
