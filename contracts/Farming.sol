@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.4;
+pragma solidity 0.6.6;
 
 import "./JUSD.sol";
 import "./Mimic.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
 
 contract Farming {
     string public name = "Mimic Governance Token Farming";
@@ -17,7 +17,7 @@ contract Farming {
 
     uint256 public rewardRate = 10;
 
-    constructor(address _MimicToken, address _JUSDToken) {
+    constructor(address _MimicToken, address _JUSDToken) public {
         MimicToken = ERC20(_MimicToken);
         JUSDToken = ERC20(_JUSDToken);
     }

@@ -46,11 +46,9 @@ const Faucet = () => {
 
   const handleChangeMimicSwap = (e) => {
     if (e.target.value > Web3.utils.fromWei(MimicBalance.toString())) {
-      Swal.fire({
+      Toast.fire({
         icon: "warning",
         title: "Insufficient of Mimic Balance",
-        showConfirmButton: false,
-        timer: 1500,
       });
     } else {
       setMimicSwap(e.target.value);
@@ -189,6 +187,7 @@ const Faucet = () => {
                 colorScheme="pink"
                 height="70px"
                 className="swap-button"
+                disabled={MimicSwap == 0}
                 onClick={handleClickSwap}
               >
                 Swap

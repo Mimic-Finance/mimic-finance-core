@@ -3,18 +3,29 @@
   "ganacheHost": "127.0.0.1",
   "ganachePort": "8545",
   "ganacheNetworkId": "*",
+  "forkNetworkRPC": "https://ropsten.infura.io/v3/a4f7b70c34354ed4b1988216c9c24b48",
+
+  "accounts": [
+    "0xcfc597a8793e0ca94fc8310482d9e11367cfca24",
+    "0x2aac0eb300fa402730bced0b4c43a7fe6bf6491e",
+    "0xb6c3582accd194fd224f579042a9888f8051c6d9",
+    "0x89f575343b90a41963e4bd8085c0aa9ccdf4b0d3",
+    "0xf9f4b92b599f3a3163de316c35982b63f1536bc5",
+    "0xc6e02a81a6a565fe9c2c663ffe9e306c07f6f938",
+    "0x3d5ee2e3989a07e2d365e145da9dd14b071ae2b1",
+    "0xb6c3582accd194fd224f579042a9888f8051c6d9",
+    "0xea1f26b4c53949889bfac507e95814e8216793f7",
+    "0x37ad9130efbaac6cd0b1213e3c30484be0aa9d5c",
+    "0x9a49a0adae0f5a0c170029df4718a963e2ebb329"
+  ],
+
+  "rich_account": "0xdc926e34e73292cd7c48c6fd7375af7d93435d36",
+  "USDC_TESTNET": "0x9c8FA1ee532f8Afe9F2E27f06FD836F3C9572f71",
 
   "deployerAddress": "",
   "testerPrivateKey": "6e8b93d37dbd7f83ea981f157e39c1461e81d68110e44b9a972173bc5494d691",
 
   "testerAddress": "0x152D671b5E858d8039ce1B63FDEd676ac31Ef999",
   "liveHost": "https://devnet.kmutt.me",
-  "liveNetworkId": "8000",
-
-  "accounts": [
-    "0x152D671b5E858d8039ce1B63FDEd676ac31Ef999",
-    "0x9AF124b02704202eC1efDACb9bA2918F42F69B40",
-    "0xd9e54a29622329d2F0e17f79f0E38FFF78e1F1B9",
-    "0xA961AbAb1B4DBD5c6Ff6Fe3Ed7F09771B854830a"
-  ]
+  "liveNetworkId": "8000"
 }

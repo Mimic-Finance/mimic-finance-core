@@ -37,12 +37,15 @@
     "react-redux": "^7.2.5",
     "styled-components": "^5.3.3",
     "sweetalert2": "^11.4.4",
-    "truffle": "5.1.39",
     "web3": "1.2.11"
   },
   "devDependencies": {
-    "@openzeppelin/contracts": "^4.5.0",
+    "@openzeppelin/contracts": "3.4.0",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "eslint": "8.10.0",
-    "eslint-config-next": "12.1.0"
+    "eslint-config-next": "12.1.0",
+    "ganache-cli": "^6.12.2",
+    "truffle": "^5.5.4"
   }
 }
