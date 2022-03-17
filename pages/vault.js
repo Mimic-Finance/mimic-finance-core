@@ -30,9 +30,9 @@ const Home = () => {
 
         <Grid templateColumns="repeat(1, 1fr)" gap={20} pt={5}>
           <Pool
-            poolName="DAI Pool"
+            poolName="JUSD Pool"
             description="The Frist stable coin pool"
-            token="Token: DAI"
+            token="Token: JUSD"
             apy={122.32}
             label="dai-pool"
             color="#FFEA7B"
