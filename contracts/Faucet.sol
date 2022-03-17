@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.4;
+pragma solidity 0.6.6;
 
 import "./JUSD.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract Faucet {
     ERC20 public JUSDToken;
 
-    constructor(address _JUSDToken) {
+    constructor(address _JUSDToken) public {
         JUSDToken = ERC20(_JUSDToken);
     }
 

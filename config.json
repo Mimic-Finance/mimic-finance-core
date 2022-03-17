@@ -19,6 +19,9 @@
     "0x9a49a0adae0f5a0c170029df4718a963e2ebb329"
   ],
 
+  "rich_account": "0xdc926e34e73292cd7c48c6fd7375af7d93435d36",
+  "USDC_TESTNET": "0x9c8FA1ee532f8Afe9F2E27f06FD836F3C9572f71",
+
   "deployerAddress": "",
   "testerPrivateKey": "6e8b93d37dbd7f83ea981f157e39c1461e81d68110e44b9a972173bc5494d691",
 
