@@ -27,16 +27,16 @@ const Faucet = () => {
     <>
       <div className={styles.container} style={{ paddingBottom: "300px" }}>
         <Head>
-          <title>Mimic Finance | Dai Faucet</title>
+          <title>Mimic Finance | JUSD Faucet</title>
           <meta name="description" content="Dai Faucet" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
         <Text fontSize="5xl" fontWeight="bold" pt={7} align="center">
-          $mDAI Faucet
+          $JUSD Faucet
         </Text>
         <Text fontSize="2xl" align="center" pt={4}>
-          Get 10,000 mDAI to your wallet
+          Get 10,000 JUSD to your wallet
         </Text>
         <Box style={{ textAlign: "center" }} pt={50}>
           <Button
@@ -48,7 +48,7 @@ const Faucet = () => {
             h={"50px"}
             onClick={claimToken}
           >
-            Claim mDAI
+            Claim JUSD
           </Button>
         </Box>
       </div>
