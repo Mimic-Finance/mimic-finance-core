@@ -16,7 +16,7 @@ contract Swap {
         MimicToken = ERC20Burnable(_MimicToken);
     }
     
-   function random() internal returns (uint) {
+    function random() internal returns (uint) {
     uint ran = uint(keccak256(abi.encodePacked(block.timestamp, msg.sender,"mimic"))) % 900;
     ran = ran + 100;
     return ran;
