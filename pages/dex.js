@@ -40,7 +40,7 @@ const Faucet = () => {
   const [USDCSwap, setUSDCSwap] = useState(0);
 
   const handleChangeETHSwap = (e) => {
-    if (e.target.value > Web3.utils.fromWei(ETHBalance.toString())) {
+    if (e.target.value > parseFloat(ETHBalance)) {
       Toast.fire({
         icon: "warning",
         title: "Insufficient of ETH Balance",
@@ -71,10 +71,18 @@ const Faucet = () => {
 
   const handleClickETHtoUSDCSwap = async () => {
     if (DexContract) {
-      await DexContract.methods.swapEthForUSDC(web3.utils.toWei(ETHSwap)).send({
-        value: web3.utils.toWei(ETHSwap),
-        from: account,
-      });
+      await DexContract.methods
+        .swapEthForUSDC(web3.utils.toWei(ETHSwap))
+        .send({
+          value: web3.utils.toWei(ETHSwap),
+          from: account,
+        })
+        .on("transactionHash", (hash) => {
+          Toast.fire({
+            icon: "success",
+            title: "Swap Success",
+          });
+        });
     }
   };
 
@@ -87,12 +95,18 @@ const Faucet = () => {
           from: account,
         })
         .on("transactionHash", (hash) => {
-          console.log("approved");
+          Toast.fire({
+            icon: "success",
+            title: "Approved",
+          });
           DexContract.methods
             .swapUSDCForEth(USDC)
             .send({ from: account })
             .on("transactionHash", (hash) => {
-              console.log("swap");
+              Toast.fire({
+                icon: "success",
+                title: "Swap Success",
+              });
             });
         });
     }
