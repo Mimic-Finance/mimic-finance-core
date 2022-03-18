@@ -15,6 +15,10 @@ const MENU = [
     label: "Faucet",
     href: "/faucet",
   },
+  {
+    label: "Portfolio",
+    href: "/portfolio",
+  },
 ];
 
 export default MENU;
