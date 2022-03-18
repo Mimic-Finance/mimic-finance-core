@@ -122,7 +122,7 @@ const Faucet = () => {
                   fontSize={"sm"}
                   style={{ textAlign: "left", marginBottom: "15px" }}
                 >
-                  ETH
+                  ETH {"->"} USDC
                 </Text>
                 <Grid templateColumns="repeat(10, 1fr)" gap={0}>
                   <GridItem colSpan={7}>
@@ -180,7 +180,7 @@ const Faucet = () => {
                   fontSize={"sm"}
                   style={{ textAlign: "left", marginBottom: "15px" }}
                 >
-                  USDC
+                  USDC {"->"} ETH
                 </Text>
                 <Grid templateColumns="repeat(10, 1fr)" gap={0}>
                   <GridItem colSpan={7}>
