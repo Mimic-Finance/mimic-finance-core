@@ -4,7 +4,6 @@ import {
   Text,
   Box,
   Button,
-  Container,
   FormControl,
   InputGroup,
   Input,
@@ -14,12 +13,11 @@ import {
   Select,
   Center,
 } from "@chakra-ui/react";
-import { ArrowDownIcon } from "@chakra-ui/icons";
 import Toast from "../components/Utils/Toast/Toast";
 import Web3 from "web3";
 
 import useAppSelector from "../hooks/useAppSelector";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Faucet = () => {
   const { account } = useAppSelector((state) => state.account);
