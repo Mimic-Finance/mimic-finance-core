@@ -3,7 +3,7 @@
   "ganacheHost": "127.0.0.1",
   "ganachePort": "8545",
   "ganacheNetworkId": "*",
-  "forkNetworkRPC": "https://ropsten.infura.io/v3/a4f7b70c34354ed4b1988216c9c24b48",
+  "forkNetworkRPC": "https://mainnet.infura.io/v3/a4f7b70c34354ed4b1988216c9c24b48",
 
   "accounts": [
     "0xcfc597a8793e0ca94fc8310482d9e11367cfca24",
@@ -19,8 +19,8 @@
     "0x9a49a0adae0f5a0c170029df4718a963e2ebb329"
   ],
 
-  "rich_account": "0xdc926e34e73292cd7c48c6fd7375af7d93435d36",
-  "USDC_TESTNET": "0x9c8FA1ee532f8Afe9F2E27f06FD836F3C9572f71",
+  "rich_account": "0x6262998Ced04146fA42253a5C0AF90CA02dfd2A3",
+  "USDC_TESTNET": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
 
   "deployerAddress": "",
   "testerPrivateKey": "6e8b93d37dbd7f83ea981f157e39c1461e81d68110e44b9a972173bc5494d691",

@@ -4,6 +4,10 @@ const MENU = [
     href: "/swap",
   },
   {
+    label: "Dex",
+    href: "/dex",
+  },
+  {
     label: "Vault",
     href: "/vault",
   },

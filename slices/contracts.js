@@ -5,10 +5,18 @@ import Mimic_ABI from "../abis/Mimic.json";
 import Farming_ABI from "../abis/Farming.json";
 import Faucet_ABI from "../abis/Faucet.json";
 import Swap_ABI from "../abis/Swap.json";
+import Dex_ABI from "../abis/Dex.json";
+import USDC_ABI from "../abis/ERC20Mock.json";
+
+import config from "../config.json";
 
 const initialState = {
   //Smart Contract loading
   loading: true,
+
+  //Balances
+  ETHBalance: 0,
+  USDCBalance: 0,
 
   // Contracts
   JUSDContract: {},
@@ -16,6 +24,8 @@ const initialState = {
   FarmingContract: {},
   FaucetContract: {},
   SwapContract: {},
+  DexContract: {},
+  USDCContract: {},
 
   // JUSD Pool
   JUSDBalance: 0,
@@ -28,11 +38,18 @@ export const loadContractData = async (account) => {
     const web3 = window.web3;
 
     let response = {
+      //Balances
+      ETHBalance: 0,
+      USDCBalance: 0,
+
+      //Contract
       JUSDContract: {},
       MimicContract: {},
       FarmingContract: {},
       FaucetContract: {},
       SwapContract: {},
+      DexContract: {},
+      USDCContract: {},
 
       // JUSD Pool
       JUSDBalance: 0,
@@ -43,6 +60,13 @@ export const loadContractData = async (account) => {
     // const accounts = await web3.eth.getAccounts();
     let currentAccount = account;
     const networkId = await web3.eth.net.getId();
+
+    /**
+     *
+     * GET ETH Balance
+     *
+     */
+    response.ETHBalance = await web3.eth.getBalance(currentAccount);
 
     /**
      * Load JUSD Contract
@@ -135,6 +159,41 @@ export const loadContractData = async (account) => {
       window.alert("Swap Contract not deployed");
     }
 
+    /**
+     * Load Dex Contract
+     * Dex.json
+     */
+    const dexContractData = Dex_ABI.networks[networkId];
+    if (dexContractData) {
+      const dexContract = new web3.eth.Contract(
+        Dex_ABI.abi,
+        dexContractData.address
+      );
+      response.DexContract = dexContract;
+    } else {
+      window.alert("Dex Contract not deployed");
+    }
+
+    /**
+     * Load USDC Contract
+     * Dex.json
+     */
+
+    if (USDC_ABI) {
+      const usdcContract = new web3.eth.Contract(
+        USDC_ABI.abi,
+        config.USDC_TESTNET
+      );
+      response.USDCContract = usdcContract;
+      let USDCBalance = await usdcContract.methods
+        .balanceOf(currentAccount)
+        .call();
+      console.log(USDCBalance);
+      response.USDCBalance = USDCBalance / Math.pow(10, 6);
+    } else {
+      window.alert("USCD (Mock) Contract not deployed");
+    }
+
     return response;
   } catch {
     console.log("Cannot Load Blockchain Data");
@@ -148,15 +207,23 @@ const contractSlice = createSlice({
   initialState,
   reducers: {
     setContractData(state, action) {
+      //Balances
+      state.ETHBalance = action.payload.ETHBalance;
+      state.USDCBalance = action.payload.USDCBalance;
+
+      //Token Balance
       state.JUSDBalance = action.payload.JUSDBalance;
       state.MimicBalance = action.payload.MimicBalance;
       state.JUSDStakingBalance = action.payload.JUSDStakingBalance;
 
+      //Contracts
       state.JUSDContract = action.payload.JUSDContract;
       state.MimicContract = action.payload.MimicContract;
       state.FarmingContract = action.payload.FarmingContract;
       state.FaucetContract = action.payload.FaucetContract;
       state.SwapContract = action.payload.SwapContract;
+      state.DexContract = action.payload.DexContract;
+      state.USDCContract = action.payload.USDCContract;
     },
   },
 });
