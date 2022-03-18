@@ -1,10 +1,9 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
+import styles from "../../styles/Home.module.css";
 import {
   Text,
   Box,
   Button,
-  Container,
   FormControl,
   InputGroup,
   Input,
@@ -14,96 +13,117 @@ import {
   Select,
   Center,
 } from "@chakra-ui/react";
-import { ArrowDownIcon } from "@chakra-ui/icons";
-import Toast from "../components/Utils/Toast/Toast";
+import Toast from "../../components/Utils/Toast/Toast";
 import Web3 from "web3";
 
-import useAppSelector from "../hooks/useAppSelector";
-import { useEffect, useState } from "react";
+import useAppSelector from "../../hooks/useAppSelector";
+import { useState } from "react";
 
 const Faucet = () => {
   const { account } = useAppSelector((state) => state.account);
-  const { SwapContract, JUSDContract, MimicContract } = useAppSelector(
+  const { DexContract, USDCContract } = useAppSelector(
     (state) => state.contracts
   );
 
   //Token Balance
-  const { MimicBalance, JUSDBalance } = useAppSelector(
+  const { ETHBalance, USDCBalance } = useAppSelector(
     (state) => state.contracts
   );
 
-  console.log("Mimic => " + Web3.utils.fromWei(MimicBalance.toString()));
-  console.log("JUSD =>" + Web3.utils.fromWei(JUSDBalance.toString()));
+  console.log("ETH => " + Web3.utils.fromWei(ETHBalance.toString()));
+  console.log("USDC => " + USDCBalance);
 
   //Swap State
-  const [MimicSwap, setMimicSwap] = useState(0);
-  const [JUSDSwap, setJUSDSwap] = useState(0);
+  const [ETHSwap, setETHSwap] = useState(0);
+  const [USDCSwap, setUSDCSwap] = useState(0);
 
-  // to do fix to use from smartcontract rate
-  const [mockRate, setMockRate] = useState(
-    (Math.random() * (0.99 - 0.1) + 0.1).toFixed(4)
-  );
-
-  const handleChangeMimicSwap = (e) => {
-    if (e.target.value > Web3.utils.fromWei(MimicBalance.toString())) {
+  const handleChangeETHSwap = (e) => {
+    if (e.target.value > parseFloat(ETHBalance)) {
       Toast.fire({
         icon: "warning",
-        title: "Insufficient of Mimic Balance",
+        title: "Insufficient of ETH Balance",
       });
     } else {
-      setMimicSwap(e.target.value);
-      setJUSDSwap(e.target.value * mockRate);
+      setETHSwap(e.target.value);
     }
   };
 
-  const handleSetMaxMimicSwap = () => {
-    setMimicSwap(Web3.utils.fromWei(MimicBalance.toString()));
+  const handleChangeUSDCSwap = (e) => {
+    if (e.target.value > parseFloat(USDCBalance)) {
+      Toast.fire({
+        icon: "warning",
+        title: "Insufficient of USDC Balance",
+      });
+    } else {
+      setUSDCSwap(e.target.value);
+    }
   };
 
-  const handleClickSwap = async () => {
-    console.log(Web3.utils.toWei(MimicSwap.toString()));
-    await MimicContract.methods
-      .approve(SwapContract._address, Web3.utils.toWei(MimicSwap.toString()))
-      .send({ from: account })
-      .on("transactionHash", (hash) => {
-        Toast.fire({
-          icon: "success",
-          title: "Approved Success",
-        }).then(() => {
-          SwapContract.methods
-            .SwapToken(Web3.utils.toWei(MimicSwap.toString()))
+  const handleSetMaxETHSwap = () => {
+    setETHSwap(Web3.utils.fromWei(ETHBalance.toString()));
+  };
+
+  const handleSetMaxUSDCSwap = () => {
+    setUSDCSwap(USDCBalance);
+  };
+
+  const handleClickETHtoUSDCSwap = async () => {
+    if (DexContract) {
+      await DexContract.methods
+        .swapEthForUSDC(web3.utils.toWei(ETHSwap))
+        .send({
+          value: web3.utils.toWei(ETHSwap),
+          from: account,
+        })
+        .on("transactionHash", (hash) => {
+          Toast.fire({
+            icon: "success",
+            title: "Swap Success",
+          });
+        });
+    }
+  };
+
+  const handleClickUSDCtoETHSwap = async () => {
+    const USDC = USDCSwap * Math.pow(10, 6);
+    if (DexContract) {
+      await USDCContract.methods
+        .approve(DexContract._address, USDC)
+        .send({
+          from: account,
+        })
+        .on("transactionHash", (hash) => {
+          Toast.fire({
+            icon: "success",
+            title: "Approved",
+          });
+          DexContract.methods
+            .swapUSDCForEth(USDC)
             .send({ from: account })
             .on("transactionHash", (hash) => {
               Toast.fire({
                 icon: "success",
                 title: "Swap Success",
-              }).then(() => {
-                setMimicSwap(0);
-                setJUSDSwap(0);
               });
             });
         });
-      });
+    }
   };
-
-  useEffect(() => {
-    setJUSDSwap(MimicSwap * mockRate);
-  }, [MimicBalance, MimicSwap, mockRate]);
 
   return (
     <>
       <div className={styles.container}>
         <Head>
-          <title>Mimic Finance | Swap</title>
+          <title>Mimic Finance | Dex</title>
           <meta name="description" content="Dai Faucet" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
         <Text fontSize="4xl" fontWeight="bold" pt={5} align="center">
-          Mimic Swap
+          Quick Swap
         </Text>
         <Text fontSize="md" align="center" pt={0}>
-          Mimic Finance Decentralize Exchange
+          Decentralize Exchange based-on Uniswap
         </Text>
         <Center>
           <Box w={450} pt={6}>
@@ -114,7 +134,7 @@ const Faucet = () => {
                   fontSize={"sm"}
                   style={{ textAlign: "left", marginBottom: "15px" }}
                 >
-                  From
+                  ETH {"->"} USDC
                 </Text>
                 <Grid templateColumns="repeat(10, 1fr)" gap={0}>
                   <GridItem colSpan={7}>
@@ -124,14 +144,14 @@ const Faucet = () => {
                           type="number"
                           style={{ border: "0" }}
                           placeholder="0.00"
-                          value={MimicSwap}
-                          onChange={handleChangeMimicSwap}
+                          value={ETHSwap}
+                          onChange={handleChangeETHSwap}
                         />
                         <InputRightElement width="4.5rem">
                           <Button
                             h="1.75rem"
                             size="sm"
-                            onClick={handleSetMaxMimicSwap}
+                            onClick={handleSetMaxETHSwap}
                           >
                             Max
                           </Button>
@@ -141,40 +161,7 @@ const Faucet = () => {
                   </GridItem>
                   <GridItem colSpan={3}>
                     <Select style={{ border: "0" }}>
-                      <option>Mimic</option>
-                    </Select>
-                  </GridItem>
-                </Grid>
-              </Box>
-
-              <Box pt={3} pb={3}>
-                <ArrowDownIcon w={8} h={8} />
-              </Box>
-
-              {/* To  */}
-              <Box className="currency-box">
-                <Text
-                  fontSize={"sm"}
-                  style={{ textAlign: "left", marginBottom: "15px" }}
-                >
-                  To
-                </Text>
-                <Grid templateColumns="repeat(10, 1fr)" gap={0}>
-                  <GridItem colSpan={7}>
-                    <FormControl id="email">
-                      <InputGroup size="md">
-                        <Input
-                          type="number"
-                          style={{ border: "0" }}
-                          placeholder="0.00"
-                          value={JUSDSwap}
-                        />
-                      </InputGroup>
-                    </FormControl>
-                  </GridItem>
-                  <GridItem colSpan={3}>
-                    <Select style={{ border: "0" }}>
-                      <option>JUSD</option>
+                      <option>ETH</option>
                     </Select>
                   </GridItem>
                 </Grid>
@@ -187,8 +174,66 @@ const Faucet = () => {
                 colorScheme="pink"
                 height="70px"
                 className="swap-button"
-                disabled={MimicSwap == 0}
-                onClick={handleClickSwap}
+                disabled={ETHSwap == 0}
+                onClick={handleClickETHtoUSDCSwap}
+              >
+                Swap
+              </Button>
+            </Box>
+          </Box>
+        </Center>
+        <Center>
+          {/* USCD to ETH */}
+          <Box w={450} pt={6}>
+            <Box className="swap-box" style={{ textAlign: "center" }} p={5}>
+              {/* From */}
+              <Box className="currency-box">
+                <Text
+                  fontSize={"sm"}
+                  style={{ textAlign: "left", marginBottom: "15px" }}
+                >
+                  USDC {"->"} ETH
+                </Text>
+                <Grid templateColumns="repeat(10, 1fr)" gap={0}>
+                  <GridItem colSpan={7}>
+                    <FormControl id="email">
+                      <InputGroup size="md">
+                        <Input
+                          type="number"
+                          style={{ border: "0" }}
+                          placeholder="0.00"
+                          value={USDCSwap}
+                          onChange={handleChangeUSDCSwap}
+                        />
+                        <InputRightElement width="4.5rem">
+                          <Button
+                            h="1.75rem"
+                            size="sm"
+                            onClick={handleSetMaxUSDCSwap}
+                          >
+                            Max
+                          </Button>
+                        </InputRightElement>
+                      </InputGroup>
+                    </FormControl>
+                  </GridItem>
+                  <GridItem colSpan={3}>
+                    <Select style={{ border: "0" }}>
+                      <option>USDC</option>
+                    </Select>
+                  </GridItem>
+                </Grid>
+              </Box>
+
+              {/* Button */}
+              <Button
+                style={{ borderRadius: "15px" }}
+                width={"100%"}
+                colorScheme="cyan"
+                height="70px"
+                className="swap-button"
+                disabled={USDCSwap == 0}
+                onClick={handleClickUSDCtoETHSwap}
               >
                 Swap
               </Button>
