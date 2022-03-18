@@ -8,6 +8,7 @@ const options = {
   host: config.ganacheHost,
   port: config.ganachePort,
   seed: 1306,
+  chainId: 1,
 };
 
 const server = ganache.server(options);
