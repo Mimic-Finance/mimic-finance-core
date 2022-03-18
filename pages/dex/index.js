@@ -17,9 +17,13 @@ import Toast from "../../components/Utils/Toast/Toast";
 import Web3 from "web3";
 
 import useAppSelector from "../../hooks/useAppSelector";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ArrowDownIcon } from "@chakra-ui/icons";
 
-const Faucet = () => {
+import AggregatorV3InterfaceABI from "../../abis/@chainlink/AggregatorV3InterfaceABI.json";
+import config from "../../config.json";
+
+const Dex = () => {
   const { account } = useAppSelector((state) => state.account);
   const { DexContract, USDCContract } = useAppSelector(
     (state) => state.contracts
@@ -37,18 +41,28 @@ const Faucet = () => {
   const [ETHSwap, setETHSwap] = useState(0);
   const [USDCSwap, setUSDCSwap] = useState(0);
 
-  const handleChangeETHSwap = (e) => {
-    if (e.target.value > parseFloat(ETHBalance)) {
+  //Swap Currency
+  const [from, setFrom] = useState("USDC");
+  const [to, setTo] = useState("ETH");
+
+  //Rate Swap
+  const [rate, setRate] = useState(0);
+
+  const handleChangeETH = (e) => {
+    if (
+      e.target.value > parseFloat(Web3.utils.fromWei(ETHBalance.toString()))
+    ) {
       Toast.fire({
         icon: "warning",
         title: "Insufficient of ETH Balance",
       });
     } else {
       setETHSwap(e.target.value);
+      setUSDCSwap(e.target.value * (1 / rate));
     }
   };
 
-  const handleChangeUSDCSwap = (e) => {
+  const handleChangeUSDC = (e) => {
     if (e.target.value > parseFloat(USDCBalance)) {
       Toast.fire({
         icon: "warning",
@@ -56,15 +70,40 @@ const Faucet = () => {
       });
     } else {
       setUSDCSwap(e.target.value);
+      setETHSwap(e.target.value * rate);
     }
   };
 
-  const handleSetMaxETHSwap = () => {
+  const handleMaxETH = () => {
     setETHSwap(Web3.utils.fromWei(ETHBalance.toString()));
+    setUSDCSwap(Web3.utils.fromWei(ETHBalance.toString()) * (1 / rate));
   };
 
-  const handleSetMaxUSDCSwap = () => {
+  const handleMaxUSDC = () => {
     setUSDCSwap(USDCBalance);
+    setETHSwap(USDCBalance * rate);
+  };
+
+  const handleChageCurrency = (e) => {
+    if (e.target.value === "USDC") {
+      setFrom("USDC");
+      setTo("ETH");
+      setETHSwap(0);
+      setUSDCSwap(0);
+    } else {
+      setFrom("ETH");
+      setTo("USDC");
+      setETHSwap(0);
+      setUSDCSwap(0);
+    }
+  };
+
+  const handleClickSwap = () => {
+    if (from === "USDC") {
+      handleClickUSDCtoETHSwap();
+    } else {
+      handleClickETHtoUSDCSwap();
+    }
   };
 
   const handleClickETHtoUSDCSwap = async () => {
@@ -110,6 +149,27 @@ const Faucet = () => {
     }
   };
 
+  /**
+   *
+   * Price Feed (ChainLink)
+   */
+  const loadRateSwap = () => {
+    const web3 = new Web3(config.forkNetworkRPC);
+    const aggregatorV3InterfaceABI = AggregatorV3InterfaceABI;
+    const addr = "0x986b5E1e1755e3C2440e960477f25201B0a8bbD4"; //USDC - ETH
+    const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, addr);
+    priceFeed.methods
+      .latestRoundData()
+      .call()
+      .then((roundData) => {
+        setRate(Web3.utils.fromWei(roundData.answer.toString()));
+      });
+  };
+
+  useEffect(() => {
+    loadRateSwap();
+  });
+
   return (
     <>
       <div className={styles.container}>
@@ -125,6 +185,7 @@ const Faucet = () => {
         <Text fontSize="md" align="center" pt={0}>
           Decentralize Exchange based-on Uniswap
         </Text>
+
         <Center>
           <Box w={450} pt={6}>
             <Box className="swap-box" style={{ textAlign: "center" }} p={5}>
@@ -134,7 +195,7 @@ const Faucet = () => {
                   fontSize={"sm"}
                   style={{ textAlign: "left", marginBottom: "15px" }}
                 >
-                  ETH {"->"} USDC
+                  From
                 </Text>
                 <Grid templateColumns="repeat(10, 1fr)" gap={0}>
                   <GridItem colSpan={7}>
@@ -144,14 +205,18 @@ const Faucet = () => {
                           type="number"
                           style={{ border: "0" }}
                           placeholder="0.00"
-                          value={ETHSwap}
-                          onChange={handleChangeETHSwap}
+                          value={from == "USDC" ? USDCSwap : ETHSwap}
+                          onChange={
+                            from == "USDC" ? handleChangeUSDC : handleChangeETH
+                          }
                         />
                         <InputRightElement width="4.5rem">
                           <Button
                             h="1.75rem"
                             size="sm"
-                            onClick={handleSetMaxETHSwap}
+                            onClick={
+                              from == "USDC" ? handleMaxUSDC : handleMaxETH
+                            }
                           >
                             Max
                           </Button>
@@ -160,8 +225,46 @@ const Faucet = () => {
                     </FormControl>
                   </GridItem>
                   <GridItem colSpan={3}>
-                    <Select style={{ border: "0" }}>
+                    <Select
+                      style={{ border: "0" }}
+                      onChange={handleChageCurrency}
+                    >
+                      <option>USDC</option>
                       <option>ETH</option>
+                    </Select>
+                  </GridItem>
+                </Grid>
+              </Box>
+
+              <Box pt={3} pb={3}>
+                <ArrowDownIcon w={8} h={8} />
+              </Box>
+
+              {/* To  */}
+              <Box className="currency-box">
+                <Text
+                  fontSize={"sm"}
+                  style={{ textAlign: "left", marginBottom: "15px" }}
+                >
+                  To
+                </Text>
+                <Grid templateColumns="repeat(10, 1fr)" gap={0}>
+                  <GridItem colSpan={7}>
+                    <FormControl id="email">
+                      <InputGroup size="md">
+                        <Input
+                          type="number"
+                          style={{ border: "0" }}
+                          placeholder="0.00"
+                          value={to == "ETH" ? ETHSwap : USDCSwap}
+                          disabled
+                        />
+                      </InputGroup>
+                    </FormControl>
+                  </GridItem>
+                  <GridItem colSpan={3}>
+                    <Select style={{ border: "0" }} disabled>
+                      <option>{to}</option>
                     </Select>
                   </GridItem>
                 </Grid>
@@ -174,66 +277,8 @@ const Faucet = () => {
                 colorScheme="pink"
                 height="70px"
                 className="swap-button"
-                disabled={ETHSwap == 0}
-                onClick={handleClickETHtoUSDCSwap}
-              >
-                Swap
-              </Button>
-            </Box>
-          </Box>
-        </Center>
-        <Center>
-          {/* USCD to ETH */}
-          <Box w={450} pt={6}>
-            <Box className="swap-box" style={{ textAlign: "center" }} p={5}>
-              {/* From */}
-              <Box className="currency-box">
-                <Text
-                  fontSize={"sm"}
-                  style={{ textAlign: "left", marginBottom: "15px" }}
-                >
-                  USDC {"->"} ETH
-                </Text>
-                <Grid templateColumns="repeat(10, 1fr)" gap={0}>
-                  <GridItem colSpan={7}>
-                    <FormControl id="email">
-                      <InputGroup size="md">
-                        <Input
-                          type="number"
-                          style={{ border: "0" }}
-                          placeholder="0.00"
-                          value={USDCSwap}
-                          onChange={handleChangeUSDCSwap}
-                        />
-                        <InputRightElement width="4.5rem">
-                          <Button
-                            h="1.75rem"
-                            size="sm"
-                            onClick={handleSetMaxUSDCSwap}
-                          >
-                            Max
-                          </Button>
-                        </InputRightElement>
-                      </InputGroup>
-                    </FormControl>
-                  </GridItem>
-                  <GridItem colSpan={3}>
-                    <Select style={{ border: "0" }}>
-                      <option>USDC</option>
-                    </Select>
-                  </GridItem>
-                </Grid>
-              </Box>
-
-              {/* Button */}
-              <Button
-                style={{ borderRadius: "15px" }}
-                width={"100%"}
-                colorScheme="cyan"
-                height="70px"
-                className="swap-button"
-                disabled={USDCSwap == 0}
-                onClick={handleClickUSDCtoETHSwap}
+                disabled={USDCSwap == 0 && ETHSwap == 0}
+                onClick={handleClickSwap}
               >
                 Swap
               </Button>
@@ -245,4 +290,4 @@ const Faucet = () => {
   );
 };
 
-export default Faucet;
+export default Dex;
