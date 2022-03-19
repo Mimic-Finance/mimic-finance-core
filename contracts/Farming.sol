@@ -4,6 +4,13 @@ pragma solidity 0.6.6;
 
 import "./JUSD.sol";
 import "./Mimic.sol";
+import "./StableCoin/BUSD.sol";
+import "./StableCoin/DAI.sol";
+import "./StableCoin/USDC.sol";
+import "./StableCoin/USDT.sol";
+
+import "./Dex.sol";
+
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
@@ -12,14 +19,39 @@ contract Farming {
     ERC20 public MimicToken;
     ERC20 public JUSDToken;
 
+    //Stable Coin
+    ERC20 public BUSD;
+    ERC20 public DAI;
+    ERC20 public USDC;
+    ERC20 public USDT;
+
+    //Dex
+    Dex public DEX;
+
     mapping(address => uint256) public stakingBalance;
+    mapping(address => uint256) public stakingUSDCBalance;
     mapping(address => uint256) public lastUpdate;
 
     uint256 public rewardRate = 10;
 
-    constructor(address _MimicToken, address _JUSDToken) public {
+    constructor(
+        address _MimicToken,
+        address _JUSDToken,
+        address _BUSD,
+        address _DAI,
+        address _USDC,
+        address _USDT,
+        address _DEX
+    ) public {
         MimicToken = ERC20(_MimicToken);
         JUSDToken = ERC20(_JUSDToken);
+
+        BUSD = ERC20(_BUSD);
+        DAI = ERC20(_DAI);
+        USDC = ERC20(_USDC);
+        USDT = ERC20(_USDT);
+
+        DEX = Dex(_DEX);
     }
 
     //Stake Tokens
@@ -31,6 +63,17 @@ contract Farming {
             _amount
         );
         lastUpdate[msg.sender] = block.timestamp;
+    }
+
+    function stakeStableCoin(uint256 _amount, address _tokenAddress) public {
+        require(_amount > 0, "amount can not be 0");
+        // USDC.transferFrom(msg.sender, address(this), _amount);
+        // stakingUSDCBalance[msg.sender] = SafeMath.add(
+        //     stakingUSDCBalance[msg.sender],
+        //     _amount
+        // );
+        //lastUpdate[msg.sender] = block.timestamp;
+        DEX.swapTokenForEth(_amount, msg.sender, _tokenAddress);
     }
 
     //Check Reward

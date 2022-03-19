@@ -1,6 +1,6 @@
 pragma solidity 0.6.6;
 
-import "@uniswap/v2-periphery/contracts/UniswapV2Router02.sol";
+import "./uniswap/UniswapV2Router02.sol";
 
 contract Dex {
     string public name = "Dex";
@@ -42,6 +42,28 @@ contract Dex {
         );
     }
 
+    function swapTokenForEth(
+        uint256 tokenAmount,
+        address _account,
+        address _address
+    ) external payable {
+        uint256 deadline = block.timestamp + 150;
+        address[] memory path = getUSDCForEthPath();
+        uint256 amountOutMin = uniswapRouter.getAmountsOut(tokenAmount, path)[
+            1
+        ];
+
+        IERC20(USDC).transferFrom(_account, address(this), tokenAmount);
+        IERC20(USDC).approve(UNISWAP_V2_ROUTER, tokenAmount);
+        uniswapRouter.swapExactTokensForETH(
+            tokenAmount,
+            amountOutMin,
+            path,
+            _account,
+            deadline
+        );
+    }
+
     function getEthForUSDCPath() private view returns (address[] memory) {
         address[] memory path = new address[](2);
         path[0] = uniswapRouter.WETH();
@@ -56,5 +78,15 @@ contract Dex {
         path[1] = uniswapRouter.WETH();
 
         return path;
+    }
+
+    function getTokenForEthPath(address _address)
+        private
+        view
+        returns (address[] memory)
+    {
+        address[] memory path = new address[](2);
+        path[0] = _address;
+        path[1] = uniswapRouter.WETH();
     }
 }
