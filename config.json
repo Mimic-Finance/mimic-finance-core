@@ -23,9 +23,9 @@
   "USDC_TESTNET": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
 
   "deployerAddress": "",
-  "testerPrivateKey": "6e8b93d37dbd7f83ea981f157e39c1461e81d68110e44b9a972173bc5494d691",
+  "testerPrivateKey": "77e11942a51604e05c207de60320b222e30e5284daad659dd1fd9fda41df1b0e",
 
-  "testerAddress": "0x152D671b5E858d8039ce1B63FDEd676ac31Ef999",
-  "liveHost": "https://devnet.kmutt.me",
-  "liveNetworkId": "8000"
+  "testerAddress": "0x86aC1a9d70e4bfcA6b4ca273F834cF3F3AfAd615",
+  "liveHost": "https://rpc-01.kmuttchain.tech",
+  "liveNetworkId": "4649"
 }

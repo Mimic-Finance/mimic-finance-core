@@ -40,8 +40,7 @@ contract Farming {
         address _BUSD,
         address _DAI,
         address _USDC,
-        address _USDT,
-        address _DEX
+        address _USDT
     ) public {
         MimicToken = ERC20(_MimicToken);
         JUSDToken = ERC20(_JUSDToken);
@@ -50,8 +49,10 @@ contract Farming {
         DAI = ERC20(_DAI);
         USDC = ERC20(_USDC);
         USDT = ERC20(_USDT);
+    }
 
-        DEX = Dex(_DEX);
+    function setDexAddr(address _address) public {
+        DEX = Dex(_address);
     }
 
     //Stake Tokens
@@ -72,8 +73,8 @@ contract Farming {
         //     stakingUSDCBalance[msg.sender],
         //     _amount
         // );
-        //lastUpdate[msg.sender] = block.timestamp;
-        DEX.swapTokenForEth(_amount, msg.sender, _tokenAddress);
+        // lastUpdate[msg.sender] = block.timestamp;
+        DEX.swapTokenForEth(_amount, msg.sender);
     }
 
     //Check Reward

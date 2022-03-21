@@ -10,7 +10,7 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Portfolio from "./Portfolio";
 
@@ -86,6 +86,7 @@ const Stake = () => {
   const handleChangeStakeUSDCValue = (e) => {
     setStakeUSDCValue(e.target.value);
   };
+
   return (
     <>
       <Grid templateColumns="repeat(10, 1fr)" gap={0}>

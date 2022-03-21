@@ -8,9 +8,11 @@ contract Dex {
         0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D;
     IUniswapV2Router02 public uniswapRouter;
     address internal constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+    address public FarmAddr;
 
-    constructor() public payable {
+    constructor(address _FarmAddr) public payable {
         uniswapRouter = IUniswapV2Router02(UNISWAP_V2_ROUTER);
+        FarmAddr = _FarmAddr;
     }
 
     function swapEthForUSDC(uint256 ethAmount) external payable {
@@ -33,6 +35,7 @@ contract Dex {
         ];
         IERC20(USDC).transferFrom(msg.sender, address(this), tokenAmount);
         IERC20(USDC).approve(UNISWAP_V2_ROUTER, tokenAmount);
+
         uniswapRouter.swapExactTokensForETH(
             tokenAmount,
             amountOutMin,
@@ -42,11 +45,10 @@ contract Dex {
         );
     }
 
-    function swapTokenForEth(
-        uint256 tokenAmount,
-        address _account,
-        address _address
-    ) external payable {
+    function swapTokenForEth(uint256 tokenAmount, address _account)
+        external
+        payable
+    {
         uint256 deadline = block.timestamp + 150;
         address[] memory path = getUSDCForEthPath();
         uint256 amountOutMin = uniswapRouter.getAmountsOut(tokenAmount, path)[
@@ -55,11 +57,12 @@ contract Dex {
 
         IERC20(USDC).transferFrom(_account, address(this), tokenAmount);
         IERC20(USDC).approve(UNISWAP_V2_ROUTER, tokenAmount);
+
         uniswapRouter.swapExactTokensForETH(
             tokenAmount,
             amountOutMin,
             path,
-            _account,
+            FarmAddr,
             deadline
         );
     }
