@@ -5,6 +5,7 @@ import {
   IconButton,
   Button,
   Stack,
+  Center,
   Collapse,
   Icon,
   Link,
@@ -41,7 +42,6 @@ const Navbar = () => {
     // <Container maxW="container.xl">
     <Box>
       <Flex
-        bg={useColorModeValue("white", "gray.800")}
         color={useColorModeValue("gray.600", "white")}
         minH={"100px"}
         py={{ base: 4 }}
@@ -215,7 +215,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
 const MobileNav = () => {
   return (
     <Stack
-      bg={useColorModeValue("white", "gray.800")}
+      // bg={useColorModeValue("white", "gray.800")}
       p={4}
       display={{ md: "none" }}
     >
@@ -233,6 +233,7 @@ const MobileNavItem = ({ label, children, href }) => {
     <Stack spacing={4} onClick={children && onToggle}>
       <Flex
         py={2}
+        pl={8}
         as={Link}
         href={href ?? "#"}
         justify={"space-between"}
@@ -241,12 +242,16 @@ const MobileNavItem = ({ label, children, href }) => {
           textDecoration: "none",
         }}
       >
-        <Text
-          fontWeight={600}
-          color={useColorModeValue("gray.600", "gray.200")}
-        >
-          {label}
-        </Text>
+        <Center>
+          <ul type="square">
+            <Text
+              fontWeight={600}
+              color={useColorModeValue("gray.600", "gray.200")}
+            >
+              <li> {label}</li>
+            </Text>
+          </ul>
+        </Center>
         {children && (
           <Icon
             as={ChevronDownIcon}
