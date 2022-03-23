@@ -8,13 +8,16 @@ import "./Swap.sol";
 
 contract Auto {
     string public name = "Auto-Compound";
-    ERC20Burnable public MimicToken;
-    ERC20 public JUSDToken;
-    ERC20Burnable public cJUSDToken;
-    Farming public Farm;
-    Swap public swapp;
-    address internal adrfarm;
-    address internal adrswap;
+
+    ERC20Burnable internal MimicToken;
+    ERC20 internal JUSDToken;
+    ERC20Burnable internal cJUSDToken;
+    Farming internal FarmContract;
+    Swap internal SwapContract;
+
+    /* Other Contract Address */
+    address internal FarmAddress;
+    address internal SwapAddress;
 
     constructor(
         address _JUSDToken,
@@ -23,31 +26,44 @@ contract Auto {
         address _cJUSDToken,
         address _Swap
     ) public {
+        /* Initial Token with token address */
         MimicToken = ERC20Burnable(_MimicToken);
         JUSDToken = ERC20(_JUSDToken);
-        Farm = Farming(_Farming);
         cJUSDToken = ERC20Burnable(_cJUSDToken);
-        swapp = Swap(_Swap);
-        adrfarm = _Farming;
-        adrswap = _Swap;
+
+        /* Initial Farm and Swap Contract with token address */
+        SwapContract = Swap(_Swap);
+        FarmContract = Farming(_Farming);
+
+        /* Initial Farm and Swap Contract address */
+        FarmAddress = _Farming;
+        SwapAddress = _Swap;
     }
 
     function deposit(uint256 _amount) public {
-        uint256 balance = _amount;
-        JUSDToken.transferFrom(msg.sender, address(this), balance);
-        JUSDToken.approve(adrfarm, balance);
-        Farm.stakeTokens(balance);
-        cJUSDToken.transfer(msg.sender, balance);
+        address _account = msg.sender;
+        /* Transfer JUSD from user to Auto-Compound Contract */
+        JUSDToken.transferFrom(_account, address(this), _amount);
+        /* Auto-Compound:: Approve JUSD for spend amount to Farm */
+        JUSDToken.approve(FarmAddress, _amount);
+        /* Stake JUSD in Farm Contract with Auto-Compound */
+        FarmContract.stakeTokens(_amount);
+
+        /**
+         * Transfer cJUSD to user (Force return cJUSD)
+         * to do: swap in uniswap router based-on LP price.
+         */
+        cJUSDToken.transfer(_account, _amount);
     }
 
     function swapmim() public {
-        Farm.issueTokens();
+        FarmContract.issueTokens();
         // uint256 mimbal = MimicToken.balanceOf(address(this));
         // MimicToken.approve(adrswap, mimbal);
         //swapp.mimtojusd(mimbal);
     }
 
     function claim() public {
-        Farm.issueTokens();
+        FarmContract.issueTokens();
     }
 }
