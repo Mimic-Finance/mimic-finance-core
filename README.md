@@ -1,6 +1,14 @@
-# Mimic Finance
-![next_js_lint workflow](https://github.com/Mimic-Finance/mimic-farm-v2/actions/workflows/Next-js-Lint/badge.svg)
+<h1 align="center">
+  <a href="#readme" title="Ganache README.md"><img alt="Mimic Finance" src="https://drive.google.com/uc?export=view&id=1LDLKuAQqc_5Wjn_DBLAm1_eZxUndHv20" alt="Mimic Finance" width="160"/></a>
+   <br/> Mimic Finance
+</h1>
 
+
+![next_js_lint workflow](https://github.com/Mimic-Finance/mimic-farm-v2/actions/workflows/next-js-lint.yml/badge.svg)
+![contract_ci workflow](https://github.com/Mimic-Finance/mimic-farm-v2/actions/workflows/contract-ci.yml/badge.svg)
+![production_deploy workflow](https://github.com/Mimic-Finance/mimic-farm-v2/actions/workflows/main-deploy.yml/badge.svg)
+
+---
 ## Getting Started
 
 Requirements
