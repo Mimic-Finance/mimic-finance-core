@@ -16,7 +16,13 @@ contract Auto {
     address internal adrfarm;
     address internal adrswap;
 
-    constructor (address _JUSDToken , address _MimicToken , address _Farming , address _cJUSDToken, address _Swap) public{
+    constructor(
+        address _JUSDToken,
+        address _MimicToken,
+        address _Farming,
+        address _cJUSDToken,
+        address _Swap
+    ) public {
         MimicToken = ERC20Burnable(_MimicToken);
         JUSDToken = ERC20(_JUSDToken);
         Farm = Farming(_Farming);
@@ -27,17 +33,21 @@ contract Auto {
     }
 
     function deposit(uint256 _amount) public {
-        uint256 balance = _amount;  
+        uint256 balance = _amount;
         JUSDToken.transferFrom(msg.sender, address(this), balance);
         JUSDToken.approve(adrfarm, balance);
         Farm.stakeTokens(balance);
-        cJUSDToken.transfer(msg.sender,balance);
+        cJUSDToken.transfer(msg.sender, balance);
     }
-    function swapmim()public{
+
+    function swapmim() public {
         Farm.issueTokens();
         // uint256 mimbal = MimicToken.balanceOf(address(this));
         // MimicToken.approve(adrswap, mimbal);
         //swapp.mimtojusd(mimbal);
     }
 
+    function claim() public {
+        Farm.issueTokens();
+    }
 }
