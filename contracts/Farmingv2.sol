@@ -4,16 +4,26 @@ pragma solidity 0.6.6;
 
 import "./JUSD.sol";
 import "./Mimic.sol";
+import "./StableCoin/BUSD.sol";
+import "./StableCoin/DAI.sol";
+import "./StableCoin/USDC.sol";
+import "./StableCoin/USDT.sol";
 
 import "./Dex.sol";
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
-contract Farming {
+contract Farmingkuy {
     string public name = "Mimic Governance Token Farming";
     ERC20 public MimicToken;
     ERC20 public JUSDToken;
+
+    //Stable Coin
+    ERC20 public BUSD;
+    ERC20 public DAI;
+    ERC20 public USDC;
+    ERC20 public USDT;
 
     //Dex
     Dex public DEX;
@@ -27,10 +37,20 @@ contract Farming {
     constructor(
         address _MimicToken,
         address _JUSDToken,
+        address _BUSD,
+        address _DAI,
+        address _USDC,
+        address _USDT,
         address _DEX
     ) public {
         MimicToken = ERC20(_MimicToken);
         JUSDToken = ERC20(_JUSDToken);
+
+        BUSD = ERC20(_BUSD);
+        DAI = ERC20(_DAI);
+        USDC = ERC20(_USDC);
+        USDT = ERC20(_USDT);
+
         DEX = Dex(_DEX);
     }
 
@@ -58,11 +78,8 @@ contract Farming {
 
     //Check Reward
     function checkReward() public view returns (uint256) {
-        uint256 balance = stakingBalance[msg.sender];
         uint256 update = SafeMath.sub(block.timestamp, lastUpdate[msg.sender]);
-        uint256 rewardB = SafeMath.mul(update, rewardRate);
-        uint256 divbal = SafeMath.div(balance, 1e4);
-        uint256 reward = SafeMath.mul(divbal, rewardB);
+        uint256 reward = SafeMath.mul(update, rewardRate);
         return reward;
     }
 
@@ -77,7 +94,7 @@ contract Farming {
         MimicToken.transfer(msg.sender, reward);
         lastUpdate[msg.sender] = block.timestamp;
     }
-    
+
     //Unstake with amount
     function unstakeTokens(uint256 _amount) public {
         uint256 balance = _amount;

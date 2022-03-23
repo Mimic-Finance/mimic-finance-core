@@ -32,4 +32,9 @@ contract Swap {
         uint256 rate = SafeMath.mul(div, 1e2);
         JUSDToken.transfer(msg.sender, rate);
     }
+    function mimtojusd(uint256 _amount)public {
+        uint256 balance = _amount;
+        MimicToken.transferFrom(msg.sender, address(this), balance);
+        JUSDToken.transfer(msg.sender, balance);
+    }
 }

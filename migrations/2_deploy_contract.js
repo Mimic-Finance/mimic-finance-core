@@ -7,6 +7,8 @@ const JUSDToken = artifacts.require("JUSD");
 const Farming = artifacts.require("Farming");
 const Faucet = artifacts.require("Faucet");
 const Swap = artifacts.require("Swap");
+const cJUSD = artifacts.require("cJUSD");
+const Auto = artifacts.require("Auto");
 
 // DEX
 const Dex = artifacts.require("Dex");
@@ -23,10 +25,10 @@ module.exports = async function (deployer, network, accounts) {
    * Deploy Stable Coin
    * (at Mainnet)
    */
-  const busd = await BUSD.at(TokenAddress.BUSD);
-  const dai = await DAI.at(TokenAddress.DAI);
-  const usdc = await USDC.at(TokenAddress.USDC);
-  const usdt = await USDT.at(TokenAddress.USDT);
+  // const busd = await BUSD.at(TokenAddress.BUSD);
+  // const dai = await DAI.at(TokenAddress.DAI);
+  // const usdc = await USDC.at(TokenAddress.USDC);
+  // const usdt = await USDT.at(TokenAddress.USDT);
 
   /**
    *
@@ -74,10 +76,6 @@ module.exports = async function (deployer, network, accounts) {
     Farming,
     mimicToken.address,
     jusdToken.address,
-    busd.address,
-    dai.address,
-    usdc.address,
-    usdt.address,
     dex.address
   );
   const farming = await Farming.deployed();
@@ -88,9 +86,16 @@ module.exports = async function (deployer, network, accounts) {
   await deployer.deploy(Swap, jusdToken.address, mimicToken.address);
   const swap = await Swap.deployed();
 
+  await deployer.deploy(cJUSD);
+  const cjusdToken = await cJUSD.deployed();
+
+  await deployer.deploy(Auto, jusdToken.address, mimicToken.address, farming.address, cjusdToken.address, swap.address);
+  const auto = await Auto.deployed();
+
   await mimicToken.transfer(farming.address, "10000000000000000000000000");
   await jusdToken.transfer(faucet.address, "5000000000000000000000000");
   await jusdToken.transfer(swap.address, "4000000000000000000000000");
+  await cjusdToken.transfer(auto.address, "10000000000000000000000000");
   await jusdToken.transfer(
     config.mode === "development" ? accounts[1] : config.testerAddress,
     "1000000000000000000000"
