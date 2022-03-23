@@ -9,8 +9,8 @@ import {
 
 const theme = extendTheme({
   fonts: {
-    heading: "Montserrat",
-    body: "Montserrat",
+    heading: "Inter",
+    body: "Inter",
   },
 
   styles: {
