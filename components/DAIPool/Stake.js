@@ -28,6 +28,7 @@ const Stake = () => {
     USDCContract,
     DexContract,
     USDCBalance,
+    RewardBalance,
   } = useAppSelector((state) => state.contracts);
 
   console.log(FarmingContract);
@@ -132,9 +133,9 @@ const Stake = () => {
 
       <Portfolio
         balance={Web3.utils.fromWei(JUSDStakingBalance.toString())}
-        reward={Web3.utils.fromWei(MimicBalance.toString())}
+        reward={Web3.utils.fromWei(RewardBalance.toString())}
         total={
-          parseInt(Web3.utils.fromWei(MimicBalance.toString())) +
+          parseInt(Web3.utils.fromWei(RewardBalance.toString())) +
           parseInt(Web3.utils.fromWei(JUSDStakingBalance.toString()))
         }
       />

@@ -18,6 +18,9 @@ const initialState = {
   ETHBalance: 0,
   USDCBalance: 0,
 
+  //Reward
+  RewardBalance: 0,
+
   // Contracts
   JUSDContract: {},
   MimicContract: {},
@@ -41,6 +44,9 @@ export const loadContractData = async (account) => {
       //Balances
       ETHBalance: 0,
       USDCBalance: 0,
+
+      //Reward
+      RewardBalance: 0,
 
       //Contract
       JUSDContract: {},
@@ -124,7 +130,14 @@ export const loadContractData = async (account) => {
       let JUSDStakingBalance = await FarmingContract.methods
         .stakingBalance(currentAccount)
         .call();
+      let RewardBalance = await FarmingContract.methods
+        .checkRewardByAddress(currentAccount)
+        .call();
+
+      console.log(RewardBalance);
+
       response.JUSDStakingBalance = JUSDStakingBalance.toString();
+      response.RewardBalance = RewardBalance.toString();
     } else {
       window.alert("Farming contract not deployed to detected network.");
     }
@@ -210,6 +223,9 @@ const contractSlice = createSlice({
       //Balances
       state.ETHBalance = action.payload.ETHBalance;
       state.USDCBalance = action.payload.USDCBalance;
+
+      //Reward
+      state.RewardBalance = action.payload.RewardBalance;
 
       //Token Balance
       state.JUSDBalance = action.payload.JUSDBalance;

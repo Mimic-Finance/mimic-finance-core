@@ -16,9 +16,8 @@ import useAppSelector from "../../hooks/useAppSelector";
 
 const WithDraw = () => {
   const { account } = useAppSelector((state) => state.account);
-  const { FarmingContract, MimicBalance, JUSDStakingBalance } = useAppSelector(
-    (state) => state.contracts
-  );
+  const { FarmingContract, MimicBalance, JUSDStakingBalance, RewardBalance } =
+    useAppSelector((state) => state.contracts);
 
   //widraw Value
   const [withDrawValue, setWithdrawValue] = useState(0);
@@ -86,9 +85,9 @@ const WithDraw = () => {
       </Button>
       <Portfolio
         balance={Web3.utils.fromWei(JUSDStakingBalance.toString())}
-        reward={Web3.utils.fromWei(MimicBalance.toString())}
+        reward={Web3.utils.fromWei(RewardBalance.toString())}
         total={
-          parseInt(Web3.utils.fromWei(MimicBalance.toString())) +
+          parseInt(Web3.utils.fromWei(RewardBalance.toString())) +
           parseInt(Web3.utils.fromWei(JUSDStakingBalance.toString()))
         }
       />
