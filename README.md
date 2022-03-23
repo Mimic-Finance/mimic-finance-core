@@ -1,3 +1,5 @@
+# Mimic Finance
+![next_js_lint workflow](https://github.com/Mimic-Finance/mimic-farm-v2/actions/workflows/Next-js-Lint/badge.svg)
 
 ## Getting Started
 
