@@ -92,7 +92,7 @@ const Stake = () => {
       <Grid templateColumns="repeat(10, 1fr)" gap={0}>
         <GridItem colSpan={3}>
           <Select style={{ borderRadius: "10px 0px 0px 10px" }}>
-            <option>mDAI</option>
+            <option>JUSD</option>
           </Select>
         </GridItem>
         <GridItem colSpan={7}>
@@ -139,7 +139,7 @@ const Stake = () => {
           parseInt(Web3.utils.fromWei(JUSDStakingBalance.toString()))
         }
       />
-      <Text fontSize="xl" mt={6} mb={3}>
+      {/* <Text fontSize="xl" mt={6} mb={3}>
         <b>Stake with USDC (Swap Mock)</b>
       </Text>
       <Grid templateColumns="repeat(10, 1fr)" gap={0}>
@@ -181,7 +181,7 @@ const Stake = () => {
         }}
       >
         Stake
-      </Button>
+      </Button> */}
     </>
   );
 };

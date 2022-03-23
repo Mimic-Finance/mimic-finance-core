@@ -46,15 +46,15 @@ const DAIPool = () => {
             <GridItem colSpan={1}>
               <Box>
                 <Image
-                  src={"/assets/images/daiToken.png"}
-                  alt="DAI Staking"
+                  src={"/assets/images/pools/JUSD.png"}
+                  alt="JUSD Staking"
                   width={100}
                 />
               </Box>
             </GridItem>
             <GridItem colSpan={7}>
               <Text fontSize="4xl">
-                <b>DAI Pool (Stable Coin)</b>
+                <b>JUSD Pool (Stable Coin)</b>
               </Text>
             </GridItem>
             <GridItem colSpan={2} style={{ textAlign: "right" }}>
@@ -72,7 +72,7 @@ const DAIPool = () => {
           <Grid templateColumns="repeat(10, 1fr)" gap={10} mt={7}>
             <GridItem colSpan={6}>
               <Text fontSize="xl">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Dai is a
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $JUSD is a
                 stablecoin whose value is pegged to the U.S. dollar, which means
                 it is shielded from the wild swings in prices that are typically
                 associated with a cryptocurrency.

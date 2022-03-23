@@ -43,7 +43,7 @@ const WithDraw = () => {
       <Grid templateColumns="repeat(10, 1fr)" gap={0} mt={0}>
         <GridItem colSpan={3}>
           <Select style={{ borderRadius: "10px 0px 0px 10px" }}>
-            <option>mDAI</option>
+            <option>JUSD</option>
           </Select>
         </GridItem>
         <GridItem colSpan={7}>
