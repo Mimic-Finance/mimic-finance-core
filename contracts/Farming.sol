@@ -77,7 +77,7 @@ contract Farming {
         MimicToken.transfer(msg.sender, reward);
         lastUpdate[msg.sender] = block.timestamp;
     }
-    
+
     //Unstake with amount
     function unstakeTokens(uint256 _amount) public {
         uint256 balance = _amount;
