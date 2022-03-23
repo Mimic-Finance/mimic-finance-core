@@ -1,4 +1,4 @@
-name: Next.js Lint
+name: Next-js-Lint
 
 on:
   push:
