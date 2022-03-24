@@ -1,14 +1,17 @@
 <h1 align="center">
-  <a href="#readme" title="Ganache README.md"><img alt="Mimic Finance" src="https://github.com/Mimic-Finance/mimic-finance-core/blob/develop/public/assets/images/logo-box.png?raw=true" alt="Mimic Finance" width="160"/></a>
-   <br/> Mimic Finance
+  <a href="#readme" title="Ganache README.md"><img alt="Mimic Finance" src="https://github.com/Mimic-Finance/mimic-finance-core/blob/develop/public/assets/images/logo-box.png?raw=true" alt="Mimic Finance" width="130"/></a>
+   <br/> Mimic Finance Core
+  <p align="center">
+   <img src="https://github.com/Mimic-Finance/mimic-finance-core/actions/workflows/next-js-lint.yml/badge.svg" alt="next_js_lint">
+  <img src="https://github.com/Mimic-Finance/mimic-finance-core/actions/workflows/contract-ci.yml/badge.svg" alt="contract_ci">
+    <img src="https://github.com/Mimic-Finance/mimic-finance-core/actions/workflows/staging-deploy.yml/badge.svg" alt="production_staging">
+    <a href="https://farm.kmutt.me" target="_blank">
+  <img src="https://github.com/Mimic-Finance/mimic-finance-core/actions/workflows/main-deploy.yml/badge.svg" alt="production_deploy">
+      </a>
+</p>
+
 </h1>
 
-
-![next_js_lint workflow](https://github.com/Mimic-Finance/mimic-finance-core/actions/workflows/next-js-lint.yml/badge.svg)
-![contract_ci workflow](https://github.com/Mimic-Finance/mimic-finance-core/actions/workflows/contract-ci.yml/badge.svg)
-![production_deploy workflow](https://github.com/Mimic-Finance/mimic-finance-core/actions/workflows/main-deploy.yml/badge.svg)
-
----
 ## Getting Started
 
 Requirements
