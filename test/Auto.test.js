@@ -40,6 +40,8 @@ contract("Auto", ([owner, investor]) => {
 
     //transfer cJUSD -> autocompound
     await cjusdToken.transfer(auto.address, tokens("10000000"));
+    //transfer jusd -> swap
+    await jusdToken.transfer(swap.address, tokens('1000000'));
     //transfer mimic -> farm
     await mimicToken.transfer(farming.address, tokens("10000000"));
     // transfer jusd from act 0 -> act 1
@@ -183,11 +185,42 @@ contract("Auto", ([owner, investor]) => {
         tokens("0"),
         "auto-compound wallet balance correct"
       );
-      //await farming.issueTokens()
       // //check mimic balance
       await auto.claim();
-      // result = await jusdToken.balanceOf(auto.address)
-      // assert.equal(result.toString(), tokens('10'), 'jusd balance after swap correct')
+      result = await mimicToken.balanceOf(auto.address)
+      assert.equal(result.toString(), tokens('11.574074074074070000'), 'mimic balance correct')
+      await auto.swapMimToJUSD();
+      result = await jusdToken.balanceOf(auto.address)
+      assert.equal(result.toString(), tokens('11.574074074074070000'), 'jusd swap correct')
+      // Deposit again 
+      await auto.depositToFarm(tokens('11.57'))
+      //check investor jusd balance
+      result = await jusdToken.balanceOf(auto.address);
+      assert.equal(
+        result.toString(),
+        tokens('0.004074074074070000'),
+        "Auto-Compound JUSD balance after stake correct"
+      );
+      //check auto-compound farm staking balance
+      result = await farming.stakingBalance(auto.address);
+      assert.equal(
+        result.toString(),
+        tokens("10011.57"),
+        "auto-compound farming balance correct"
+      );
+    });
+    it("Check Auto-Compound Withdraw", async () => {
+      let result
+      result = await cjusdToken.balanceOf(investor);
+      assert.equal(result.toString(), tokens('10000'),"cjusd balance correct before withdraw")
+      result = await jusdToken.balanceOf(investor);
+      assert.equal(result.toString(),tokens('0'),"jusd token balance correct before withdraw")
+      await cjusdToken.approve(auto.address, tokens('1000000000'), {from: investor});
+      await auto.withdraw(tokens('10000'))
+      result = await cjusdToken.balanceOf(investor);
+      assert.equal(result.toString(),tokens('0'), "cjusd balance correct after unstake")
+      result = await jusdToken.balanceOf(investor);
+      assert.equal(result.toString(),tokens('10000'), "jusd balance correct after unstake")
     });
   });
 });

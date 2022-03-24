@@ -35,7 +35,8 @@ contract Swap {
 
     function mimtojusd(uint256 _amount) public {
         uint256 balance = _amount;
-        MimicToken.transferFrom(msg.sender, address(this), balance);
+        address recipients = msg.sender;
+        MimicToken.transferFrom(recipients, address(this), balance);
         JUSDToken.transfer(msg.sender, balance);
     }
 }

@@ -20,9 +20,7 @@ contract Farming {
 
     mapping(address => uint256) public stakingBalance;
     mapping(address => uint256) public stakingUSDCBalance;
-    mapping(address => uint256) public lastUpdate;
-
-    uint256 public rewardRate = 10;
+    mapping(address => uint256) public updateTime;
 
     constructor(
         address _MimicToken,
@@ -42,7 +40,7 @@ contract Farming {
             stakingBalance[msg.sender],
             _amount
         );
-        lastUpdate[msg.sender] = block.timestamp;
+        updateTime[msg.sender] = block.timestamp;
     }
 
     function stakeStableCoin(uint256 _amount, address _tokenAddress) public {
@@ -56,60 +54,45 @@ contract Farming {
         DEX.swapTokenForEth(_amount, msg.sender, _tokenAddress);
     }
 
-    //Check Reward
-    function checkReward() public view returns (uint256) {
-        uint256 balance = stakingBalance[msg.sender];
-        uint256 update = SafeMath.sub(block.timestamp, lastUpdate[msg.sender]);
-        uint256 rewardB = SafeMath.mul(update, rewardRate);
-        uint256 divbal = SafeMath.div(balance, 1e4);
-        uint256 reward = SafeMath.mul(divbal, rewardB);
-        return reward;
-    }
-
     //Check reward by address without send function (no gas)
-    function checkRewardByAddress(address _address)
-        public
-        view
-        returns (uint256)
-    {
-        uint256 balance = stakingBalance[_address];
-        uint256 update = SafeMath.sub(block.timestamp, lastUpdate[_address]);
-        uint256 rewardB = SafeMath.mul(update, rewardRate);
-        uint256 divbal = SafeMath.div(balance, 1e4);
-        uint256 reward = SafeMath.mul(divbal, rewardB);
+    function checkRewardByAddress(address _address) public view returns (uint256){
+        uint256 reward = calculateRewards(_address);
         return reward;
     }
 
+    function calculateTime(address account)public view returns(uint256){
+        uint256 time = block.timestamp;
+        uint totalTime = time-updateTime[account];
+        return totalTime;
+    }
+
+    function calculateRewards(address account)public view returns(uint256){
+        uint256 time = SafeMath.mul(calculateTime(account), 1e18);
+        uint256 rate = 864;
+        uint256 timeRate = time/rate;
+        uint256 reward = SafeMath.div(SafeMath.mul(stakingBalance[account], timeRate), 1e18);
+        return reward;
+    }
     //Issuing Token
     function issueTokens() public {
         uint256 balance = stakingBalance[msg.sender];
-        uint256 update = SafeMath.sub(block.timestamp, lastUpdate[msg.sender]);
-        uint256 rewardB = SafeMath.mul(update, rewardRate);
-        uint256 divbal = SafeMath.div(balance, 1e4);
-        uint256 reward = SafeMath.mul(divbal, rewardB);
+        uint256 reward = calculateRewards(msg.sender);
         require(reward > 0 && balance > 0);
         MimicToken.transfer(msg.sender, reward);
-        lastUpdate[msg.sender] = block.timestamp;
+        updateTime[msg.sender] = block.timestamp;
     }
 
     //Unstake with amount
     function unstakeTokens(uint256 _amount) public {
-        uint256 balance = _amount;
-        require(balance > 0, "staking balance cannot be 0");
-
-        uint256 staking_balance = stakingBalance[msg.sender];
-        uint256 update = SafeMath.sub(block.timestamp, lastUpdate[msg.sender]);
-        uint256 rewardB = SafeMath.mul(update, rewardRate);
-        uint256 divbal = SafeMath.div(staking_balance, 1e4);
-        uint256 reward = SafeMath.mul(divbal, rewardB);
-
-        JUSDToken.transfer(msg.sender, balance);
-        uint256 remain = stakingBalance[msg.sender] - balance;
+        require(_amount > 0, "staking balance cannot be 0");
+        JUSDToken.transfer(msg.sender, _amount);
+        uint256 remain = stakingBalance[msg.sender] - _amount;
         stakingBalance[msg.sender] = remain;
 
         //withdraw and claim reward
-        require(reward > 0 && staking_balance > 0);
+        uint256 reward = calculateRewards(msg.sender);
+        require(reward > 0 && stakingBalance[msg.sender] > 0);
         MimicToken.transfer(msg.sender, reward);
-        lastUpdate[msg.sender] = block.timestamp;
+        updateTime[msg.sender] = block.timestamp;
     }
 }

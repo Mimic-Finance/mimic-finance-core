@@ -6,6 +6,8 @@ import "./cJUSD.sol";
 import "./Farming.sol";
 import "./Swap.sol";
 
+import "@openzeppelin/contracts/math/SafeMath.sol";
+
 contract Auto {
     string public name = "Auto-Compound";
 
@@ -18,6 +20,7 @@ contract Auto {
     /* Other Contract Address */
     address internal FarmAddress;
     address internal SwapAddress;
+    mapping(address => uint256) public stakingBalance;
 
     constructor(
         address _JUSDToken,
@@ -42,6 +45,10 @@ contract Auto {
 
     function deposit(uint256 _amount) public {
         address _account = msg.sender;
+        stakingBalance[_account] = SafeMath.add(
+            stakingBalance[_account],
+            _amount
+        );
         /* Transfer JUSD from user to Auto-Compound Contract */
         JUSDToken.transferFrom(_account, address(this), _amount);
         /* Auto-Compound:: Approve JUSD for spend amount to Farm */
@@ -55,15 +62,26 @@ contract Auto {
          */
         cJUSDToken.transfer(_account, _amount);
     }
+     function depositToFarm(uint256 _amount) public {
+         /* Auto-Compound:: Approve JUSD for spend amount to Farm */
+        JUSDToken.approve(FarmAddress, _amount);
+        /* Stake JUSD in Farm Contract with Auto-Compound */
+        FarmContract.stakeTokens(_amount);
+    }
 
-    function swapmim() public {
-        FarmContract.issueTokens();
-        // uint256 mimbal = MimicToken.balanceOf(address(this));
-        // MimicToken.approve(adrswap, mimbal);
-        //swapp.mimtojusd(mimbal);
+    function swapMimToJUSD() public {
+        uint256 mimbal = MimicToken.balanceOf(address(this));
+        MimicToken.approve(SwapAddress, mimbal);
+        SwapContract.mimtojusd(mimbal);
     }
 
     function claim() public {
         FarmContract.issueTokens();
+    }
+
+    function withdraw(uint256 _amount) public {
+        cJUSDToken.transferFrom(msg.sender, address(this), _amount);
+        FarmContract.unstakeTokens(_amount);
+        JUSDToken.transfer(msg.sender, _amount);
     }
 }
