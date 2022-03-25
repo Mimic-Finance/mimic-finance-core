@@ -14,6 +14,7 @@ contract Farming {
     string public name = "Mimic Governance Token Farming";
     ERC20 public MimicToken;
     ERC20 public JUSDToken;
+    address internal constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
 
     //Dex
     Dex public DEX;
@@ -36,22 +37,20 @@ contract Farming {
     function stakeTokens(uint256 _amount) public {
         require(_amount > 0, "amount can not be 0");
         JUSDToken.transferFrom(msg.sender, address(this), _amount);
-        stakingBalance[msg.sender] = SafeMath.add(
-            stakingBalance[msg.sender],
-            _amount
-        );
+        stakingBalance[msg.sender] = SafeMath.add(stakingBalance[msg.sender], _amount );
         updateTime[msg.sender] = block.timestamp;
     }
 
-    function stakeStableCoin(uint256 _amount, address _tokenAddress) public {
+    //Stake USDC
+    function stakeUSDC(uint256 _amount) public {
         require(_amount > 0, "amount can not be 0");
-        // USDC.transferFrom(msg.sender, address(this), _amount);
-        // stakingUSDCBalance[msg.sender] = SafeMath.add(
-        //     stakingUSDCBalance[msg.sender],
-        //     _amount
-        // );
-        //lastUpdate[msg.sender] = block.timestamp;
-        DEX.swapTokenForEth(_amount, msg.sender, _tokenAddress);
+        ERC20(USDC).approve(address(this), _amount);
+        ERC20(USDC).transferFrom(msg.sender, address(this), _amount);
+        stakingUSDCBalance[msg.sender] = SafeMath.add(stakingUSDCBalance[msg.sender],_amount);
+        updateTime[msg.sender] = block.timestamp;
+    }
+    function checkUSDCBalance(address account) public {
+        ERC20(USDC).balanceOf(account);
     }
 
     //Check reward by address without send function (no gas)

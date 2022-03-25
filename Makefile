@@ -15,6 +15,9 @@ deploy:
 ta:
 	truffle test ./test/Auto.test.js
 
+tf: 
+	truffle test ./test/Farm.test.js
+
 chain:
 	ganache \
 	--chain.chainId 1 \

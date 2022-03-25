@@ -209,6 +209,20 @@ contract("Auto", ([owner, investor]) => {
         "auto-compound farming balance correct"
       );
     });
+    it("Check Stake USDC", async () => {
+      let result
+      result = await cjusdToken.balanceOf(investor);
+      assert.equal(result.toString(), tokens('10000'), "cjusd balance correct before withdraw")
+      result = await jusdToken.balanceOf(investor);
+      assert.equal(result.toString(), tokens('0'), "jusd token balance correct before withdraw")
+      await cjusdToken.approve(auto.address, tokens('1000000000'), { from: investor });
+      await auto.withdraw(tokens('10000'))
+      result = await cjusdToken.balanceOf(investor);
+      assert.equal(result.toString(), tokens('0'), "cjusd balance correct after unstake")
+      result = await jusdToken.balanceOf(investor);
+      assert.equal(result.toString(), tokens('10000'), "jusd balance correct after unstake")
+    });
+
     it("Check Auto-Compound Withdraw", async () => {
       let result
       result = await cjusdToken.balanceOf(investor);
