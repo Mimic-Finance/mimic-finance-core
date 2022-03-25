@@ -1,7 +1,7 @@
 import { Text, Box, Button, IconButton } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 import Link from "next/link";
-import { FaGavel } from "react-icons/fa";
+import { FaGavel, FaRegChartBar } from "react-icons/fa";
 
 export const Pool = (props) => {
   return (
@@ -32,7 +32,19 @@ export const Pool = (props) => {
           width={200}
           variant="solid"
         >
-          Stake
+          Stake Pool
+        </Button>
+      </Link>
+      <Link href={"/auto/" + props.label} passHref>
+        <Button
+          ml={5}
+          leftIcon={<FaRegChartBar />}
+          mt={4}
+          style={{ backgroundColor: "#232137", color: "#fff" }}
+          width={200}
+          variant="solid"
+        >
+          Auto Compound
         </Button>
       </Link>
     </Box>
