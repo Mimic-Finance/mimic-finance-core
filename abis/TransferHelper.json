@@ -8,7 +8,7 @@
   "sourceMap": "137:1350:5:-:0;;132:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24",
   "deployedSourceMap": "137:1350:5:-:0;;;;;;12:1:-1;9;2:12",
   "source": "pragma solidity >=0.6.0;\n\n// helper methods for interacting with ERC20 tokens and sending ETH that do not consistently return true/false\nlibrary TransferHelper {\n    function safeApprove(address token, address to, uint value) internal {\n        // bytes4(keccak256(bytes('approve(address,uint256)')));\n        (bool success, bytes memory data) = token.call(abi.encodeWithSelector(0x095ea7b3, to, value));\n        require(success && (data.length == 0 || abi.decode(data, (bool))), 'TransferHelper: APPROVE_FAILED');\n    }\n\n    function safeTransfer(address token, address to, uint value) internal {\n        // bytes4(keccak256(bytes('transfer(address,uint256)')));\n        (bool success, bytes memory data) = token.call(abi.encodeWithSelector(0xa9059cbb, to, value));\n        require(success && (data.length == 0 || abi.decode(data, (bool))), 'TransferHelper: TRANSFER_FAILED');\n    }\n\n    function safeTransferFrom(address token, address from, address to, uint value) internal {\n        // bytes4(keccak256(bytes('transferFrom(address,address,uint256)')));\n        (bool success, bytes memory data) = token.call(abi.encodeWithSelector(0x23b872dd, from, to, value));\n        require(success && (data.length == 0 || abi.decode(data, (bool))), 'TransferHelper: TRANSFER_FROM_FAILED');\n    }\n\n    function safeTransferETH(address to, uint value) internal {\n        (bool success,) = to.call{value:value}(new bytes(0));\n        require(success, 'TransferHelper: ETH_TRANSFER_FAILED');\n    }\n}\n",
-  "sourcePath": "@uniswap/lib/contracts/libraries/TransferHelper.sol",
+  "sourcePath": "@uniswap\\lib\\contracts\\libraries\\TransferHelper.sol",
   "ast": {
     "absolutePath": "@uniswap/lib/contracts/libraries/TransferHelper.sol",
     "exportedSymbols": {
@@ -4995,8 +4995,8 @@
     "version": "0.6.6+commit.6c089d02.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.3",
-  "updatedAt": "2022-03-24T22:39:00.798Z",
+  "schemaVersion": "3.4.5",
+  "updatedAt": "2022-03-25T13:06:57.942Z",
   "devdoc": {
     "methods": {}
   },

@@ -1,12 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import JUSD_ABI from "../abis/JUSD.json";
+import cJUSD_ABI from "../abis/cJUSD.json";
 import Mimic_ABI from "../abis/Mimic.json";
 import Farming_ABI from "../abis/Farming.json";
 import Faucet_ABI from "../abis/Faucet.json";
 import Swap_ABI from "../abis/Swap.json";
 import Dex_ABI from "../abis/Dex.json";
 import USDC_ABI from "../abis/ERC20Mock.json";
+import Auto_ABI from "../abis/Auto.json";
 
 import config from "../config.json";
 
@@ -22,6 +24,8 @@ const initialState = {
   RewardBalance: 0,
 
   // Contracts
+  cJUSDContract: {},
+  AutoContract: {},
   JUSDContract: {},
   MimicContract: {},
   FarmingContract: {},
@@ -31,9 +35,13 @@ const initialState = {
   USDCContract: {},
 
   // JUSD Pool
+  cJUSDBalance: 0,
   JUSDBalance: 0,
   MimicBalance: 0,
   JUSDStakingBalance: 0,
+
+  // JUSD Auto pool
+  JUSDAutoStakingBalance: 0,
 };
 
 export const loadContractData = async (account) => {
@@ -49,6 +57,8 @@ export const loadContractData = async (account) => {
       RewardBalance: 0,
 
       //Contract
+      cJUSDContract: {},
+      AutoContract: {},
       JUSDContract: {},
       MimicContract: {},
       FarmingContract: {},
@@ -61,6 +71,9 @@ export const loadContractData = async (account) => {
       JUSDBalance: 0,
       MimicBalance: 0,
       JUSDStakingBalance: 0,
+
+      // JUSD Auto pool
+      JUSDAutoStakingBalance: 0,
     };
 
     // const accounts = await web3.eth.getAccounts();
@@ -189,7 +202,7 @@ export const loadContractData = async (account) => {
 
     /**
      * Load USDC Contract
-     * Dex.json
+     * USDC.json
      */
 
     if (USDC_ABI) {
@@ -205,6 +218,46 @@ export const loadContractData = async (account) => {
       response.USDCBalance = USDCBalance / Math.pow(10, 6);
     } else {
       window.alert("USCD (Mock) Contract not deployed");
+    }
+
+    /**
+     * Load AutoCompound Contract
+     * Auto.json
+     */
+     const autoContractData = Auto_ABI.networks[networkId];
+     if (autoContractData) {
+       const AutoContract = new web3.eth.Contract(
+         Auto_ABI.abi,
+         autoContractData.address
+       );
+       response.AutoContract = AutoContract;
+       let JUSDAutoStakingBalance = await AutoContract.methods
+        .stakingBalance(currentAccount)
+        .call();
+       response.JUSDAutoStakingBalance = JUSDAutoStakingBalance.toString();
+     } else {
+       window.alert("Auto Contract not deployed");
+     }
+
+         /**
+     * Load cJUSD Contract
+     * cJUSD.json
+     */
+    const cJUSDTokenData = cJUSD_ABI.networks[networkId];
+    if (cJUSDTokenData) {
+      const cJUSDContract = new web3.eth.Contract(
+        cJUSD_ABI.abi,
+        cJUSDTokenData.address
+      );
+
+      response.cJUSDContract = cJUSDContract;
+      // Get cJUSD Balance
+      let cJUSDBalance = await cJUSDContract.methods
+        .balanceOf(currentAccount)
+        .call();
+      response.cJUSDBalance = cJUSDBalance.toString();
+    } else {
+      window.alert("cJUSD contract not deployed to detected network.");
     }
 
     return response;
@@ -228,11 +281,15 @@ const contractSlice = createSlice({
       state.RewardBalance = action.payload.RewardBalance;
 
       //Token Balance
+      state.cJUSDBalance = action.payload.cJUSDBalance;
       state.JUSDBalance = action.payload.JUSDBalance;
       state.MimicBalance = action.payload.MimicBalance;
       state.JUSDStakingBalance = action.payload.JUSDStakingBalance;
+      state.JUSDAutoStakingBalance = action.payload.JUSDAutoStakingBalance;
 
       //Contracts
+      state.cJUSDContract = action.payload.cJUSDContract;
+      state.AutoContract = action.payload.AutoContract;
       state.JUSDContract = action.payload.JUSDContract;
       state.MimicContract = action.payload.MimicContract;
       state.FarmingContract = action.payload.FarmingContract;

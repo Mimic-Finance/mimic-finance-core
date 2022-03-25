@@ -53,7 +53,7 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity >=0.5.0;\n\ninterface IWETH {\n    function deposit() external payable;\n    function transfer(address to, uint value) external returns (bool);\n    function withdraw(uint) external;\n}\n",
-  "sourcePath": "@uniswap/v2-periphery/contracts/interfaces/IWETH.sol",
+  "sourcePath": "@uniswap\\v2-periphery\\contracts\\interfaces\\IWETH.sol",
   "ast": {
     "absolutePath": "@uniswap/v2-periphery/contracts/interfaces/IWETH.sol",
     "exportedSymbols": {
@@ -595,8 +595,8 @@
     "version": "0.6.6+commit.6c089d02.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.3",
-  "updatedAt": "2022-03-24T22:39:00.808Z",
+  "schemaVersion": "3.4.5",
+  "updatedAt": "2022-03-25T13:06:57.969Z",
   "devdoc": {
     "methods": {}
   },
