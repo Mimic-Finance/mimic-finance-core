@@ -82,7 +82,7 @@ const JUSDAuto = () => {
                 <Text fontSize="xl">
                   <b>Total Value Deposited</b>
                 </Text>
-                <TVD></TVD>
+                <TVD></TVD> (to do fix)
               </Box>
             </GridItem>
             <GridItem colSpan={4}>

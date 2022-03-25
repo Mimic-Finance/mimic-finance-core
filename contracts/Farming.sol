@@ -55,24 +55,32 @@ contract Farming {
     }
 
     //Check reward by address without send function (no gas)
-    function checkRewardByAddress(address _address) public view returns (uint256){
+    function checkRewardByAddress(address _address)
+        public
+        view
+        returns (uint256)
+    {
         uint256 reward = calculateRewards(_address);
         return reward;
     }
 
-    function calculateTime(address account)public view returns(uint256){
+    function calculateTime(address account) public view returns (uint256) {
         uint256 time = block.timestamp;
-        uint totalTime = time-updateTime[account];
+        uint256 totalTime = time - updateTime[account];
         return totalTime;
     }
 
-    function calculateRewards(address account)public view returns(uint256){
+    function calculateRewards(address account) public view returns (uint256) {
         uint256 time = SafeMath.mul(calculateTime(account), 1e18);
         uint256 rate = 864;
-        uint256 timeRate = time/rate;
-        uint256 reward = SafeMath.div(SafeMath.mul(stakingBalance[account], timeRate), 1e18);
+        uint256 timeRate = time / rate;
+        uint256 reward = SafeMath.div(
+            SafeMath.mul(stakingBalance[account], timeRate),
+            1e18
+        );
         return reward;
     }
+
     //Issuing Token
     function issueTokens() public {
         uint256 balance = stakingBalance[msg.sender];
@@ -86,12 +94,12 @@ contract Farming {
     function unstakeTokens(uint256 _amount) public {
         require(_amount > 0, "staking balance cannot be 0");
         JUSDToken.transfer(msg.sender, _amount);
-        uint256 remain = stakingBalance[msg.sender] - _amount;
+        uint256 remain = SafeMath.sub(stakingBalance[msg.sender], _amount);
         stakingBalance[msg.sender] = remain;
 
         //withdraw and claim reward
         uint256 reward = calculateRewards(msg.sender);
-        require(reward > 0 && stakingBalance[msg.sender] > 0);
+        // require(reward > 0 && stakingBalance[msg.sender] >= 0);
         MimicToken.transfer(msg.sender, reward);
         updateTime[msg.sender] = block.timestamp;
     }

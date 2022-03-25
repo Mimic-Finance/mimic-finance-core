@@ -224,22 +224,22 @@ export const loadContractData = async (account) => {
      * Load AutoCompound Contract
      * Auto.json
      */
-     const autoContractData = Auto_ABI.networks[networkId];
-     if (autoContractData) {
-       const AutoContract = new web3.eth.Contract(
-         Auto_ABI.abi,
-         autoContractData.address
-       );
-       response.AutoContract = AutoContract;
-       let JUSDAutoStakingBalance = await AutoContract.methods
+    const autoContractData = Auto_ABI.networks[networkId];
+    if (autoContractData) {
+      const AutoContract = new web3.eth.Contract(
+        Auto_ABI.abi,
+        autoContractData.address
+      );
+      response.AutoContract = AutoContract;
+      let JUSDAutoStakingBalance = await AutoContract.methods
         .stakingBalance(currentAccount)
         .call();
-       response.JUSDAutoStakingBalance = JUSDAutoStakingBalance.toString();
-     } else {
-       window.alert("Auto Contract not deployed");
-     }
+      response.JUSDAutoStakingBalance = JUSDAutoStakingBalance.toString();
+    } else {
+      window.alert("Auto Contract not deployed");
+    }
 
-         /**
+    /**
      * Load cJUSD Contract
      * cJUSD.json
      */

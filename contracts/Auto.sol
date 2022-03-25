@@ -62,8 +62,9 @@ contract Auto {
          */
         cJUSDToken.transfer(_account, _amount);
     }
-     function depositToFarm(uint256 _amount) public {
-         /* Auto-Compound:: Approve JUSD for spend amount to Farm */
+
+    function depositToFarm(uint256 _amount) public {
+        /* Auto-Compound:: Approve JUSD for spend amount to Farm */
         JUSDToken.approve(FarmAddress, _amount);
         /* Stake JUSD in Farm Contract with Auto-Compound */
         FarmContract.stakeTokens(_amount);
@@ -80,8 +81,17 @@ contract Auto {
     }
 
     function withdraw(uint256 _amount) public {
-        cJUSDToken.transferFrom(msg.sender, address(this), _amount);
+        address _account = msg.sender;
+        cJUSDToken.transferFrom(_account, address(this), _amount);
         FarmContract.unstakeTokens(_amount);
-        JUSDToken.transfer(msg.sender, _amount);
+        JUSDToken.transfer(_account, _amount);
+    }
+
+    function getcJUSDBalance() public returns (uint256) {
+        return cJUSDToken.balanceOf(address(this));
+    }
+
+    function getJUSDBalance() public returns (uint256) {
+        return JUSDToken.balanceOf(address(this));
     }
 }
