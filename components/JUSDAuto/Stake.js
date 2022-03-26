@@ -71,6 +71,7 @@ const Stake = () => {
                       icon: "success",
                       title: "Deposit Success!",
                     });
+                    setStakeValue(0);
                   }
                 }, 1500);
               });
