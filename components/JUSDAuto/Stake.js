@@ -7,6 +7,7 @@ import {
   Button,
   InputGroup,
   Text,
+  Spinner,
   InputRightElement,
 } from "@chakra-ui/react";
 
@@ -127,7 +128,13 @@ const Stake = () => {
           stakeTokens(Web3.utils.toWei(stakeValue.toString()));
         }}
       >
-        {wait_tx && send_tx_status ? "Please wait transaction ..." : "Stake"}
+        {wait_tx && send_tx_status ? (
+          <>
+            <Spinner size={"sm"} mr={2} /> Waiting the transaction ...
+          </>
+        ) : (
+          "Stake"
+        )}
       </Button>
 
       {/* <Portfolio
