@@ -5,7 +5,7 @@ on:
     branches: [ develop ]
 
 jobs:
-  next-js-lint:
+  next-js-build:
     runs-on: ubuntu-latest
 
     steps:
