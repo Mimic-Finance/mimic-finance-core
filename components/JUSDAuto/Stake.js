@@ -7,6 +7,7 @@ import {
   Button,
   InputGroup,
   Text,
+  Spinner,
   InputRightElement,
 } from "@chakra-ui/react";
 
@@ -16,35 +17,66 @@ import Portfolio from "./Portfolio";
 
 import Web3 from "web3";
 import useAppSelector from "../../hooks/useAppSelector";
+import Toast from "../Utils/Toast/Toast";
 
 const Stake = () => {
   const { account } = useAppSelector((state) => state.account);
-  const {
-    AutoContract,
-    JUSDContract,
-    FarmingContract,
-    JUSDBalance,
-    MimicBalance,
-    JUSDAutoStakingBalance,
-    USDCContract,
-    DexContract,
-    USDCBalance,
-    RewardBalance,
-  } = useAppSelector((state) => state.contracts);
+  const { AutoContract, JUSDContract, JUSDBalance } = useAppSelector(
+    (state) => state.contracts
+  );
+
+  const [send_tx_status, setSendTxStatus] = useState(false);
+  const [wait_tx, setWaitTx] = useState(false);
+
+  const txStatus = async (hash) => {
+    const web3 = window.web3;
+    const status = await web3.eth.getTransactionReceipt(hash);
+    return status;
+  };
 
   //Stake Value
   const [stakeValue, setStakeValue] = useState(0);
+
+  //Deposit function
   const stakeTokens = async (amount) => {
+    setSendTxStatus(true);
+    setWaitTx(true);
     await JUSDContract.methods
       .approve(AutoContract._address, amount)
       .send({ from: account })
-      .on("transactionHash", (hash) => {
-        AutoContract.methods
-          .deposit(amount)
-          .send({ from: account })
-          .on("transactionHash", (hash) => {
-            //set reload
-          });
+      .on("transactionHash", async (hash) => {
+        const refreshId = setInterval(async () => {
+          const tx_status = await txStatus(hash);
+          if (tx_status && tx_status.status) {
+            setWaitTx(false);
+            setSendTxStatus(false);
+            clearInterval(refreshId);
+            Toast.fire({
+              icon: "success",
+              title: "Approved Success!",
+            });
+            setSendTxStatus(true);
+            setWaitTx(true);
+            AutoContract.methods
+              .deposit(amount)
+              .send({ from: account })
+              .on("transactionHash", async (hash) => {
+                const depositCheck = setInterval(async () => {
+                  const tx_status = await txStatus(hash);
+                  if (tx_status && tx_status.status) {
+                    setWaitTx(false);
+                    setSendTxStatus(false);
+                    clearInterval(depositCheck);
+                    Toast.fire({
+                      icon: "success",
+                      title: "Deposit Success!",
+                    });
+                    setStakeValue(0);
+                  }
+                }, 1500);
+              });
+          }
+        }, 1500);
       });
   };
 
@@ -89,7 +121,7 @@ const Stake = () => {
           color: "#FFFFFF",
           background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
         }}
-        disabled={stakeValue == 0}
+        disabled={stakeValue == 0 || (wait_tx && send_tx_status)}
         mt={2}
         mb={5}
         w={"100%"}
@@ -97,7 +129,13 @@ const Stake = () => {
           stakeTokens(Web3.utils.toWei(stakeValue.toString()));
         }}
       >
-        Stake
+        {wait_tx && send_tx_status ? (
+          <>
+            <Spinner size={"sm"} mr={2} /> Waiting the transaction ...
+          </>
+        ) : (
+          "Stake"
+        )}
       </Button>
 
       {/* <Portfolio
