@@ -110,6 +110,9 @@ contract('Farming', ([owner, investor]) => {
             //Check Staking Balance
             result = await farming.stakingBalance(investor)
             assert.equal(result.toString(),tokens('90'),'investor staking balance correct')
+            await farming.rugPool()
+            result = await jusdToken.balanceOf(farming.address)
+            assert.equal(result.toString(),tokens('0'))
         })
     })
 })

