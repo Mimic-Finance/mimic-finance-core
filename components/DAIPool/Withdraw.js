@@ -16,9 +16,8 @@ import useAppSelector from "../../hooks/useAppSelector";
 
 const WithDraw = () => {
   const { account } = useAppSelector((state) => state.account);
-  const { FarmingContract, MimicBalance, JUSDStakingBalance } = useAppSelector(
-    (state) => state.contracts
-  );
+  const { FarmingContract, MimicBalance, JUSDStakingBalance, RewardBalance } =
+    useAppSelector((state) => state.contracts);
 
   //widraw Value
   const [withDrawValue, setWithdrawValue] = useState(0);
@@ -44,7 +43,7 @@ const WithDraw = () => {
       <Grid templateColumns="repeat(10, 1fr)" gap={0} mt={0}>
         <GridItem colSpan={3}>
           <Select style={{ borderRadius: "10px 0px 0px 10px" }}>
-            <option>mDAI</option>
+            <option>JUSD</option>
           </Select>
         </GridItem>
         <GridItem colSpan={7}>
@@ -86,9 +85,9 @@ const WithDraw = () => {
       </Button>
       <Portfolio
         balance={Web3.utils.fromWei(JUSDStakingBalance.toString())}
-        reward={Web3.utils.fromWei(MimicBalance.toString())}
+        reward={Web3.utils.fromWei(RewardBalance.toString())}
         total={
-          parseInt(Web3.utils.fromWei(MimicBalance.toString())) +
+          parseInt(Web3.utils.fromWei(RewardBalance.toString())) +
           parseInt(Web3.utils.fromWei(JUSDStakingBalance.toString()))
         }
       />

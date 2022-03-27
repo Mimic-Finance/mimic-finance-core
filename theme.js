@@ -9,15 +9,23 @@ import {
 
 const theme = extendTheme({
   fonts: {
-    heading: "Montserrat",
-    body: "Montserrat",
+    heading: "Inter",
+    body: "Inter",
   },
 
   styles: {
     global: (props) => ({
       body: {
+        bg: mode("#fffff", "#2c2f35")(props),
         color: mode("gray.800", "whiteAlpha.900")(props),
         lineHeight: "base",
+        backgroundImage: mode(
+          "radial-gradient(50% 50% at 50% 50%,rgba(247,110,17,0.1) 0%,rgba(255,255,255,0) 100%)",
+          "radial-gradient(50% 50% at 50% 50%,rgba(247,110,17,0.1) 0%,rgba(33,36,41,0) 100%)"
+        )(props),
+        backgroundPosition: "0 -30vh",
+        backgroundRepeat: "no-repeat",
+        justifyContent: "center",
       },
       /**
        * Text Color Section
@@ -46,13 +54,13 @@ const theme = extendTheme({
       ".btn-launch-app": {},
       ".community-box": {
         color: mode(NORMAL_LIGHT, NORMAL_DARK)(props),
-        bg: mode("#ffffff", "#222d3b")(props),
+        bg: mode("#ffffff", "#292d33")(props),
         textAlign: "center",
         border: "2px solid rgba(0, 0, 0, 0.05)",
       },
       ".swap-box": {
         color: mode(NORMAL_LIGHT, NORMAL_DARK)(props),
-        bg: mode("#ffffff", "#222d3b")(props),
+        bg: mode("#ffffff", "#292d33")(props),
         textAlign: "center",
         borderRadius: "20px",
         boxShadow:
@@ -62,7 +70,7 @@ const theme = extendTheme({
       ".currency-box": {
         padding: "20px",
         color: mode(NORMAL_LIGHT, NORMAL_DARK)(props),
-        bg: mode("#ffffff", "#2e3948")(props),
+        bg: mode("#ffffff", "#292d33")(props),
         textAlign: "center",
         borderRadius: "20px",
         border: "1px solid rgba(0, 0, 0, 0.05)",
@@ -74,7 +82,7 @@ const theme = extendTheme({
       },
       ".portfolio-box": {
         color: mode(NORMAL_LIGHT, NORMAL_DARK)(props),
-        bg: mode("#ffffff", "#222d3b")(props),
+        bg: mode("#ffffff", "#292d33")(props),
         textAlign: "center",
         borderRadius: "10px",
         border: "2px solid rgba(0, 0, 0, 0.05)",

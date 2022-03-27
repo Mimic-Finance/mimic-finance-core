@@ -1,0 +1,19 @@
+name: Next-js-Build
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  next-js-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Install dependency
+        run: yarn install
+
+      - name: next-js-build
+        run: yarn build

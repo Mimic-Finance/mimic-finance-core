@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 import Web3 from "web3";
 import { useRouter } from "next/router";
-import TVD from "../../components/DAIPool/TVD";
+import TVD from "../../components/JUSDAuto/TVD";
 
 import {
   Text,
@@ -20,11 +20,11 @@ import {
 import { useEffect, useState } from "react";
 import { FaCalculator } from "react-icons/fa";
 import CountUp from "react-countup";
-import Portfolio from "../../components/DAIPool/Portfolio";
+import Portfolio from "../../components/JUSDAuto/Portfolio";
 
-import { Panel } from "../../components/DAIPool/Panel";
+import { Panel } from "../../components/JUSDAuto/Panel";
 
-const DAIPool = () => {
+const JUSDAuto = () => {
   const info = {
     poolName: "",
     label: "",
@@ -46,15 +46,15 @@ const DAIPool = () => {
             <GridItem colSpan={1}>
               <Box>
                 <Image
-                  src={"/assets/images/daiToken.png"}
-                  alt="DAI Staking"
+                  src={"/assets/images/pools/JUSD.png"}
+                  alt="JUSD Staking"
                   width={100}
                 />
               </Box>
             </GridItem>
             <GridItem colSpan={7}>
               <Text fontSize="4xl">
-                <b>DAI Pool (Stable Coin)</b>
+                <b>Auto-Compound JUSD Pool</b>
               </Text>
             </GridItem>
             <GridItem colSpan={2} style={{ textAlign: "right" }}>
@@ -72,7 +72,7 @@ const DAIPool = () => {
           <Grid templateColumns="repeat(10, 1fr)" gap={10} mt={7}>
             <GridItem colSpan={6}>
               <Text fontSize="xl">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Dai is a
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $JUSD is a
                 stablecoin whose value is pegged to the U.S. dollar, which means
                 it is shielded from the wild swings in prices that are typically
                 associated with a cryptocurrency.
@@ -82,7 +82,7 @@ const DAIPool = () => {
                 <Text fontSize="xl">
                   <b>Total Value Deposited</b>
                 </Text>
-                <TVD></TVD>
+                <TVD></TVD> (to do fix)
               </Box>
             </GridItem>
             <GridItem colSpan={4}>
@@ -96,4 +96,4 @@ const DAIPool = () => {
   );
 };
 
-export default DAIPool;
+export default JUSDAuto;

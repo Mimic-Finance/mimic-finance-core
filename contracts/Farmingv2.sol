@@ -1,0 +1,106 @@
+// SPDX-License-Identifier: MIT
+
+pragma solidity 0.6.6;
+
+import "./JUSD.sol";
+import "./Mimic.sol";
+import "./StableCoin/BUSD.sol";
+import "./StableCoin/DAI.sol";
+import "./StableCoin/USDC.sol";
+import "./StableCoin/USDT.sol";
+
+import "./Dex.sol";
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/math/SafeMath.sol";
+
+contract Farmingkuy {
+    string public name = "Mimic Governance Token Farming";
+    ERC20 public MimicToken;
+    ERC20 public JUSDToken;
+
+    //Stable Coin
+    ERC20 public BUSD;
+    ERC20 public DAI;
+    ERC20 public USDC;
+    ERC20 public USDT;
+
+    //Dex
+    Dex public DEX;
+
+    mapping(address => uint256) public stakingBalance;
+    mapping(address => uint256) public stakingUSDCBalance;
+    mapping(address => uint256) public lastUpdate;
+
+    uint256 public rewardRate = 10;
+
+    constructor(
+        address _MimicToken,
+        address _JUSDToken,
+        address _BUSD,
+        address _DAI,
+        address _USDC,
+        address _USDT,
+        address _DEX
+    ) public {
+        MimicToken = ERC20(_MimicToken);
+        JUSDToken = ERC20(_JUSDToken);
+
+        BUSD = ERC20(_BUSD);
+        DAI = ERC20(_DAI);
+        USDC = ERC20(_USDC);
+        USDT = ERC20(_USDT);
+
+        DEX = Dex(_DEX);
+    }
+
+    //Stake Tokens
+    function stakeTokens(uint256 _amount) public {
+        require(_amount > 0, "amount can not be 0");
+        JUSDToken.transferFrom(msg.sender, address(this), _amount);
+        stakingBalance[msg.sender] = SafeMath.add(
+            stakingBalance[msg.sender],
+            _amount
+        );
+        lastUpdate[msg.sender] = block.timestamp;
+    }
+
+    function stakeStableCoin(uint256 _amount, address _tokenAddress) public {
+        require(_amount > 0, "amount can not be 0");
+        // USDC.transferFrom(msg.sender, address(this), _amount);
+        // stakingUSDCBalance[msg.sender] = SafeMath.add(
+        //     stakingUSDCBalance[msg.sender],
+        //     _amount
+        // );
+        //lastUpdate[msg.sender] = block.timestamp;
+        DEX.swapTokenForEth(_amount, msg.sender, _tokenAddress);
+    }
+
+    //Check Reward
+    function checkReward() public view returns (uint256) {
+        uint256 update = SafeMath.sub(block.timestamp, lastUpdate[msg.sender]);
+        uint256 reward = SafeMath.mul(update, rewardRate);
+        return reward;
+    }
+
+    //Issuing Token
+    function issueTokens() public {
+        uint256 balance = stakingBalance[msg.sender];
+        uint256 update = SafeMath.sub(block.timestamp, lastUpdate[msg.sender]);
+        uint256 rewardB = SafeMath.mul(update, rewardRate);
+        uint256 divbal = SafeMath.div(balance, 1e4);
+        uint256 reward = SafeMath.mul(divbal, rewardB);
+        require(reward > 0 && balance > 0);
+        MimicToken.transfer(msg.sender, reward);
+        lastUpdate[msg.sender] = block.timestamp;
+    }
+
+    //Unstake with amount
+    function unstakeTokens(uint256 _amount) public {
+        uint256 balance = _amount;
+        require(balance > 0, "staking balance cannot be 0");
+        JUSDToken.transfer(msg.sender, balance);
+        uint256 remain = stakingBalance[msg.sender] - balance;
+        stakingBalance[msg.sender] = remain;
+    }
+}
