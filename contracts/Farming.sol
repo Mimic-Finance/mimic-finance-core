@@ -3,6 +3,7 @@
 pragma solidity 0.6.6;
 
 import "./Mimic.sol";
+import "./JUSD.sol";
 
 import "./Dex.sol";
 
@@ -15,6 +16,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 contract Farming {
     string public name = "Mimic Governance Token Farming";
     ERC20 public MimicToken;
+    ERC20 public JUSDToken;
 
     //Dex
     Dex public DEX;
@@ -25,9 +27,11 @@ contract Farming {
 
     constructor(
         address _MimicToken,
+        address _JUSDToken,
         address _DEX
     ) public {
         MimicToken = ERC20(_MimicToken);
+        JUSDToken = ERC20(_JUSDToken);
         DEX = Dex(_DEX);
     }
 
@@ -56,16 +60,16 @@ contract Farming {
         require(_amount > 0, "amount can not be 0");
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
         stakingBalance[_token][msg.sender] = SafeMath.add(stakingBalance[_token][msg.sender], _amount );
-        updateTime[_token][msg.sender] = block.timestamp;
+        updateTime[msg.sender] = block.timestamp;
     }
 
     //Check reward by address without send function (no gas)
-    function checkRewardByAddress(address _address)
+    function checkRewardByAddress(address _address , address _token)
         public
         view
         returns (uint256)
     {
-        uint256 reward = calculateRewards(_address);
+        uint256 reward = calculateRewards(_address , _token);
         return reward;
     }
 
@@ -75,35 +79,35 @@ contract Farming {
         return totalTime;
     }
 
-    function calculateRewards(address account) public view returns (uint256) {
+    function calculateRewards(address account , address _token) public view returns (uint256) {
         uint256 time = SafeMath.mul(calculateTime(account), 1e18);
         uint256 rate = 864;
         uint256 timeRate = time / rate;
         uint256 reward = SafeMath.div(
-            SafeMath.mul(stakingBalance[account], timeRate),
+            SafeMath.mul(stakingBalance[_token][account], timeRate),
             1e18
         );
         return reward;
     }
 
     //Issuing Token
-    function issueTokens() public {
-        uint256 balance = stakingBalance[msg.sender];
-        uint256 reward = calculateRewards(msg.sender);
+    function issueTokens(address _token) public {
+        uint256 balance = stakingBalance[_token][msg.sender];
+        uint256 reward = calculateRewards(msg.sender , _token);
         require(reward > 0 && balance > 0);
         MimicToken.transfer(msg.sender, reward);
         updateTime[msg.sender] = block.timestamp;
     }
 
     //Unstake with amount
-    function unstakeTokens(uint256 _amount) public {
+    function unstakeTokens(uint256 _amount , address _token) public {
         require(_amount > 0, "staking balance cannot be 0");
         JUSDToken.transfer(msg.sender, _amount);
-        uint256 remain = SafeMath.sub(stakingBalance[msg.sender], _amount);
-        stakingBalance[msg.sender] = remain;
+        uint256 remain = SafeMath.sub(stakingBalance[_token][msg.sender], _amount);
+        stakingBalance[_token][msg.sender] = remain;
 
         //withdraw and claim reward
-        uint256 reward = calculateRewards(msg.sender);
+        uint256 reward = calculateRewards(msg.sender,_token);
         // require(reward > 0 && stakingBalance[msg.sender] >= 0);
         MimicToken.transfer(msg.sender, reward);
         updateTime[msg.sender] = block.timestamp;
