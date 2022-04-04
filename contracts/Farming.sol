@@ -2,55 +2,61 @@
 
 pragma solidity 0.6.6;
 
-import "./JUSD.sol";
 import "./Mimic.sol";
 
 import "./Dex.sol";
 
+import "./AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
+
+
 
 contract Farming {
     string public name = "Mimic Governance Token Farming";
     ERC20 public MimicToken;
-    ERC20 public JUSDToken;
-    address internal constant USDC = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
 
     //Dex
     Dex public DEX;
 
-    mapping(address => uint256) public stakingBalance;
-    mapping(address => uint256) public stakingUSDCBalance;
+    mapping(address => mapping (address => uint256)) public stakingBalance;
     mapping(address => uint256) public updateTime;
+    mapping(address => address) public tokenPriceMapping;
 
     constructor(
         address _MimicToken,
-        address _JUSDToken,
         address _DEX
     ) public {
         MimicToken = ERC20(_MimicToken);
-        JUSDToken = ERC20(_JUSDToken);
         DEX = Dex(_DEX);
     }
 
-    //Stake Tokens
-    function stakeTokens(uint256 _amount) public {
-        require(_amount > 0, "amount can not be 0");
-        JUSDToken.transferFrom(msg.sender, address(this), _amount);
-        stakingBalance[msg.sender] = SafeMath.add(stakingBalance[msg.sender], _amount );
-        updateTime[msg.sender] = block.timestamp;
+    function setPriceFeed(address _token, address _priceFeed) public {
+        tokenPriceMapping[_token]  = _priceFeed;
     }
 
-    //Stake USDC
-    function stakeUSDC(uint256 _amount) public {
-        require(_amount > 0, "amount can not be 0");
-        ERC20(USDC).approve(address(this), _amount);
-        ERC20(USDC).transferFrom(msg.sender, address(this), _amount);
-        stakingUSDCBalance[msg.sender] = SafeMath.add(stakingUSDCBalance[msg.sender],_amount);
-        updateTime[msg.sender] = block.timestamp;
+    function getTokenValue(address _token)public view returns (uint256, uint256){
+        address priceFeedAddress = tokenPriceMapping[_token];
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(priceFeedAddress);
+        (,int256 price,,,)= priceFeed.latestRoundData();
+        uint256 decimals = uint256(priceFeed.decimals());
+        return (uint256(price), decimals);
     }
-    function checkUSDCBalance(address account) public {
-        ERC20(USDC).balanceOf(account);
+
+    function stakingValue (address _account , address _token) public view returns(uint256) {
+        if (stakingBalance[_token][_account] <= 0){
+            return 0;
+        }
+        (uint256 price , uint256 decimals) = getTokenValue(_token);
+        return (SafeMath.div(SafeMath.mul(stakingBalance[_token][_account], price), 10**decimals));
+    }
+
+    //Stake Tokens
+    function stakeTokens(uint256 _amount , address _token) public {
+        require(_amount > 0, "amount can not be 0");
+        ERC20(_token).transferFrom(msg.sender, address(this), _amount);
+        stakingBalance[_token][msg.sender] = SafeMath.add(stakingBalance[_token][msg.sender], _amount );
+        updateTime[_token][msg.sender] = block.timestamp;
     }
 
     //Check reward by address without send function (no gas)
