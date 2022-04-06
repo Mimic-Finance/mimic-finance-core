@@ -46,7 +46,7 @@ const DAIPool = () => {
             <GridItem colSpan={1}>
               <Box>
                 <Image
-                  src={"/assets/images/pools/JUSD.png"}
+                  src={"/assets/images/pools/defi-friend.png"}
                   alt="JUSD Staking"
                   width={100}
                 />
@@ -54,7 +54,7 @@ const DAIPool = () => {
             </GridItem>
             <GridItem colSpan={7}>
               <Text fontSize="4xl">
-                <b>JUSD Pool (Stable Coin)</b>
+                <b>Stable Coin Pool</b>
               </Text>
             </GridItem>
             <GridItem colSpan={2} style={{ textAlign: "right" }}>
@@ -72,17 +72,20 @@ const DAIPool = () => {
           <Grid templateColumns="repeat(10, 1fr)" gap={10} mt={7}>
             <GridItem colSpan={6}>
               <Text fontSize="xl">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $JUSD is a
-                stablecoin whose value is pegged to the U.S. dollar, which means
-                it is shielded from the wild swings in prices that are typically
-                associated with a cryptocurrency.
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A stablecoin is
+                a class of cryptocurrencies that attempt to offer price
+                stability and are backed by a reserve asset. Stablecoins have
+                gained traction as they attempt to offer the best of both
+                worlds—the instant processing and security or privacy of
+                payments of cryptocurrencies, and the volatility-free stable
+                valuations of fiat currencies.
               </Text>
 
               <Box mt={10}>
                 <Text fontSize="xl">
                   <b>Total Value Deposited</b>
                 </Text>
-                <TVD></TVD>
+                {/* <TVD></TVD> */}
               </Box>
             </GridItem>
             <GridItem colSpan={4}>
