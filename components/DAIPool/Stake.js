@@ -6,6 +6,7 @@ import {
   Input,
   Button,
   InputGroup,
+  Spinner,
   Text,
   InputRightElement,
 } from "@chakra-ui/react";
@@ -22,40 +23,103 @@ import useAppSelector from "../../hooks/useAppSelector";
 const Stake = () => {
   const { account } = useAppSelector((state) => state.account);
   const {
-    JUSDContract,
     FarmingContract,
-    JUSDBalance,
-    MimicBalance,
-    JUSDStakingBalance,
     USDCContract,
-    DexContract,
-    USDCBalance,
-    RewardBalance,
+    DAIContract,
+    USDTContract,
+    BUSDContract,
     ERC20UtilsContract,
   } = useAppSelector((state) => state.contracts);
 
+  const coinContractList = [
+    USDCContract,
+    BUSDContract,
+    DAIContract,
+    USDTContract,
+  ];
+
   //Stake Value
   const [stakeValue, setStakeValue] = useState(0);
-  const [stakeUSDCValue, setStakeUSDCValue] = useState(0);
   const [coin, setCoin] = useState(StableCoin[0].address);
   const [coinBalance, setCoinBalance] = useState(0);
 
-  const stakeTokens = async (amount) => {
+  const [send_tx_status, setSendTxStatus] = useState(false);
+  const [wait_tx, setWaitTx] = useState(false);
+
+  const txStatus = async (hash) => {
+    const web3 = window.web3;
+    const status = await web3.eth.getTransactionReceipt(hash);
+    return status;
+  };
+
+  const deposit = async () => {
+    //Find coin Contract
+    var CoinConract = coinContractList.find(
+      (contract) => contract._address == coin
+    );
+
     if (coin !== null) {
-      console.log(coin);
-      await JUSDContract.methods
-        .approve(FarmingContract._address, amount)
+      const decimals = await ERC20UtilsContract.methods
+        .decimals(coin.toString())
+        .call();
+      var _amount = 0;
+      if (decimals == 6) {
+        _amount = stakeValue * Math.pow(10, 6);
+      } else {
+        _amount = Web3.utils.toWei(stakeValue.toString());
+      }
+
+      console.log("approve value => ", _amount);
+
+      // Approve
+      setSendTxStatus(true);
+      setWaitTx(true);
+      await CoinConract.methods
+        .approve(FarmingContract._address, _amount)
         .send({ from: account })
         .on("transactionHash", (hash) => {
-          FarmingContract.methods
-            .stakeTokens(amount)
-            .send({ from: account })
-            .on("transactionHash", (hash) => {
+          const refreshId = setInterval(async () => {
+            const tx_status = await txStatus(hash);
+            if (tx_status && tx_status.status) {
+              setWaitTx(false);
+              setSendTxStatus(false);
+              clearInterval(refreshId);
               Toast.fire({
                 icon: "success",
-                title: "Deposit Success!",
+                title: "Approved Success!",
               });
-            });
+
+              /**
+               * Check Allowance value
+               */
+              const allowance = await ERC20UtilsContract.methods
+                .allowance(coin, account, FarmingContract._address)
+                .call();
+              console.log("Allowance ===> ", allowance);
+
+              /**
+               *  Deposit
+               * */
+              FarmingContract.methods
+                .stakeTokens(_amount, coin)
+                .send({ from: account })
+                .on("transactionHash", (hash) => {
+                  const depositCheck = setInterval(async () => {
+                    const tx_status = await txStatus(hash);
+                    if (tx_status && tx_status.status) {
+                      setWaitTx(false);
+                      setSendTxStatus(false);
+                      clearInterval(depositCheck);
+                      Toast.fire({
+                        icon: "success",
+                        title: "Deposit Success!",
+                      });
+                      setStakeValue(0);
+                    }
+                  }, 1500);
+                });
+            }
+          }, 1500);
         });
     } else {
       Toast.fire({
@@ -65,8 +129,11 @@ const Stake = () => {
     }
   };
 
-  const setStakeValueMax = () => {
-    if (coin === StableCoin.find((coin) => coin.symbol === "USDC").address) {
+  const setStakeValueMax = async () => {
+    const decimals = await ERC20UtilsContract.methods
+      .decimals(coin.toString())
+      .call();
+    if (decimals == 6) {
       setStakeValue(coinBalance / Math.pow(10, 6));
     } else {
       setStakeValue(Web3.utils.fromWei(coinBalance.toString()));
@@ -76,14 +143,6 @@ const Stake = () => {
   const handleChangeStakeValue = (e) => {
     setStakeValue(e.target.value);
   };
-
-  // const setStakeUSDCValueMax = () => {
-  //   setStakeUSDCValue(USDCBalance);
-  // };
-
-  // const handleChangeStakeUSDCValue = (e) => {
-  //   setStakeUSDCValue(e.target.value);
-  // };
 
   const handleChangeCoin = async (e) => {
     setStakeValue(0);
@@ -136,15 +195,21 @@ const Stake = () => {
           color: "#FFFFFF",
           background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
         }}
-        disabled={stakeValue == 0}
+        disabled={stakeValue == 0 || (wait_tx && send_tx_status)}
         mt={2}
         mb={5}
         w={"100%"}
         onClick={() => {
-          stakeTokens(Web3.utils.toWei(stakeValue.toString()));
+          deposit();
         }}
       >
-        Stake
+        {wait_tx && send_tx_status ? (
+          <>
+            <Spinner size={"sm"} mr={2} /> Waiting the transaction ...
+          </>
+        ) : (
+          "Stake"
+        )}
       </Button>
 
       {/* <Portfolio

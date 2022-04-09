@@ -7,9 +7,16 @@ import Farming_ABI from "../abis/Farming.json";
 import Faucet_ABI from "../abis/Faucet.json";
 import Swap_ABI from "../abis/Swap.json";
 import Dex_ABI from "../abis/Dex.json";
-import USDC_ABI from "../abis/ERC20Mock.json";
+
 import Auto_ABI from "../abis/Auto.json";
 import ERC20Utils_ABI from "../abis/ERC20Utils.json";
+
+//Import Stable Coin ABI
+import TokenAddress from "../constants/TokenAddress.json";
+import DAI_ABI from "../abis/DAI.json";
+import USDT_ABI from "../abis/USDT.json";
+import BUSD_ABI from "../abis/BUSD.json";
+import USDC_ABI from "../abis/ERC20Mock.json";
 
 import config from "../config.json";
 
@@ -33,8 +40,13 @@ const initialState = {
   FaucetContract: {},
   SwapContract: {},
   DexContract: {},
-  USDCContract: {},
   ERC20UtilsContract: {},
+
+  //StableCoin Contract
+  USDCContract: {},
+  BUSDContract: {},
+  DAIContract: {},
+  USDTContract: {},
 
   // JUSD Pool
   cJUSDBalance: 0,
@@ -67,8 +79,13 @@ export const loadContractData = async (account) => {
       FaucetContract: {},
       SwapContract: {},
       DexContract: {},
-      USDCContract: {},
       ERC20UtilsContract: {},
+
+      //StableCoin Contract
+      USDCContract: {},
+      BUSDContract: {},
+      DAIContract: {},
+      USDTContract: {},
 
       // JUSD Pool
       JUSDBalance: 0,
@@ -229,6 +246,7 @@ export const loadContractData = async (account) => {
       console.log("cann't load DEX Contract");
     }
 
+    //======================================  Stable Coin Section  ===========================================
     /**
      * Load USDC Contract
      * USDC.json
@@ -237,7 +255,7 @@ export const loadContractData = async (account) => {
       if (USDC_ABI) {
         const usdcContract = new web3.eth.Contract(
           USDC_ABI.abi,
-          config.USDC_TESTNET
+          TokenAddress.USDC
         );
         response.USDCContract = usdcContract;
         let USDCBalance = await usdcContract.methods
@@ -251,6 +269,62 @@ export const loadContractData = async (account) => {
     } catch {
       console.log("cann't load USDC Contract");
     }
+
+    /**
+     * Load USDT Contract
+     * USDT.json
+     */
+    try {
+      if (USDT_ABI) {
+        const usdtContract = new web3.eth.Contract(
+          USDT_ABI.abi,
+          TokenAddress.USDT
+        );
+        response.USDTContract = usdtContract;
+      } else {
+        window.alert("USDT Contract not deployed");
+      }
+    } catch {
+      console.log("cann't load USDT Contract");
+    }
+
+    /**
+     * Load DAI Contract
+     * DAI.json
+     */
+    try {
+      if (DAI_ABI) {
+        const daiContract = new web3.eth.Contract(
+          DAI_ABI.abi,
+          TokenAddress.DAI
+        );
+        response.DAIContract = daiContract;
+      } else {
+        window.alert("dai Contract not deployed");
+      }
+    } catch {
+      console.log("cann't load dai Contract");
+    }
+
+    /**
+     * Load BUSD Contract
+     * BUSD.json
+     */
+    try {
+      if (BUSD_ABI) {
+        const busdContract = new web3.eth.Contract(
+          BUSD_ABI.abi,
+          TokenAddress.BUSD
+        );
+        response.BUSDContract = busdContract;
+      } else {
+        window.alert("BUSD Contract not deployed");
+      }
+    } catch {
+      console.log("cann't load BUSD Contract");
+    }
+
+    //===============================  End Stable Coin Section =====================================
 
     /**
      * Load AutoCompound Contract
@@ -356,8 +430,13 @@ const contractSlice = createSlice({
       state.FaucetContract = action.payload.FaucetContract;
       state.SwapContract = action.payload.SwapContract;
       state.DexContract = action.payload.DexContract;
-      state.USDCContract = action.payload.USDCContract;
       state.ERC20UtilsContract = action.payload.ERC20UtilsContract;
+
+      //Stable coin Contract
+      state.USDCContract = action.payload.USDCContract;
+      state.USDTContract = action.payload.USDTContract;
+      state.BUSDContract = action.payload.BUSDContract;
+      state.DAIContract = action.payload.DAIContract;
     },
   },
 });
