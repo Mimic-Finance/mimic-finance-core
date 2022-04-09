@@ -9,6 +9,7 @@ const Faucet = artifacts.require("Faucet");
 const Swap = artifacts.require("Swap");
 const cJUSD = artifacts.require("cJUSD");
 const Auto = artifacts.require("Auto");
+const ERC20Utils = artifacts.require("ERC20Utils");
 
 // DEX
 const Dex = artifacts.require("Dex");
@@ -89,8 +90,18 @@ module.exports = async function (deployer, network, accounts) {
   await deployer.deploy(cJUSD);
   const cjusdToken = await cJUSD.deployed();
 
-  await deployer.deploy(Auto, jusdToken.address, mimicToken.address, farming.address, cjusdToken.address, swap.address);
+  await deployer.deploy(
+    Auto,
+    jusdToken.address,
+    mimicToken.address,
+    farming.address,
+    cjusdToken.address,
+    swap.address
+  );
   const auto = await Auto.deployed();
+
+  await deployer.deploy(ERC20Utils);
+  const erc20utils = await ERC20Utils.deployed();
 
   await mimicToken.transfer(farming.address, "10000000000000000000000000");
   await jusdToken.transfer(faucet.address, "5000000000000000000000000");

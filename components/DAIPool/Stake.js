@@ -14,7 +14,7 @@ import { useState } from "react";
 
 import Portfolio from "./Portfolio";
 import StableCoin from "../../constants/StableCoin.json";
-import Toast from "../utils/Toast/Toast";
+import Toast from "../Utils/Toast/Toast";
 
 import Web3 from "web3";
 import useAppSelector from "../../hooks/useAppSelector";
@@ -31,14 +31,14 @@ const Stake = () => {
     DexContract,
     USDCBalance,
     RewardBalance,
+    ERC20UtilsContract,
   } = useAppSelector((state) => state.contracts);
-
-  console.log(FarmingContract);
 
   //Stake Value
   const [stakeValue, setStakeValue] = useState(0);
   const [stakeUSDCValue, setStakeUSDCValue] = useState(0);
   const [coin, setCoin] = useState(StableCoin[0].address);
+  const [coinBalance, setCoinBalance] = useState(0);
 
   const stakeTokens = async (amount) => {
     if (coin !== null) {
@@ -66,23 +66,32 @@ const Stake = () => {
   };
 
   const setStakeValueMax = () => {
-    setStakeValue(Web3.utils.fromWei(JUSDBalance.toString()));
+    if (coin === StableCoin.find((coin) => coin.symbol === "USDC").address) {
+      setStakeValue(coinBalance / Math.pow(10, 6));
+    } else {
+      setStakeValue(Web3.utils.fromWei(coinBalance.toString()));
+    }
   };
 
   const handleChangeStakeValue = (e) => {
     setStakeValue(e.target.value);
   };
 
-  const setStakeUSDCValueMax = () => {
-    setStakeUSDCValue(USDCBalance);
-  };
+  // const setStakeUSDCValueMax = () => {
+  //   setStakeUSDCValue(USDCBalance);
+  // };
 
-  const handleChangeStakeUSDCValue = (e) => {
-    setStakeUSDCValue(e.target.value);
-  };
+  // const handleChangeStakeUSDCValue = (e) => {
+  //   setStakeUSDCValue(e.target.value);
+  // };
 
-  const handleChangeCoin = (e) => {
+  const handleChangeCoin = async (e) => {
+    setStakeValue(0);
     setCoin(e.target.value);
+    let coin_value = await ERC20UtilsContract.methods
+      .balanceOf(e.target.value.toString(), account)
+      .call();
+    setCoinBalance(coin_value);
   };
 
   return (
