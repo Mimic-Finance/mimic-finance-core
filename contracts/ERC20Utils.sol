@@ -13,16 +13,15 @@ contract ERC20Utils {
         view
         returns (uint256)
     {
-        uint256 balance = ERC20(_token).balanceOf(_account);
-        return balance;
+        return ERC20(_token).balanceOf(_account);
     }
 
     function approve(
         address _token,
-        address _account,
+        address _spender,
         uint256 _amount
-    ) public {
-        ERC20(_token).approve(_account, _amount);
+    ) public payable returns (bool) {
+        return ERC20(_token).approve(_spender, _amount);
     }
 
     function transferFrom(
@@ -42,28 +41,28 @@ contract ERC20Utils {
         ERC20(_token).transfer(_recipient, _amount);
     }
 
-    function totalSupply(address _token) public view {
-        ERC20(_token).totalSupply();
+    function totalSupply(address _token) public view returns (uint256) {
+        return ERC20(_token).totalSupply();
     }
 
-    function name(address _token) public view {
-        ERC20(_token).name();
+    function name(address _token) public view returns (string memory) {
+        return ERC20(_token).name();
     }
 
-    function symbol(address _token) public view {
-        ERC20(_token).symbol();
+    function symbol(address _token) public view returns (string memory) {
+        return ERC20(_token).symbol();
     }
 
-    function decimals(address _token) public view {
-        ERC20(_token).decimals();
+    function decimals(address _token) public view returns (uint8) {
+        return ERC20(_token).decimals();
     }
 
     function allowance(
         address _token,
         address _owner,
         address _spender
-    ) public view {
-        ERC20(_token).allowance(_owner, _spender);
+    ) public view returns (uint256) {
+        return ERC20(_token).allowance(_owner, _spender);
     }
 
     function increaseAllowance(

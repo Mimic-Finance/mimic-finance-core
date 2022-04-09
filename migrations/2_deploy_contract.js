@@ -26,10 +26,22 @@ module.exports = async function (deployer, network, accounts) {
    * Deploy Stable Coin
    * (at Mainnet)
    */
-  // const busd = await BUSD.at(TokenAddress.BUSD);
-  // const dai = await DAI.at(TokenAddress.DAI);
-  // const usdc = await USDC.at(TokenAddress.USDC);
-  // const usdt = await USDT.at(TokenAddress.USDT);
+  const busd = await BUSD.at(TokenAddress.BUSD);
+  await busd.transfer(accounts[1], "10000000000000000000000", {
+    from: config.rich_account,
+  });
+  const dai = await DAI.at(TokenAddress.DAI);
+  await dai.transfer(accounts[1], "10000000000000000000000", {
+    from: config.rich_account,
+  });
+  const usdc = await USDC.at(TokenAddress.USDC);
+  await usdc.transfer(accounts[1], 10000000000, {
+    from: config.rich_account,
+  });
+  const usdt = await USDT.at(TokenAddress.USDT);
+  await usdt.transfer(accounts[1], 10000000000, {
+    from: config.rich_account,
+  });
 
   /**
    *
