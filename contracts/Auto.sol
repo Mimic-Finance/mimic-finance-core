@@ -43,7 +43,7 @@ contract Auto {
         SwapAddress = _Swap;
     }
 
-    function deposit(uint256 _amount) public {
+    function deposit(uint256 _amount , address _token) public {
         address _account = msg.sender;
         stakingBalance[_account] = SafeMath.add(
             stakingBalance[_account],
@@ -54,7 +54,7 @@ contract Auto {
         /* Auto-Compound:: Approve JUSD for spend amount to Farm */
         JUSDToken.approve(FarmAddress, _amount);
         /* Stake JUSD in Farm Contract with Auto-Compound */
-        FarmContract.stakeTokens(_amount);
+        FarmContract.stakeTokens(_amount, _token);
 
         /**
          * Transfer cJUSD to user (Force return cJUSD)
@@ -63,11 +63,11 @@ contract Auto {
         cJUSDToken.transfer(_account, _amount);
     }
 
-    function depositToFarm(uint256 _amount) public {
+    function depositToFarm(uint256 _amount , address _token) public {
         /* Auto-Compound:: Approve JUSD for spend amount to Farm */
         JUSDToken.approve(FarmAddress, _amount);
         /* Stake JUSD in Farm Contract with Auto-Compound */
-        FarmContract.stakeTokens(_amount);
+        FarmContract.stakeTokens(_amount , _token);
     }
 
     function swapMimToJUSD() public {
@@ -76,14 +76,14 @@ contract Auto {
         SwapContract.mimtojusd(mimbal);
     }
 
-    function claim() public {
-        FarmContract.issueTokens();
+    function claim(address _token) public {
+        FarmContract.issueTokens(_token);
     }
 
-    function withdraw(uint256 _amount) public {
+    function withdraw(uint256 _amount , address _token) public {
         address _account = msg.sender;
         cJUSDToken.transferFrom(_account, address(this), _amount);
-        FarmContract.unstakeTokens(_amount);
+        FarmContract.unstakeTokens(_amount , _token);
         JUSDToken.transfer(_account, _amount);
     }
 
