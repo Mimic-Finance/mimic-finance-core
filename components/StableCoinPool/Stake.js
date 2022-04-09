@@ -7,7 +7,6 @@ import {
   Button,
   InputGroup,
   Spinner,
-  Text,
   InputRightElement,
 } from "@chakra-ui/react";
 
@@ -53,27 +52,33 @@ const Stake = () => {
   };
 
   const deposit = async () => {
-    //Find coin Contract
+    // => Find coin Contract that user select coin (for use approve function)
     var CoinConract = coinContractList.find(
       (contract) => contract._address == coin
     );
 
+    // => set amount with decimals
     if (coin !== null) {
+      // => get decimals of token
       const decimals = await ERC20UtilsContract.methods
         .decimals(coin.toString())
         .call();
       var _amount = 0;
       if (decimals == 6) {
+        // decimal = 6
         _amount = stakeValue * Math.pow(10, 6);
       } else {
+        // decimal = 18
         _amount = Web3.utils.toWei(stakeValue.toString());
       }
 
       console.log("approve value => ", _amount);
 
-      // Approve
+      // ========== Transaction Start ==============
       setSendTxStatus(true);
       setWaitTx(true);
+      // => Approve <<<
+      // => approve with coin that user select
       await CoinConract.methods
         .approve(FarmingContract._address, _amount)
         .send({ from: account })
@@ -81,43 +86,47 @@ const Stake = () => {
           const refreshId = setInterval(async () => {
             const tx_status = await txStatus(hash);
             if (tx_status && tx_status.status) {
-              setWaitTx(false);
-              setSendTxStatus(false);
               clearInterval(refreshId);
               Toast.fire({
                 icon: "success",
                 title: "Approved Success!",
               });
 
-              /**
-               * Check Allowance value
-               */
+              // => Check Allowance value <<<
               const allowance = await ERC20UtilsContract.methods
                 .allowance(coin, account, FarmingContract._address)
                 .call();
               console.log("Allowance ===> ", allowance);
 
-              /**
-               *  Deposit
-               * */
-              FarmingContract.methods
-                .stakeTokens(_amount, coin)
-                .send({ from: account })
-                .on("transactionHash", (hash) => {
-                  const depositCheck = setInterval(async () => {
-                    const tx_status = await txStatus(hash);
-                    if (tx_status && tx_status.status) {
-                      setWaitTx(false);
-                      setSendTxStatus(false);
-                      clearInterval(depositCheck);
-                      Toast.fire({
-                        icon: "success",
-                        title: "Deposit Success!",
-                      });
-                      setStakeValue(0);
-                    }
-                  }, 1500);
+              if (allowance == _amount) {
+                // => Deposit <<<
+                FarmingContract.methods
+                  .stakeTokens(_amount, coin)
+                  .send({ from: account })
+                  .on("transactionHash", (hash) => {
+                    const depositCheck = setInterval(async () => {
+                      const tx_status = await txStatus(hash);
+                      if (tx_status && tx_status.status) {
+                        setWaitTx(false);
+                        setSendTxStatus(false);
+                        clearInterval(depositCheck);
+                        Toast.fire({
+                          icon: "success",
+                          title: "Deposit Success!",
+                        });
+                        setStakeValue(0);
+                      }
+                    }, 1500);
+                  });
+              } else {
+                Toast.fire({
+                  icon: "error",
+                  title:
+                    "Please set approve value = " +
+                    stakeValue +
+                    " on your wallet",
                 });
+              }
             }
           }, 1500);
         });
@@ -147,10 +156,10 @@ const Stake = () => {
   const handleChangeCoin = async (e) => {
     setStakeValue(0);
     setCoin(e.target.value);
-    let coin_value = await ERC20UtilsContract.methods
+    let _coinBalance = await ERC20UtilsContract.methods
       .balanceOf(e.target.value.toString(), account)
       .call();
-    setCoinBalance(coin_value);
+    setCoinBalance(_coinBalance);
   };
 
   return (

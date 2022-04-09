@@ -201,7 +201,7 @@
         "id": 1947,
         "nodeType": "ImportDirective",
         "scope": 2211,
-        "sourceUnit": 3010,
+        "sourceUnit": 3192,
         "src": "24:20:12",
         "symbolAliases": [],
         "unitAlias": ""
@@ -212,7 +212,7 @@
         "id": 1948,
         "nodeType": "ImportDirective",
         "scope": 2211,
-        "sourceUnit": 3035,
+        "sourceUnit": 3217,
         "src": "45:21:12",
         "symbolAliases": [],
         "unitAlias": ""
@@ -223,7 +223,7 @@
         "id": 1949,
         "nodeType": "ImportDirective",
         "scope": 2211,
-        "sourceUnit": 3206,
+        "sourceUnit": 3388,
         "src": "67:21:12",
         "symbolAliases": [],
         "unitAlias": ""
@@ -234,7 +234,7 @@
         "id": 1950,
         "nodeType": "ImportDirective",
         "scope": 2211,
-        "sourceUnit": 2988,
+        "sourceUnit": 3170,
         "src": "89:23:12",
         "symbolAliases": [],
         "unitAlias": ""
@@ -245,7 +245,7 @@
         "id": 1951,
         "nodeType": "ImportDirective",
         "scope": 2211,
-        "sourceUnit": 3181,
+        "sourceUnit": 3363,
         "src": "113:20:12",
         "symbolAliases": [],
         "unitAlias": ""
@@ -423,7 +423,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_Farming_$2987",
+              "typeIdentifier": "t_contract$_Farming_$3169",
               "typeString": "contract Farming"
             },
             "typeName": {
@@ -431,10 +431,10 @@
               "id": 1962,
               "name": "Farming",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 2987,
+              "referencedDeclaration": 3169,
               "src": "359:7:12",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Farming_$2987",
+                "typeIdentifier": "t_contract$_Farming_$3169",
                 "typeString": "contract Farming"
               }
             },
@@ -453,7 +453,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_Swap_$3180",
+              "typeIdentifier": "t_contract$_Swap_$3362",
               "typeString": "contract Swap"
             },
             "typeName": {
@@ -461,10 +461,10 @@
               "id": 1964,
               "name": "Swap",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 3180,
+              "referencedDeclaration": 3362,
               "src": "394:4:12",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Swap_$3180",
+                "typeIdentifier": "t_contract$_Swap_$3362",
                 "typeString": "contract Swap"
               }
             },
@@ -849,7 +849,7 @@
                       "referencedDeclaration": 1965,
                       "src": "1003:12:12",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Swap_$3180",
+                        "typeIdentifier": "t_contract$_Swap_$3362",
                         "typeString": "contract Swap"
                       }
                     },
@@ -883,10 +883,10 @@
                         "name": "Swap",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 3180,
+                        "referencedDeclaration": 3362,
                         "src": "1018:4:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Swap_$3180_$",
+                          "typeIdentifier": "t_type$_t_contract$_Swap_$3362_$",
                           "typeString": "type(contract Swap)"
                         }
                       },
@@ -901,13 +901,13 @@
                       "src": "1018:11:12",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Swap_$3180",
+                        "typeIdentifier": "t_contract$_Swap_$3362",
                         "typeString": "contract Swap"
                       }
                     },
                     "src": "1003:26:12",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Swap_$3180",
+                      "typeIdentifier": "t_contract$_Swap_$3362",
                       "typeString": "contract Swap"
                     }
                   },
@@ -932,7 +932,7 @@
                       "referencedDeclaration": 1963,
                       "src": "1039:12:12",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Farming_$2987",
+                        "typeIdentifier": "t_contract$_Farming_$3169",
                         "typeString": "contract Farming"
                       }
                     },
@@ -966,10 +966,10 @@
                         "name": "Farming",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 2987,
+                        "referencedDeclaration": 3169,
                         "src": "1054:7:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Farming_$2987_$",
+                          "typeIdentifier": "t_type$_t_contract$_Farming_$3169_$",
                           "typeString": "type(contract Farming)"
                         }
                       },
@@ -984,13 +984,13 @@
                       "src": "1054:17:12",
                       "tryCall": false,
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Farming_$2987",
+                        "typeIdentifier": "t_contract$_Farming_$3169",
                         "typeString": "contract Farming"
                       }
                     },
                     "src": "1039:32:12",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Farming_$2987",
+                      "typeIdentifier": "t_contract$_Farming_$3169",
                       "typeString": "contract Farming"
                     }
                   },
@@ -1800,7 +1800,7 @@
                         "referencedDeclaration": 1963,
                         "src": "1732:12:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Farming_$2987",
+                          "typeIdentifier": "t_contract$_Farming_$3169",
                           "typeString": "contract Farming"
                         }
                       },
@@ -1811,7 +1811,7 @@
                       "lValueRequested": false,
                       "memberName": "stakeTokens",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 2744,
+                      "referencedDeclaration": 2926,
                       "src": "1732:24:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_address_$returns$__$",
@@ -2157,7 +2157,7 @@
                         "referencedDeclaration": 1963,
                         "src": "2226:12:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Farming_$2987",
+                          "typeIdentifier": "t_contract$_Farming_$3169",
                           "typeString": "contract Farming"
                         }
                       },
@@ -2168,7 +2168,7 @@
                       "lValueRequested": false,
                       "memberName": "stakeTokens",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 2744,
+                      "referencedDeclaration": 2926,
                       "src": "2226:24:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_address_$returns$__$",
@@ -2561,7 +2561,7 @@
                         "referencedDeclaration": 1965,
                         "src": "2434:12:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Swap_$3180",
+                          "typeIdentifier": "t_contract$_Swap_$3362",
                           "typeString": "contract Swap"
                         }
                       },
@@ -2572,7 +2572,7 @@
                       "lValueRequested": false,
                       "memberName": "mimtojusd",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 3179,
+                      "referencedDeclaration": 3361,
                       "src": "2434:22:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$returns$__$",
@@ -2667,7 +2667,7 @@
                         "referencedDeclaration": 1963,
                         "src": "2525:12:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Farming_$2987",
+                          "typeIdentifier": "t_contract$_Farming_$3169",
                           "typeString": "contract Farming"
                         }
                       },
@@ -2678,7 +2678,7 @@
                       "lValueRequested": false,
                       "memberName": "issueTokens",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 2890,
+                      "referencedDeclaration": 3072,
                       "src": "2525:24:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$returns$__$",
@@ -3041,7 +3041,7 @@
                         "referencedDeclaration": 1963,
                         "src": "2745:12:12",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Farming_$2987",
+                          "typeIdentifier": "t_contract$_Farming_$3169",
                           "typeString": "contract Farming"
                         }
                       },
@@ -3052,7 +3052,7 @@
                       "lValueRequested": false,
                       "memberName": "unstakeTokens",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 2962,
+                      "referencedDeclaration": 3144,
                       "src": "2745:26:12",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_address_$returns$__$",
@@ -3652,7 +3652,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3010,
+          "SourceUnit": 3192,
           "absolutePath": "project:/contracts/JUSD.sol",
           "file": "./JUSD.sol",
           "scope": 2211,
@@ -3667,7 +3667,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3035,
+          "SourceUnit": 3217,
           "absolutePath": "project:/contracts/Mimic.sol",
           "file": "./Mimic.sol",
           "scope": 2211,
@@ -3682,7 +3682,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3206,
+          "SourceUnit": 3388,
           "absolutePath": "project:/contracts/cJUSD.sol",
           "file": "./cJUSD.sol",
           "scope": 2211,
@@ -3697,7 +3697,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 2988,
+          "SourceUnit": 3170,
           "absolutePath": "project:/contracts/Farming.sol",
           "file": "./Farming.sol",
           "scope": 2211,
@@ -3712,7 +3712,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 3181,
+          "SourceUnit": 3363,
           "absolutePath": "project:/contracts/Swap.sol",
           "file": "./Swap.sol",
           "scope": 2211,
@@ -3912,7 +3912,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "Farming",
-                  "referencedDeclaration": 2987,
+                  "referencedDeclaration": 3169,
                   "type": "contract Farming"
                 },
                 "id": 1962,
@@ -3942,7 +3942,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "Swap",
-                  "referencedDeclaration": 3180,
+                  "referencedDeclaration": 3362,
                   "type": "contract Swap"
                 },
                 "id": 1964,
@@ -4569,7 +4569,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 3180,
+                                  "referencedDeclaration": 3362,
                                   "type": "type(contract Swap)",
                                   "value": "Swap"
                                 },
@@ -4660,7 +4660,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 2987,
+                                  "referencedDeclaration": 3169,
                                   "type": "type(contract Farming)",
                                   "value": "Farming"
                                 },
@@ -5455,7 +5455,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "stakeTokens",
-                              "referencedDeclaration": 2744,
+                              "referencedDeclaration": 2926,
                               "type": "function (uint256,address) external"
                             },
                             "children": [
@@ -5848,7 +5848,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "stakeTokens",
-                              "referencedDeclaration": 2744,
+                              "referencedDeclaration": 2926,
                               "type": "function (uint256,address) external"
                             },
                             "children": [
@@ -6249,7 +6249,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "mimtojusd",
-                              "referencedDeclaration": 3179,
+                              "referencedDeclaration": 3361,
                               "type": "function (uint256) external"
                             },
                             "children": [
@@ -6404,7 +6404,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "issueTokens",
-                              "referencedDeclaration": 2890,
+                              "referencedDeclaration": 3072,
                               "type": "function (address) external"
                             },
                             "children": [
@@ -6827,7 +6827,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "unstakeTokens",
-                              "referencedDeclaration": 2962,
+                              "referencedDeclaration": 3144,
                               "type": "function (uint256,address) external"
                             },
                             "children": [
@@ -7427,11 +7427,11 @@
       "events": {},
       "links": {},
       "address": "0x56880D5CA6Eb94A52a0B1098823865aBD26d4eF5",
-      "transactionHash": "0x0ea4f8276f62b0c4d9259287c8f02853a624fa92d31d17d92b9ca21c03dab0d3"
+      "transactionHash": "0xca5a2c686d3a8c2677e2b766944a34d23e3d05fef499c2eb2a9abd1085023561"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2022-04-09T21:36:40.908Z",
+  "updatedAt": "2022-04-09T21:45:47.515Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
