@@ -1,7 +1,7 @@
 import { Text, Box } from "@chakra-ui/react";
 import useAppSelector from "../hooks/useAppSelector";
 
-import { useUSDC } from "hooks/useContract";
+import { useUSDC, useFarm } from "hooks/useContract";
 import { useEffect, useState, useCallback } from "react";
 
 const Healthcheck = () => {
@@ -16,6 +16,9 @@ const Healthcheck = () => {
     const balance = await USDCContract.methods.balanceOf(account).call();
     setUSDCBalance(balance);
   }, [USDCContract.methods, account]);
+
+  const farmContract = useFarm();
+  console.log(farmContract);
 
   useEffect(() => {
     getUSDCBalance();
