@@ -3,6 +3,7 @@
   "ganacheHost": "127.0.0.1",
   "ganachePort": "8545",
   "ganacheNetworkId": "*",
+  "networkId": 1,
   "forkNetworkRPC": "https://mainnet.infura.io/v3/a4f7b70c34354ed4b1988216c9c24b48",
 
   "accounts": [
