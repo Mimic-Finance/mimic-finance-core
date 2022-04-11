@@ -1,13 +1,14 @@
 import { Text, Box } from "@chakra-ui/react";
 
 import { useUSDC, useBUSD } from "hooks/useToken";
-import { useFarm } from "hooks/useContracts";
+import { useFarm, useAutoCompound } from "hooks/useContracts";
 import useAccount from "hooks/useAccount";
 
 const Healthcheck = () => {
   const USDC = useUSDC();
   const BUSD = useBUSD();
   const Farm = useFarm();
+  const AutoCompound = useAutoCompound();
 
   const account = useAccount();
 
