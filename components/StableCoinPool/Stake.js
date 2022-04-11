@@ -1,3 +1,7 @@
+import Web3 from "web3";
+import { useState } from "react";
+import useAppSelector from "../../hooks/useAppSelector";
+
 import {
   Grid,
   GridItem,
@@ -10,31 +14,29 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 
-import { useState } from "react";
-
 import Portfolio from "./Portfolio";
-import StableCoin from "../../constants/StableCoin.json";
 import Toast from "../Utils/Toast/Toast";
+import StableCoin from "../../constants/StableCoin.json";
 
-import Web3 from "web3";
-import useAppSelector from "../../hooks/useAppSelector";
+import useAccount from "hooks/useAccount";
+import { useBUSD, useUSDC, useUSDT, useDAI } from "hooks/useToken";
+import { useFarm, useERC20Utils } from "hooks/useContracts";
 
 const Stake = () => {
-  const { account } = useAppSelector((state) => state.account);
-  const {
-    FarmingContract,
-    USDCContract,
-    DAIContract,
-    USDTContract,
-    BUSDContract,
-    ERC20UtilsContract,
-  } = useAppSelector((state) => state.contracts);
+  //Initialize web3 and contract
+  const account = useAccount();
+  const Farm = useFarm();
+  const ERC20Utils = useERC20Utils();
+  const BUSD = useBUSD();
+  const USDT = useUSDT();
+  const DAI = useDAI();
+  const USDC = useUSDC();
 
   const coinContractList = [
-    USDCContract,
-    BUSDContract,
-    DAIContract,
-    USDTContract,
+    USDC.contract,
+    BUSD.contract,
+    DAI.contract,
+    USDT.contract,
   ];
 
   //Stake Value
@@ -60,7 +62,7 @@ const Stake = () => {
     // => set amount with decimals
     if (coin !== null) {
       // => get decimals of token
-      const decimals = await ERC20UtilsContract.methods
+      const decimals = await ERC20Utils.contract.methods
         .decimals(coin.toString())
         .call();
       var _amount = 0;
@@ -80,7 +82,7 @@ const Stake = () => {
       // => Approve <<<
       // => approve with coin that user select
       await CoinConract.methods
-        .approve(FarmingContract._address, _amount)
+        .approve(Farm.contract._address, _amount)
         .send({ from: account })
         .on("transactionHash", (hash) => {
           const refreshId = setInterval(async () => {
@@ -93,14 +95,14 @@ const Stake = () => {
               });
 
               // => Check Allowance value <<<
-              const allowance = await ERC20UtilsContract.methods
-                .allowance(coin, account, FarmingContract._address)
+              const allowance = await ERC20Utils.contract.methods
+                .allowance(coin, account, Farm.contract._address)
                 .call();
               console.log("Allowance ===> ", allowance);
 
               if (allowance == _amount) {
                 // => Deposit <<<
-                FarmingContract.methods
+                Farm.contract.methods
                   .stakeTokens(_amount, coin)
                   .send({ from: account })
                   .on("transactionHash", (hash) => {
@@ -139,7 +141,7 @@ const Stake = () => {
   };
 
   const setStakeValueMax = async () => {
-    const decimals = await ERC20UtilsContract.methods
+    const decimals = await ERC20Utils.contract.methods
       .decimals(coin.toString())
       .call();
     if (decimals == 6) {
@@ -156,7 +158,7 @@ const Stake = () => {
   const handleChangeCoin = async (e) => {
     setStakeValue(0);
     setCoin(e.target.value);
-    let _coinBalance = await ERC20UtilsContract.methods
+    let _coinBalance = await ERC20Utils.contract.methods
       .balanceOf(e.target.value.toString(), account)
       .call();
     setCoinBalance(_coinBalance);
