@@ -3,7 +3,7 @@ import useBUSD from "./useBUSD";
 import useDAI from "./useDAI";
 import useUSDT from "./useUSDT";
 import useJUSD from "./useJUSD";
-import useCJUSD from "./usecJUSD";
+import useCJUSD from "./useCJUSD";
 import useMIMIC from "./useMIM";
 
 export { useUSDC };
