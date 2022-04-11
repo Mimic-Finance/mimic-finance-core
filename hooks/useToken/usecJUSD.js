@@ -12,6 +12,9 @@ const useCJUSD = () => {
   const contract = useContract(abi, CJUSD_ABI.networks[1].address);
   const [balance, setBalance] = useState(false);
 
+  const methods = contract.methods;
+  const address = contract._address;
+
   const getBalance = useCallback(async () => {
     const _balance = await contract.methods.balanceOf(account).call();
     setBalance(_balance);
@@ -23,7 +26,7 @@ const useCJUSD = () => {
     }
   }, [getBalance, account]);
 
-  return { contract, balance };
+  return { contract, methods, address, balance };
 };
 
 export default useCJUSD;

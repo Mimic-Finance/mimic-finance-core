@@ -82,7 +82,7 @@ const Stake = () => {
       // => Approve <<<
       // => approve with coin that user select
       await CoinConract.methods
-        .approve(Farm.contract._address, _amount)
+        .approve(Farm.address, _amount)
         .send({ from: account })
         .on("transactionHash", (hash) => {
           const refreshId = setInterval(async () => {
@@ -96,13 +96,13 @@ const Stake = () => {
 
               // => Check Allowance value <<<
               const allowance = await ERC20Utils.contract.methods
-                .allowance(coin, account, Farm.contract._address)
+                .allowance(coin, account, Farm.address)
                 .call();
               console.log("Allowance ===> ", allowance);
 
               if (allowance == _amount) {
                 // => Deposit <<<
-                Farm.contract.methods
+                Farm.methods
                   .stakeTokens(_amount, coin)
                   .send({ from: account })
                   .on("transactionHash", (hash) => {

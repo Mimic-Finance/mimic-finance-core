@@ -9,7 +9,10 @@ const useFarm = () => {
     FARM_ABI.networks[config.networkId].address
   );
 
-  return { contract };
+  const methods = contract.methods;
+  const address = contract._address;
+
+  return { contract, methods, address };
 };
 
 export default useFarm;

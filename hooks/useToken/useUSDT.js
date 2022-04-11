@@ -13,6 +13,9 @@ const useUSDT = () => {
   const contract = useContract(abi, TokenAddress.USDT);
   const [balance, setBalance] = useState(false);
 
+  const methods = contract.methods;
+  const address = contract._address;
+
   const getBalance = useCallback(async () => {
     const _balance = await contract.methods.balanceOf(account).call();
     setBalance(_balance);
@@ -24,7 +27,7 @@ const useUSDT = () => {
     }
   }, [getBalance, account]);
 
-  return { contract, balance };
+  return { contract, methods, address, balance };
 };
 
 export default useUSDT;
