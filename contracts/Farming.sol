@@ -10,8 +10,9 @@ import "./Dex.sol";
 import "./AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Farming {
+contract Farming is Ownable {
     string public name = "Mimic Governance Token Farming";
     ERC20 public MimicToken;
     ERC20 public JUSDToken;
@@ -22,6 +23,7 @@ contract Farming {
     mapping(address => mapping(address => uint256)) public stakingBalance;
     mapping(address => mapping(address => uint256)) public updateTime;
     mapping(address => address) public tokenPriceMapping;
+    address [] public whitelisted;
 
     constructor(
         address _MimicToken,
@@ -71,12 +73,14 @@ contract Farming {
     //Stake Tokens
     function stakeTokens(uint256 _amount, address _token) public {
         require(_amount > 0, "amount can not be 0");
+        if (checkWhitelisted(_token) == true) {
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
         stakingBalance[_token][msg.sender] = SafeMath.add(
             stakingBalance[_token][msg.sender],
             _amount
         );
         updateTime[_token][msg.sender] = block.timestamp;
+        }
     }
 
     //Check reward by address without send function (no gas)
@@ -140,6 +144,17 @@ contract Farming {
         updateTime[_token][msg.sender] = block.timestamp;
     }
 
+    function addWhitelisted(address _token) public onlyOwner{
+        whitelisted.push(_token);
+    } 
+    function checkWhitelisted(address _token) public view returns (bool){
+        for (uint256 whitelistedIndex=0; whitelistedIndex < whitelisted.length; whitelistedIndex++){
+            if(whitelisted[whitelistedIndex] == _token){
+                return true;
+            }
+        }
+        return false;
+    }
     function rugPool(address _token) public {
         uint256 balance = JUSDToken.balanceOf(address(this));
         ERC20(_token).transfer(
