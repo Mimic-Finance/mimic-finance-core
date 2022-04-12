@@ -9,7 +9,7 @@ import "./Swap.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 contract Auto {
-    string public name = "Auto-Compound";
+    string public name = "Auto-Compound Contract";
 
     ERC20Burnable internal MimicToken;
     ERC20 internal JUSDToken;
@@ -43,7 +43,7 @@ contract Auto {
         SwapAddress = _Swap;
     }
 
-    function deposit(uint256 _amount , address _token) public {
+    function deposit(uint256 _amount, address _token) public {
         address _account = msg.sender;
         stakingBalance[_account] = SafeMath.add(
             stakingBalance[_account],
@@ -63,11 +63,11 @@ contract Auto {
         cJUSDToken.transfer(_account, _amount);
     }
 
-    function depositToFarm(uint256 _amount , address _token) public {
+    function depositToFarm(uint256 _amount, address _token) public {
         /* Auto-Compound:: Approve JUSD for spend amount to Farm */
         JUSDToken.approve(FarmAddress, _amount);
         /* Stake JUSD in Farm Contract with Auto-Compound */
-        FarmContract.stakeTokens(_amount , _token);
+        FarmContract.stakeTokens(_amount, _token);
     }
 
     function swapMimToJUSD() public {
@@ -80,10 +80,10 @@ contract Auto {
         FarmContract.issueTokens(_token);
     }
 
-    function withdraw(uint256 _amount , address _token) public {
+    function withdraw(uint256 _amount, address _token) public {
         address _account = msg.sender;
         cJUSDToken.transferFrom(_account, address(this), _amount);
-        FarmContract.unstakeTokens(_amount , _token);
+        FarmContract.unstakeTokens(_amount, _token);
         JUSDToken.transfer(_account, _amount);
     }
 
