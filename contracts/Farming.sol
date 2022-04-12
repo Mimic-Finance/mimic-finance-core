@@ -63,7 +63,7 @@ contract Farming is Ownable {
             return 0;
         }
         (uint256 price, uint256 decimals) = getTokenValue(_token);
-        return SafeMath.div(stakingBalance[_token][_account].mul(price),10**decimals);
+        return stakingBalance[_token][_account].mul(price).div(10**decimals);
     }
 
     //Stake Tokens
@@ -98,7 +98,7 @@ contract Farming is Ownable {
         uint256 time = calculateTime(_account , _token).mul(1e18);
         uint256 rate = 864;
         uint256 timeRate = time.div(rate);
-        uint256 reward = SafeMath.div(stakingBalance[_token][_account].mul(timeRate),1e18);
+        uint256 reward = stakingBalance[_token][_account].mul(timeRate).div(1e18);
         return reward;
     }
 
