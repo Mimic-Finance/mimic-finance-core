@@ -13,6 +13,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Farming is Ownable {
+    using SafeMath for uint256;
     string public name = "Mimic Governance Token Farming";
     ERC20 public MimicToken;
     ERC20 public JUSDToken;
@@ -62,12 +63,7 @@ contract Farming is Ownable {
             return 0;
         }
         (uint256 price, uint256 decimals) = getTokenValue(_token);
-        return (
-            SafeMath.div(
-                SafeMath.mul(stakingBalance[_token][_account], price),
-                10**decimals
-            )
-        );
+        return SafeMath.div(stakingBalance[_token][_account].mul(price),10**decimals);
     }
 
     //Stake Tokens
@@ -75,10 +71,7 @@ contract Farming is Ownable {
         require(_amount > 0, "amount can not be 0");
         if (checkWhitelisted(_token) == true) {
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
-        stakingBalance[_token][msg.sender] = SafeMath.add(
-            stakingBalance[_token][msg.sender],
-            _amount
-        );
+        stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender].add(_amount);
         updateTime[_token][msg.sender] = block.timestamp;
         }
     }
@@ -93,28 +86,19 @@ contract Farming is Ownable {
         return reward;
     }
 
-    function calculateTime(address _account, address _token)
-        public
-        view
-        returns (uint256)
+    function calculateTime(address _account, address _token) public view returns (uint256)
     {
         uint256 time = block.timestamp;
-        uint256 totalTime = time - updateTime[_token][_account];
+        uint256 totalTime = time.sub(updateTime[_token][_account]);
         return totalTime;
     }
 
-    function calculateRewards(address _account, address _token)
-        public
-        view
-        returns (uint256)
+    function calculateRewards(address _account, address _token) public view returns (uint256)
     {
-        uint256 time = SafeMath.mul(calculateTime(_account, _token), 1e18);
+        uint256 time = calculateTime(_account , _token).mul(1e18);
         uint256 rate = 864;
-        uint256 timeRate = time / rate;
-        uint256 reward = SafeMath.div(
-            SafeMath.mul(stakingBalance[_token][_account], timeRate),
-            1e18
-        );
+        uint256 timeRate = time.div(rate);
+        uint256 reward = SafeMath.div(stakingBalance[_token][_account].mul(timeRate),1e18);
         return reward;
     }
 
@@ -131,10 +115,7 @@ contract Farming is Ownable {
     function unstakeTokens(uint256 _amount, address _token) public {
         require(_amount > 0, "staking balance cannot be 0");
         ERC20(_token).transfer(msg.sender, _amount);
-        uint256 remain = SafeMath.sub(
-            stakingBalance[_token][msg.sender],
-            _amount
-        );
+        uint256 remain = stakingBalance[_token][msg.sender].sub(_amount);
         stakingBalance[_token][msg.sender] = remain;
 
         //withdraw and claim reward
@@ -148,8 +129,8 @@ contract Farming is Ownable {
         whitelisted.push(_token);
     } 
     function checkWhitelisted(address _token) public view returns (bool){
-        for (uint256 whitelistedIndex=0; whitelistedIndex < whitelisted.length; whitelistedIndex++){
-            if(whitelisted[whitelistedIndex] == _token){
+        for (uint256 i=0; i < whitelisted.length; i++){
+            if(whitelisted[i] == _token){
                 return true;
             }
         }
