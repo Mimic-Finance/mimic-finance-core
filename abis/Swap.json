@@ -4249,11 +4249,19 @@
       "events": {},
       "links": {},
       "address": "0x34F25E2a534075639fb4e4bf5ff8E0EB52DE3709",
+<<<<<<< HEAD
       "transactionHash": "0x4c42d5c206cc26ec53d5c9b6fc801fd4c01536cb895ce410803b3cd8e4ae0b0f"
     }
   },
   "schemaVersion": "3.4.6",
   "updatedAt": "2022-04-12T17:54:49.540Z",
+=======
+      "transactionHash": "0x179efbe81aa52cf0de94860c7ec91a17a8b57d65e7e1657084960ae06eb68fca"
+    }
+  },
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2022-04-11T21:08:53.615Z",
+>>>>>>> 871604fe54a704160b11d5437ca4a29fdb4e78de
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

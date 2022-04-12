@@ -7427,11 +7427,19 @@
       "events": {},
       "links": {},
       "address": "0x56880D5CA6Eb94A52a0B1098823865aBD26d4eF5",
+<<<<<<< HEAD
       "transactionHash": "0xb6b6997e106dbe1def066e33fbba50f175bf8334124a5734d09bb68bbd517a0e"
     }
   },
   "schemaVersion": "3.4.6",
   "updatedAt": "2022-04-12T17:54:49.552Z",
+=======
+      "transactionHash": "0xda93f6f303ba78b6f3ae30bc72ffce1ba836ba62200f38f8ffb037237940c975"
+    }
+  },
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2022-04-11T21:08:53.624Z",
+>>>>>>> 871604fe54a704160b11d5437ca4a29fdb4e78de
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

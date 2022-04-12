@@ -660,8 +660,13 @@
     "version": "0.6.6+commit.6c089d02.Emscripten.clang"
   },
   "networks": {},
+<<<<<<< HEAD
   "schemaVersion": "3.4.6",
   "updatedAt": "2022-04-12T17:54:49.571Z",
+=======
+  "schemaVersion": "3.4.3",
+  "updatedAt": "2022-04-11T21:08:53.640Z",
+>>>>>>> 871604fe54a704160b11d5437ca4a29fdb4e78de
   "networkType": "ethereum",
   "devdoc": {
     "methods": {
