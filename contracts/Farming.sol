@@ -68,12 +68,10 @@ contract Farming is Ownable {
 
     //Stake Tokens
     function stakeTokens(uint256 _amount, address _token) public {
-        require(_amount > 0, "amount can not be 0");
-        if (checkWhitelisted(_token) == true) {
+        require(_amount > 0 && (checkWhitelisted(_token)==true));
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
         stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender].add(_amount);
         updateTime[_token][msg.sender] = block.timestamp;
-        }
     }
 
     //Check reward by address without send function (no gas)
@@ -106,7 +104,7 @@ contract Farming is Ownable {
     function issueTokens(address _token) public {
         uint256 balance = stakingBalance[_token][msg.sender];
         uint256 reward = calculateRewards(msg.sender, _token);
-        require(reward > 0 && balance > 0);
+        require(reward >= 0 && balance >= 0);
         MimicToken.transfer(msg.sender, reward);
         updateTime[_token][msg.sender] = block.timestamp;
     }

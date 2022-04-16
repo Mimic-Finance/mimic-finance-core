@@ -1506,11 +1506,11 @@
       "events": {},
       "links": {},
       "address": "0xDaaAc806b60dF11376651C87ad8846eE2d75c47c",
-      "transactionHash": "0x6a4df30b2fdc43a53d245e02cb236c362ead4d02e9a8e6e8629e90059fa25959"
+      "transactionHash": "0x5c34ea897782bc593bf547b2d1edd09fe92790ec0f5962095931555a1004f6c5"
     }
   },
   "schemaVersion": "3.4.6",
-  "updatedAt": "2022-04-12T19:49:37.008Z",
+  "updatedAt": "2022-04-13T18:13:20.825Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
