@@ -68,7 +68,7 @@ contract Farming is Ownable {
 
     //Stake Tokens
     function stakeTokens(uint256 _amount, address _token) public {
-        require(_amount > 0 && (checkWhitelisted(_token) == true));
+        require(_amount > 0 && checkWhitelisted(_token));
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
         stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender]
             .add(_amount);
@@ -120,7 +120,7 @@ contract Farming is Ownable {
 
     //Unstake with amount
     function unstakeTokens(uint256 _amount, address _token) public {
-        require(_amount > 0, "staking balance cannot be 0");
+        require(_amount > 0);
         ERC20(_token).transfer(msg.sender, _amount);
         uint256 remain = stakingBalance[_token][msg.sender].sub(_amount);
         stakingBalance[_token][msg.sender] = remain;
@@ -133,7 +133,7 @@ contract Farming is Ownable {
     }
 
     function addWhitelisted(address _token) public onlyOwner {
-        require(checkWhitelisted(_token) == false);
+        require(!checkWhitelisted(_token));
         whitelisted.push(_token);
     }
 
@@ -145,21 +145,21 @@ contract Farming is Ownable {
     function findWhitedlisted(address _token) public view returns (uint256) {
         uint256 i = 0;
         while (whitelisted[i] != _token) {
-            i++;
+            i.add(1);
         }
         return i;
     }
 
     function removeByIndex(uint256 i) public {
-        while (i < whitelisted.length - 1) {
+        while (i < whitelisted.length.sub(1)) {
             whitelisted[i] = whitelisted[i + 1];
-            i++;
+            i.add(1);
         }
-        whitelisted.length - 1;
+        whitelisted.length.sub(1);
     }
 
     function checkWhitelisted(address _token) public view returns (bool) {
-        for (uint256 i = 0; i < whitelisted.length; i++) {
+        for (uint256 i = 0; i < whitelisted.length; i.add(1)) {
             if (whitelisted[i] == _token) {
                 return true;
             }

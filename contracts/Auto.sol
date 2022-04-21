@@ -80,7 +80,7 @@ contract Auto {
     }
     
     function deposit(uint256 _amount, address _token) public {
-        require((FarmContract.checkWhitelisted(_token) == true) && _amount > 0 );
+        require(FarmContract.checkWhitelisted(_token) && _amount > 0 );
         /* Transfer any token that in whitelist from user to Auto-Compound Contract */
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
         stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender].add(_amount);
