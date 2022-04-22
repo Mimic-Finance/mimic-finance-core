@@ -20,6 +20,8 @@ import { useAutoCompound } from "hooks/useContracts";
 import { useJUSD } from "hooks/useToken";
 import useAccount from "hooks/useAccount";
 
+import Toast from "components/Utils/Toast/Toast";
+
 const DepositToFarm = () => {
   const account = useAccount();
   const JUSD = useJUSD();
