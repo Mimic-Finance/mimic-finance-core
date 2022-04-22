@@ -6,8 +6,11 @@ import useAppSelector from "hooks/useAppSelector";
 
 import { useCallback, useEffect, useState } from "react";
 
-const useBUSD = () => {
+const useBUSD = (_account) => {
   const { account } = useAppSelector((state) => state.account);
+  if (_account) {
+    account = _account;
+  }
 
   const abi = BUSD_ABI.abi;
   const contract = useContract(abi, TokenAddress.BUSD);

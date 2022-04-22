@@ -8,12 +8,23 @@ import {
 } from "@chakra-ui/react";
 
 import { useFarm, useERC20Utils } from "hooks/useContracts";
+import { useUSDC, useBUSD, useDAI, useUSDT, useJUSD } from "hooks/useToken";
 import { useState, useEffect, useCallback } from "react";
+import Web3 from "web3";
 
 const Dashboard = () => {
   const [whitelisted, setWhitelisted] = useState([]);
   const Farm = useFarm();
   const ERC20Utils = useERC20Utils();
+
+  /**
+   * Stable Coin contract
+   */
+  const BUSD = useBUSD(Farm.address);
+  const DAI = useDAI(Farm.address);
+  const USDT = useUSDT(Farm.address);
+  const USDC = useUSDC(Farm.address);
+  const JUSD = useJUSD(Farm.address);
 
   const getWhitelisted = useCallback(async () => {
     const _whitelisted = await Farm.methods.getWhitelisted().call();
@@ -35,6 +46,24 @@ const Dashboard = () => {
     }
   }, [getWhitelisted, whitelisted]);
 
+  const fromWei = (balance) => {
+    if (balance == 0) {
+      return 0;
+    } else {
+      return Web3.utils.fromWei(balance.toString()) / 1000000;
+    }
+  };
+
+  const summaryTVD = () => {
+    const sum =
+      fromWei(BUSD.balance) +
+      fromWei(DAI.balance) +
+      fromWei(JUSD.balance) +
+      USDT.balance / Math.pow(10, 6) / 1000000 +
+      USDC.balance / Math.pow(10, 6) / 1000000;
+    return sum;
+  };
+
   return (
     <>
       <Text fontSize="xl" mb={5} mt={3} style={{ textAlign: "center" }}>
@@ -48,30 +77,43 @@ const Dashboard = () => {
         </Stat>
       </StatGroup>
 
+      <Text ml={3} mt={3}>
+        Total value deposited from <u>Farming contract</u>
+      </Text>
       <StatGroup>
         <Stat className="stat-box">
-          <StatLabel>TVD (BUSD)</StatLabel>
-          <StatNumber>$ 1M</StatNumber>
+          <StatLabel>BUSD</StatLabel>
+          <StatNumber>$ {fromWei(BUSD.balance)} M</StatNumber>
         </Stat>
 
         <Stat className="stat-box">
-          <StatLabel>TVD (USDT)</StatLabel>
-          <StatNumber>$ 2.3M</StatNumber>
+          <StatLabel>USDT</StatLabel>
+          <StatNumber>
+            $ {USDT.balance / Math.pow(10, 6) / 1000000} M
+          </StatNumber>
+        </Stat>
+        <Stat className="stat-box">
+          <StatLabel>DAI</StatLabel>
+          <StatNumber>$ {fromWei(DAI.balance)} M</StatNumber>
         </Stat>
 
         <Stat className="stat-box">
-          <StatLabel>TVD (DAI)</StatLabel>
-          <StatNumber>$ 5.4M</StatNumber>
+          <StatLabel>USDC</StatLabel>
+          <StatNumber>
+            $ {USDC.balance / Math.pow(10, 6) / 1000000} M
+          </StatNumber>
         </Stat>
 
         <Stat className="stat-box">
-          <StatLabel>TVD (USDC)</StatLabel>
-          <StatNumber>$ 12.3M</StatNumber>
+          <StatLabel>JUSD</StatLabel>
+          <StatNumber>$ {fromWei(JUSD.balance)} M</StatNumber>
         </Stat>
+      </StatGroup>
 
+      <StatGroup>
         <Stat className="stat-box">
-          <StatLabel>TVD (JUSD)</StatLabel>
-          <StatNumber>$ 7.5M</StatNumber>
+          <StatLabel>Summary of Total value deposited</StatLabel>
+          <StatNumber>$ {summaryTVD()} M</StatNumber>
         </Stat>
       </StatGroup>
 

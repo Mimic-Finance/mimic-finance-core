@@ -17,46 +17,30 @@ const Home = () => {
         Enter any Vault with any Token
       </Text>
       <Text fontSize="2xl" align="center" pt={4}>
-        Deposit with Top 10 Market Cap
+        Deposit with whitelisted Token{" "}
+        <a href="#" style={{ color: "teal" }}>
+          <small>Check here</small>
+        </a>
       </Text>
-      <Text align="center" pt={2} style={{ color: "#999" }}>
+      {/* <Text align="center" pt={2} style={{ color: "#999" }}>
         BTC, ETH, BNB, ADA, DOT, DOGE, AVAX, LTC, UNI, CAKE AND ALL STABLE COINS{" "}
-      </Text>
+      </Text> */}
 
       <Container maxW="container.lg">
         <Text fontWeight="bold" fontSize="xl" pt={20}>
-          Available Pools
+          Available Farming Pools
         </Text>
 
         <Grid templateColumns="repeat(1, 1fr)" gap={20} pt={5}>
           <Pool
-            poolName="JUSD Pool"
-            description="Jack USD Token in CPE World"
-            token="Token: JUSD"
+            poolName="Stable Coin Pool"
+            description="Stable Coin Pool is a pool that allows you to deposit any stable coin to get a yield of 1% per day."
+            token="Token: BUSD, USDC, DAI, USDT, JUSD"
             apy={122.32}
-            label="JUSD"
+            label="stable-coin"
             color="#98dfe7"
           />
-
-          {/* <Pool
-            poolName="Meme Master"
-            description="Only Doge & Shiba lovers"
-            token="DOGE - SHIB"
-            apy={1553.43}
-            label="meme-master"
-            color="#FD675C"
-          /> */}
         </Grid>
-        {/* <Grid templateColumns="repeat(1, 1fr)" gap={20} pt={20}>
-          <Pool
-            poolName="Happy Three Friends"
-            description=" Bitcoin , Ethereum , BNB"
-            token="wBTC - wETH - BNB"
-            apy={24.98}
-            label="happy-three-friend"
-            color="#84CBFF"
-          />
-        </Grid> */}
       </Container>
     </div>
   );

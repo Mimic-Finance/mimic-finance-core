@@ -14,7 +14,7 @@ export const Pool = (props) => {
         src={"/assets/images/pools/" + props.label + ".png"}
         alt={props.label}
         className="pool-logo"
-        width={100}
+        width={150}
       />
       <Text fontWeight="bold" fontSize="2xl">
         {props.poolName}

@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 import Web3 from "web3";
 import { useRouter } from "next/router";
-import TVD from "../../components/StableCoinPool/TVD";
+import TVD from "../../components/JUSDAuto/TVD";
 
 import {
   Text,
@@ -20,11 +20,11 @@ import {
 import { useEffect, useState } from "react";
 import { FaCalculator } from "react-icons/fa";
 import CountUp from "react-countup";
-import Portfolio from "../../components/StableCoinPool/Portfolio";
+import Portfolio from "../../components/JUSDAuto/Portfolio";
 
-import { Panel } from "../../components/StableCoinPool/Panel";
+import { Panel } from "../../components/JUSDAuto/Panel";
 
-const StableCoinPool = () => {
+const JUSDAuto = () => {
   const info = {
     poolName: "",
     label: "",
@@ -46,15 +46,15 @@ const StableCoinPool = () => {
             <GridItem colSpan={1}>
               <Box>
                 <Image
-                  src={"/assets/images/pools/defi-friend.png"}
-                  alt="JUSD Staking"
-                  width={100}
+                  src={"/assets/images/pools/stable-coin.png"}
+                  alt="stable-coin-pool-auto"
+                  width={200}
                 />
               </Box>
             </GridItem>
             <GridItem colSpan={7}>
               <Text fontSize="4xl">
-                <b>Stable Coin Pool</b>
+                <b>Auto-Compound: Stable Coin</b>
               </Text>
             </GridItem>
             <GridItem colSpan={2} style={{ textAlign: "right" }}>
@@ -85,7 +85,7 @@ const StableCoinPool = () => {
                 <Text fontSize="xl">
                   <b>Total Value Deposited</b>
                 </Text>
-                {/* <TVD></TVD> */}
+                {/* <TVD></TVD> (to do fix) */}
               </Box>
             </GridItem>
             <GridItem colSpan={4}>
@@ -99,4 +99,4 @@ const StableCoinPool = () => {
   );
 };
 
-export default StableCoinPool;
+export default JUSDAuto;

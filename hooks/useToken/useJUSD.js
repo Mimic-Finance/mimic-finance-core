@@ -5,8 +5,11 @@ import useAppSelector from "hooks/useAppSelector";
 
 import { useCallback, useEffect, useState } from "react";
 
-const useJUSD = () => {
+const useJUSD = (_account) => {
   const { account } = useAppSelector((state) => state.account);
+  if (_account) {
+    account = _account;
+  }
 
   const abi = JUSD_ABI.abi;
   const contract = useContract(abi, JUSD_ABI.networks[1].address);

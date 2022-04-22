@@ -6,8 +6,11 @@ import useAppSelector from "hooks/useAppSelector";
 
 import { useCallback, useEffect, useState } from "react";
 
-const useDAI = () => {
+const useDAI = (_account) => {
   const { account } = useAppSelector((state) => state.account);
+  if (_account) {
+    account = _account;
+  }
 
   const abi = DAI_ABI.abi;
   const contract = useContract(abi, TokenAddress.DAI);
