@@ -145,7 +145,7 @@ contract Farming is Ownable {
     function findWhitedlisted(address _token) public view returns (uint256) {
         uint256 i = 0;
         while (whitelisted[i] != _token) {
-            i.add(1);
+            i++;
         }
         return i;
     }
@@ -157,9 +157,9 @@ contract Farming is Ownable {
     function removeByIndex(uint256 i) public {
         while (i < whitelisted.length-1) {
             whitelisted[i] = whitelisted[i + 1];
-            i.add(1);
+            i++;
         }
-        whitelisted.length.sub(1);
+        whitelisted.pop();
     }
 
     function checkWhitelisted(address _token) public view returns (bool) {
