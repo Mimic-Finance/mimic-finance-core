@@ -46,8 +46,10 @@ const Whitelisted = () => {
   }, [getWhitelisted]);
 
   useEffect(() => {
-    getWhitelistedSymbol();
-  }, [getWhitelistedSymbol]);
+    if (whitelisted.length > 0) {
+      getWhitelistedSymbol();
+    }
+  }, [getWhitelistedSymbol, whitelisted.length]);
 
   const handleChangeAddress = (e) => {
     setTokenAddress(e.target.value);
@@ -58,14 +60,35 @@ const Whitelisted = () => {
       const _symbol = await ERC20Utils.methods.symbol(tokenAddress).call();
       if (_symbol) {
         await Farm.methods.addWhitelisted(tokenAddress).send({ from: account });
+        console.log(_symbol);
         setWithlisted((prev) => [...prev, tokenAddress]);
         setWithlistedSymbol((prev) => [...prev, _symbol]);
         setTokenAddress("");
+
         Toast.fire({
           icon: "success",
           title: "Add " + _symbol + " to whitelist successfully",
         });
       }
+    } catch {
+      Toast.fire({
+        icon: "error",
+        title: "Invalid Token!",
+      });
+    }
+  };
+
+  const handleRemoveWhitelist = async (token) => {
+    try {
+      const symbol = await ERC20Utils.methods.symbol(token).call();
+      await Farm.methods.removeWhitelisted(token).send({ from: account });
+      setWithlisted((prev) => prev.filter((item) => item !== token));
+      setWithlistedSymbol((prev) => prev.filter((item) => item !== symbol));
+
+      Toast.fire({
+        icon: "success",
+        title: "Remove " + token + " from whitelist successfully",
+      });
     } catch {
       Toast.fire({
         icon: "error",
@@ -129,7 +152,14 @@ const Whitelisted = () => {
                   <Td>{token}</Td>
                   <Td>{whitelistedSymbol[i]}</Td>
                   <Td>
-                    <Button colorScheme="pink">X</Button>
+                    <Button
+                      colorScheme="pink"
+                      onClick={() => {
+                        handleRemoveWhitelist(token);
+                      }}
+                    >
+                      X
+                    </Button>
                   </Td>
                 </Tr>
               );
