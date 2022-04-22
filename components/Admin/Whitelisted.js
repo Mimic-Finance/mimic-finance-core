@@ -17,10 +17,15 @@ import {
 
 import { useFarm, useERC20Utils } from "hooks/useContracts";
 import { useState, useEffect, useCallback } from "react";
+import useAccount from "hooks/useAccount";
+
+import Toast from "components/Utils/Toast/Toast";
 
 const Whitelisted = () => {
   const [whitelisted, setWithlisted] = useState([]);
   const [tokenAddress, setTokenAddress] = useState();
+  const [whitelistedSymbol, setWithlistedSymbol] = useState([]);
+  const account = useAccount();
   const Farm = useFarm();
   const ERC20Utils = useERC20Utils();
 
@@ -29,9 +34,20 @@ const Whitelisted = () => {
     setWithlisted(_whitelisted);
   }, [Farm.methods]);
 
+  const getWhitelistedSymbol = useCallback(async () => {
+    whitelisted.map(async (token) => {
+      const symbol = await ERC20Utils.methods.symbol(token).call();
+      setWithlistedSymbol((prev) => [...prev, symbol]);
+    });
+  }, [ERC20Utils.methods, whitelisted]);
+
   useEffect(() => {
     getWhitelisted();
   }, [getWhitelisted]);
+
+  useEffect(() => {
+    getWhitelistedSymbol();
+  }, [getWhitelistedSymbol]);
 
   const handleChangeAddress = (e) => {
     setTokenAddress(e.target.value);
@@ -40,9 +56,21 @@ const Whitelisted = () => {
   const handleAddWhitelist = async () => {
     try {
       const _symbol = await ERC20Utils.methods.symbol(tokenAddress).call();
-      console.log("symbol => " + _symbol);
+      if (_symbol) {
+        await Farm.methods.addWhitelisted(tokenAddress).send({ from: account });
+        setWithlisted((prev) => [...prev, tokenAddress]);
+        setWithlistedSymbol((prev) => [...prev, _symbol]);
+        setTokenAddress("");
+        Toast.fire({
+          icon: "success",
+          title: "Add " + _symbol + " to whitelist successfully",
+        });
+      }
     } catch {
-      console.log("not a valid token");
+      Toast.fire({
+        icon: "error",
+        title: "Invalid Token!",
+      });
     }
   };
 
@@ -95,18 +123,17 @@ const Whitelisted = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {whitelisted &&
-              whitelisted.map((token, i) => {
-                return (
-                  <Tr key={i}>
-                    <Td>{token}</Td>
-                    <Td>getsymbol</Td>
-                    <Td>
-                      <Button colorScheme="pink">X</Button>
-                    </Td>
-                  </Tr>
-                );
-              })}
+            {whitelisted.map((token, i) => {
+              return (
+                <Tr key={i}>
+                  <Td>{token}</Td>
+                  <Td>{whitelistedSymbol[i]}</Td>
+                  <Td>
+                    <Button colorScheme="pink">X</Button>
+                  </Td>
+                </Tr>
+              );
+            })}
           </Tbody>
         </Table>
       </TableContainer>

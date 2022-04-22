@@ -133,7 +133,7 @@ contract Farming is Ownable {
     }
 
     function addWhitelisted(address _token) public onlyOwner {
-        require(!checkWhitelisted(_token));
+        require(checkWhitelisted(_token) == false);
         whitelisted.push(_token);
     }
 
