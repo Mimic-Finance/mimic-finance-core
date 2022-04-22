@@ -16,7 +16,7 @@ import useAccount from "hooks/useAccount";
 import Toast from "components/Utils/Toast/Toast";
 
 const ClaimAndSwap = () => {
-  const [whitelisted, setWithlisted] = useState([]);
+  const [whitelisted, setWhitelisted] = useState([]);
   const account = useAccount();
   const Farm = useFarm();
   const AutoCompound = useAutoCompound();
@@ -48,7 +48,7 @@ const ClaimAndSwap = () => {
       });
     }
 
-    setWithlisted(whitelistWithSymbol);
+    setWhitelisted(whitelistWithSymbol);
   }, [ERC20Utils.methods, Farm.methods]);
 
   useEffect(() => {

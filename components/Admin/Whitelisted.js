@@ -23,34 +23,31 @@ import useAccount from "hooks/useAccount";
 import Toast from "components/Utils/Toast/Toast";
 
 const Whitelisted = () => {
-  const [whitelisted, setWithlisted] = useState([]);
+  const [whitelisted, setWhitelisted] = useState([]);
   const [tokenAddress, setTokenAddress] = useState();
-  const [whitelistedSymbol, setWithlistedSymbol] = useState([]);
   const account = useAccount();
   const Farm = useFarm();
   const ERC20Utils = useERC20Utils();
 
   const getWhitelisted = useCallback(async () => {
     const _whitelisted = await Farm.methods.getWhitelisted().call();
-    setWithlisted(_whitelisted);
-  }, [Farm.methods]);
-
-  const getWhitelistedSymbol = useCallback(async () => {
-    whitelisted.map(async (token) => {
-      const symbol = await ERC20Utils.methods.symbol(token).call();
-      setWithlistedSymbol((prev) => [...prev, symbol]);
-    });
-  }, [ERC20Utils.methods, whitelisted]);
-
-  useEffect(() => {
-    getWhitelisted();
-  }, [getWhitelisted]);
-
-  useEffect(() => {
-    if (whitelisted.length > 0) {
-      getWhitelistedSymbol();
+    var whitelistWithSymbol = [];
+    for (var i = 0; i < _whitelisted.length; i++) {
+      const symbol = await ERC20Utils.methods.symbol(_whitelisted[i]).call();
+      whitelistWithSymbol.push({
+        address: _whitelisted[i],
+        symbol: symbol,
+      });
     }
-  }, [getWhitelistedSymbol, whitelisted.length]);
+
+    setWhitelisted(whitelistWithSymbol);
+  }, [ERC20Utils.methods, Farm.methods]);
+
+  useEffect(() => {
+    if (whitelisted.length == 0) {
+      getWhitelisted();
+    }
+  }, [getWhitelisted, whitelisted]);
 
   const handleChangeAddress = (e) => {
     setTokenAddress(e.target.value);
@@ -61,9 +58,10 @@ const Whitelisted = () => {
       const _symbol = await ERC20Utils.methods.symbol(tokenAddress).call();
       if (_symbol) {
         await Farm.methods.addWhitelisted(tokenAddress).send({ from: account });
-        console.log(_symbol);
-        setWithlisted((prev) => [...prev, tokenAddress]);
-        setWithlistedSymbol((prev) => [...prev, _symbol]);
+        setWhitelisted((prev) => [
+          ...prev,
+          { address: tokenAddress, symbol: _symbol },
+        ]);
         setTokenAddress("");
 
         Toast.fire({
@@ -147,24 +145,25 @@ const Whitelisted = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {whitelisted.map((token, i) => {
-              return (
-                <Tr key={i}>
-                  <Td>{token}</Td>
-                  <Td>{whitelistedSymbol[i]}</Td>
-                  <Td>
-                    <Button
-                      colorScheme="pink"
-                      onClick={() => {
-                        handleRemoveWhitelist(token);
-                      }}
-                    >
-                      X
-                    </Button>
-                  </Td>
-                </Tr>
-              );
-            })}
+            {whitelisted &&
+              whitelisted.map((token, i) => {
+                return (
+                  <Tr key={i}>
+                    <Td>{token.address}</Td>
+                    <Td>{token.symbol}</Td>
+                    <Td>
+                      <Button
+                        colorScheme="pink"
+                        onClick={() => {
+                          handleRemoveWhitelist(token.address);
+                        }}
+                      >
+                        X
+                      </Button>
+                    </Td>
+                  </Tr>
+                );
+              })}
           </Tbody>
         </Table>
       </TableContainer>
