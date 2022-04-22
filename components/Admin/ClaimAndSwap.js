@@ -89,8 +89,10 @@ const ClaimAndSwap = () => {
         <Box width={"50%"}>
           <Grid pt={10} templateColumns="repeat(10, 1fr)" gap={0}>
             <GridItem colSpan={6}>
-              <Select onChange={handleChangeClaimAddress}>
-                <option>Choose Pool</option>
+              <Select
+                onChange={handleChangeClaimAddress}
+                placeholder="Choose Pool"
+              >
                 {whitelisted &&
                   whitelisted.map((token) => {
                     return (
@@ -110,7 +112,7 @@ const ClaimAndSwap = () => {
                   background:
                     "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
                 }}
-                disabled={wait_tx && send_tx_status}
+                disabled={claimAddress == null || (wait_tx && send_tx_status)}
                 mb={5}
                 ml={2}
                 w={"100%"}
