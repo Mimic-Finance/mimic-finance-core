@@ -1,8 +1,7 @@
 name: Next-js-Build
 
 on:
-  push:
-    branches: [ develop ]
+  workflow_dispatch
 
 jobs:
   next-js-build:
