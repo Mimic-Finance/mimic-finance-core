@@ -1,10 +1,16 @@
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+
 import ClaimAndSwap from "./ClaimAndSwap";
 import DepositToFarm from "./DepositToFarm";
 import Whitelisted from "./Whitelisted";
+import Dashboard from "./Dashboard";
 
 const Panel = () => {
   const _menu = [
+    {
+      name: "Dashboard",
+      component: <Dashboard />,
+    },
     {
       name: "Whitelisted",
       component: <Whitelisted />,

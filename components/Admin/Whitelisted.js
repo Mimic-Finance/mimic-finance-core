@@ -13,6 +13,7 @@ import {
   Th,
   Td,
   TableContainer,
+  Divider,
 } from "@chakra-ui/react";
 
 import { useFarm, useERC20Utils } from "hooks/useContracts";
@@ -167,6 +168,8 @@ const Whitelisted = () => {
           </Tbody>
         </Table>
       </TableContainer>
+
+      <Divider mt={20} />
     </>
   );
 };

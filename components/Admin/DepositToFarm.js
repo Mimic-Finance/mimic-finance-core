@@ -11,6 +11,7 @@ import {
   Spinner,
   Box,
   Center,
+  Divider,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import Web3 from "web3";
@@ -127,6 +128,8 @@ const DepositToFarm = () => {
           </Button>
         </Box>
       </Center>
+
+      <Divider mt={20} />
     </>
   );
 };
