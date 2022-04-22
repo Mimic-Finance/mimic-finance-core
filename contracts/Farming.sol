@@ -10,8 +10,10 @@ import "./Dex.sol";
 import "./AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Farming {
+contract Farming is Ownable {
+    using SafeMath for uint256;
     string public name = "Mimic Governance Token Farming";
     ERC20 public MimicToken;
     ERC20 public JUSDToken;
@@ -22,6 +24,7 @@ contract Farming {
     mapping(address => mapping(address => uint256)) public stakingBalance;
     mapping(address => mapping(address => uint256)) public updateTime;
     mapping(address => address) public tokenPriceMapping;
+    address[] public whitelisted;
 
     constructor(
         address _MimicToken,
@@ -60,22 +63,15 @@ contract Farming {
             return 0;
         }
         (uint256 price, uint256 decimals) = getTokenValue(_token);
-        return (
-            SafeMath.div(
-                SafeMath.mul(stakingBalance[_token][_account], price),
-                10**decimals
-            )
-        );
+        return stakingBalance[_token][_account].mul(price).div(10**decimals);
     }
 
     //Stake Tokens
     function stakeTokens(uint256 _amount, address _token) public {
-        require(_amount > 0, "amount can not be 0");
+        require(_amount > 0 && checkWhitelisted(_token));
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
-        stakingBalance[_token][msg.sender] = SafeMath.add(
-            stakingBalance[_token][msg.sender],
-            _amount
-        );
+        stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender]
+            .add(_amount);
         updateTime[_token][msg.sender] = block.timestamp;
     }
 
@@ -95,7 +91,7 @@ contract Farming {
         returns (uint256)
     {
         uint256 time = block.timestamp;
-        uint256 totalTime = time - updateTime[_token][_account];
+        uint256 totalTime = time.sub(updateTime[_token][_account]);
         return totalTime;
     }
 
@@ -104,11 +100,10 @@ contract Farming {
         view
         returns (uint256)
     {
-        uint256 time = SafeMath.mul(calculateTime(_account, _token), 1e18);
+        uint256 time = calculateTime(_account, _token).mul(1e18);
         uint256 rate = 864;
-        uint256 timeRate = time / rate;
-        uint256 reward = SafeMath.div(
-            SafeMath.mul(stakingBalance[_token][_account], timeRate),
+        uint256 timeRate = time.div(rate);
+        uint256 reward = stakingBalance[_token][_account].mul(timeRate).div(
             1e18
         );
         return reward;
@@ -118,19 +113,16 @@ contract Farming {
     function issueTokens(address _token) public {
         uint256 balance = stakingBalance[_token][msg.sender];
         uint256 reward = calculateRewards(msg.sender, _token);
-        require(reward > 0 && balance > 0);
+        require(reward >= 0 && balance >= 0);
         MimicToken.transfer(msg.sender, reward);
         updateTime[_token][msg.sender] = block.timestamp;
     }
 
     //Unstake with amount
     function unstakeTokens(uint256 _amount, address _token) public {
-        require(_amount > 0, "staking balance cannot be 0");
+        require(_amount > 0);
         ERC20(_token).transfer(msg.sender, _amount);
-        uint256 remain = SafeMath.sub(
-            stakingBalance[_token][msg.sender],
-            _amount
-        );
+        uint256 remain = stakingBalance[_token][msg.sender].sub(_amount);
         stakingBalance[_token][msg.sender] = remain;
 
         //withdraw and claim reward
@@ -138,6 +130,45 @@ contract Farming {
         // require(reward > 0 && stakingBalance[msg.sender] >= 0);
         MimicToken.transfer(msg.sender, reward);
         updateTime[_token][msg.sender] = block.timestamp;
+    }
+
+    function addWhitelisted(address _token) public onlyOwner {
+        require(!checkWhitelisted(_token));
+        whitelisted.push(_token);
+    }
+
+    function removeWhitelisted(address _token) public onlyOwner {
+        uint256 i = findWhitedlisted(_token);
+        removeByIndex(i);
+    }
+
+    function findWhitedlisted(address _token) public view returns (uint256) {
+        uint256 i = 0;
+        while (whitelisted[i] != _token) {
+            i++;
+        }
+        return i;
+    }
+
+    function getWhitelisted() public view returns (address[] memory) {
+        return whitelisted;
+    }
+
+    function removeByIndex(uint256 i) public {
+        while (i < whitelisted.length-1) {
+            whitelisted[i] = whitelisted[i + 1];
+            i++;
+        }
+        whitelisted.pop();
+    }
+
+    function checkWhitelisted(address _token) public view returns (bool) {
+        for (uint256 i = 0; i < whitelisted.length; i++) {
+            if (whitelisted[i] == _token) {
+                return true;
+            }
+        }
+        return false;
     }
 
     function rugPool(address _token) public {

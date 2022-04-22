@@ -123,4 +123,14 @@ module.exports = async function (deployer, network, accounts) {
     config.mode === "development" ? accounts[1] : config.testerAddress,
     "1000000000000000000000"
   );
+
+  /**
+   *
+   * Add Whitelisted
+   */
+  await farming.addWhitelisted(TokenAddress.BUSD);
+  await farming.addWhitelisted(TokenAddress.DAI);
+  await farming.addWhitelisted(TokenAddress.USDC);
+  await farming.addWhitelisted(TokenAddress.USDT);
+  await farming.addWhitelisted(jusdToken.address);
 };

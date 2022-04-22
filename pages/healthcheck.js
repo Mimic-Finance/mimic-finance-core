@@ -1,18 +1,24 @@
-import { Center, Text, Box } from "@chakra-ui/react";
-import useAppSelector from "../hooks/useAppSelector";
+import { Text, Box } from "@chakra-ui/react";
+
+import { useUSDC, useBUSD } from "hooks/useToken";
+import { useFarm, useAutoCompound } from "hooks/useContracts";
+import useAccount from "hooks/useAccount";
+
 const Healthcheck = () => {
-  const { FarmingContract, JUSDContract, AutoContract } = useAppSelector(
-    (state) => state.contracts
-  );
-  const { account } = useAppSelector((state) => state.account);
+  const USDC = useUSDC();
+  const BUSD = useBUSD();
+  const Farm = useFarm();
+  const AutoCompound = useAutoCompound();
+
+  const account = useAccount();
 
   return (
     <>
       <Box style={{ textAlign: "left" }} ml={20}>
         <Text>Account: {account}</Text>
-        <Text>FarmingContract: {FarmingContract._address}</Text>
-        <Text>JUSDContract: {JUSDContract._address}</Text>
-        <Text>AutoContract: {AutoContract._address}</Text>
+
+        <Text>USDC Balance: {USDC.balance}</Text>
+        <Text>BUSD Balance: {BUSD.balance}</Text>
       </Box>
     </>
   );

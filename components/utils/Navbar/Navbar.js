@@ -33,6 +33,7 @@ import LinkNext from "next/link";
 import NAV_ITEMS from "../../../constants/Menu";
 
 import ConnectButton from "../Button/ConnectButton";
+import { AdminContextProvider } from "../../../contexts/AdminContext";
 
 const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure();
@@ -168,6 +169,30 @@ const DesktopNav = () => {
           </Popover>
         </Box>
       ))}
+
+      <AdminContextProvider nav={true}>
+        <Box>
+          <Popover trigger={"hover"} placement={"bottom-start"}>
+            <PopoverTrigger>
+              <LinkNext href="/admin" passHref>
+                <a>
+                  <Text
+                    fontSize={"md"}
+                    fontWeight={500}
+                    color={linkColor}
+                    _hover={{
+                      textDecoration: "none",
+                      color: linkHoverColor,
+                    }}
+                  >
+                    Admin
+                  </Text>
+                </a>
+              </LinkNext>
+            </PopoverTrigger>
+          </Popover>
+        </Box>
+      </AdminContextProvider>
     </Stack>
   );
 };

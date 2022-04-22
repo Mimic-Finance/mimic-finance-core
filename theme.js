@@ -97,6 +97,19 @@ const theme = extendTheme({
         zIndex: 1,
         width: 150,
       },
+      ".stat-active": {
+        bg: mode("#f5f5f5", "#4c4f53")(props),
+      },
+      ".stat-deactive": {
+        bg: mode("#ffffff", "#292d33")(props),
+      },
+      ".stat-box": {
+        color: mode("gray.700", "whiteAlpha.900")(props),
+        borderRadius: "10px",
+        border: "2px solid rgba(0, 0, 0, 0.05)",
+        margin: "0.5rem",
+        padding: "1rem",
+      },
     }),
   },
 });
