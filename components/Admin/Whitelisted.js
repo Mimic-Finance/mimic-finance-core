@@ -79,14 +79,13 @@ const Whitelisted = () => {
 
   const handleRemoveWhitelist = async (token) => {
     try {
-      const symbol = await ERC20Utils.methods.symbol(token).call();
+      const _symbol = await ERC20Utils.methods.symbol(token).call();
       await Farm.methods.removeWhitelisted(token).send({ from: account });
-      setWithlisted((prev) => prev.filter((item) => item !== token));
-      setWithlistedSymbol((prev) => prev.filter((item) => item !== symbol));
+      setWhitelisted((prev) => prev.filter((item) => item.address !== token));
 
       Toast.fire({
         icon: "success",
-        title: "Remove " + token + " from whitelist successfully",
+        title: "Remove " + _symbol + " from whitelist successfully",
       });
     } catch {
       Toast.fire({
