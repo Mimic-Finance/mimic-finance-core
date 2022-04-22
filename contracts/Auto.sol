@@ -78,14 +78,15 @@ contract Auto {
         (uint256 price, uint256 decimals) = getTokenValue(_token);
         return stakingBalance[_token][_account].mul(price).div(10**decimals);
     }
-    
+
     function deposit(uint256 _amount, address _token) public {
-        require(FarmContract.checkWhitelisted(_token) && _amount > 0 );
+        require(FarmContract.checkWhitelisted(_token) && _amount > 0);
         /* Transfer any token that in whitelist from user to Auto-Compound Contract */
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
-        stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender].add(_amount);
+        stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender]
+            .add(_amount);
         /* Calculate staking value */
-        uint256 value = stakingValue(msg.sender , _token);
+        uint256 value = stakingValue(msg.sender, _token);
         /*Swap any token to jusd*/
         SwapContract.swapToJUSD(value);
         /*Transfer to Swap Contract*/
