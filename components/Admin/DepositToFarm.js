@@ -15,14 +15,13 @@ import {
 import { useState } from "react";
 import Web3 from "web3";
 
-import { useAutoCompound, useFarm } from "hooks/useContracts";
+import { useAutoCompound } from "hooks/useContracts";
 import { useJUSD } from "hooks/useToken";
 import useAccount from "hooks/useAccount";
 
 const DepositToFarm = () => {
   const account = useAccount();
   const JUSD = useJUSD();
-  const Farm = useFarm();
   const AutoCompound = useAutoCompound();
   const [depositAmount, setDepositAmount] = useState(0);
 
