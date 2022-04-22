@@ -8,19 +8,19 @@ export const AdminContext = createContext(false);
 
 export const AdminContextProvider = ({ children }) => {
   const account = useAccount();
-  const [role, setRole] = useState(false);
+  const [accessible, setAccessible] = useState(false);
   const Farm = useFarm();
 
   const checkOwner = useCallback(async () => {
     const owner = await Farm.methods.owner().call();
-    setRole(owner === account);
+    setAccessible(owner === account);
   }, [account, Farm]);
 
   useEffect(() => {
     checkOwner();
   }, [checkOwner]);
 
-  if (role) {
+  if (accessible) {
     return <AdminContext.Provider>{children}</AdminContext.Provider>;
   } else {
     return (
