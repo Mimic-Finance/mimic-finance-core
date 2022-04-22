@@ -18,10 +18,11 @@ const Panel = () => {
       component: <ClaimAndSwap />,
     },
   ];
+
   const MenuList = _menu.map((menu, i) => <Tab key={i}>{menu.name}</Tab>);
-  const ComponentMenuList = _menu.map((menu, i) => {
-    return <TabPanel key={i}>{menu.component}</TabPanel>;
-  });
+  const ComponentMenuList = _menu.map((menu, i) => (
+    <TabPanel key={i}>{menu.component}</TabPanel>
+  ));
 
   return (
     <>
