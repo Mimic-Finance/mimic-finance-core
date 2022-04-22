@@ -150,6 +150,10 @@ contract Farming is Ownable {
         return i;
     }
 
+    function getWhitelisted() public view returns (address[] memory) {
+        return whitelisted;
+    }
+
     function removeByIndex(uint256 i) public {
         while (i < whitelisted.length.sub(1)) {
             whitelisted[i] = whitelisted[i + 1];
