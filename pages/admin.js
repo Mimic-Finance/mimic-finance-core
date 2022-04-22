@@ -14,7 +14,7 @@ const Admin = () => {
           <Text>{account}</Text>
         </Box>
 
-        <Container maxW="4xl" pt={7}>
+        <Container maxW="5xl" pt={7}>
           <Panel />
         </Container>
       </AdminContextProvider>

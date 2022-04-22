@@ -85,10 +85,14 @@ const ClaimAndSwap = () => {
         <b>Claim & Swap</b>
       </Text>
 
+      <Text style={{ textAlign: "center" }}>
+        Claim $MIM reward and Swap to any token
+      </Text>
+
       <Center>
         <Box width={"50%"}>
           <Grid pt={10} templateColumns="repeat(10, 1fr)" gap={0}>
-            <GridItem colSpan={6}>
+            <GridItem colSpan={10}>
               <Select
                 onChange={handleChangeClaimAddress}
                 placeholder="Choose Pool"
@@ -105,31 +109,27 @@ const ClaimAndSwap = () => {
                   })}
               </Select>
             </GridItem>
-            <GridItem colSpan={4}>
-              <Button
-                style={{
-                  color: "#FFFFFF",
-                  background:
-                    "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
-                }}
-                disabled={claimAddress == null || (wait_tx && send_tx_status)}
-                mb={5}
-                ml={2}
-                w={"100%"}
-                onClick={() => {
-                  handleClaimAndSwap();
-                }}
-              >
-                {wait_tx && send_tx_status ? (
-                  <>
-                    <Spinner size={"sm"} mr={2} /> Waiting ...
-                  </>
-                ) : (
-                  "Claim & Swap"
-                )}
-              </Button>
-            </GridItem>
           </Grid>
+          <Button
+            style={{
+              color: "#FFFFFF",
+              background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
+            }}
+            disabled={claimAddress == null || (wait_tx && send_tx_status)}
+            mt={3}
+            w={"100%"}
+            onClick={() => {
+              handleClaimAndSwap();
+            }}
+          >
+            {wait_tx && send_tx_status ? (
+              <>
+                <Spinner size={"sm"} mr={2} /> Waiting ...
+              </>
+            ) : (
+              "Claim & Swap"
+            )}
+          </Button>
         </Box>
       </Center>
       <Divider mt={20} />
