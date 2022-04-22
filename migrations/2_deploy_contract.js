@@ -27,19 +27,32 @@ module.exports = async function (deployer, network, accounts) {
    * (at Mainnet)
    */
   const busd = await BUSD.at(TokenAddress.BUSD);
-  await busd.transfer(accounts[1], "10000000000000000000000", {
+  await busd.transfer(accounts[0], "100000000000000000000000", {
     from: config.rich_account,
   });
+  await busd.transfer(accounts[1], "100000000000000000000000", {
+    from: config.rich_account,
+  });
+
   const dai = await DAI.at(TokenAddress.DAI);
-  await dai.transfer(accounts[1], "10000000000000000000000", {
+  await dai.transfer(accounts[0], "100000000000000000000000", {
+    from: config.rich_account,
+  });
+  await dai.transfer(accounts[1], "100000000000000000000000", {
     from: config.rich_account,
   });
   const usdc = await USDC.at(TokenAddress.USDC);
-  await usdc.transfer(accounts[1], 10000000000, {
+  await usdc.transfer(accounts[0], 100000000000, {
+    from: config.rich_account,
+  });
+  await usdc.transfer(accounts[1], 100000000000, {
     from: config.rich_account,
   });
   const usdt = await USDT.at(TokenAddress.USDT);
-  await usdt.transfer(accounts[1], 10000000000, {
+  await usdt.transfer(accounts[0], 100000000000, {
+    from: config.rich_account,
+  });
+  await usdt.transfer(accounts[1], 100000000000, {
     from: config.rich_account,
   });
 
@@ -61,12 +74,17 @@ module.exports = async function (deployer, network, accounts) {
   const dex = await Dex.deployed();
 
   // Transfer USDC from unlocked account to Dex Contract
-  await usdc_mock.transfer(dex.address, 10000000000, {
+  await usdc_mock.transfer(dex.address, 100000000000, {
     from: config.rich_account,
   });
 
   // Transfer USDC from unlocked account to user account
-  await usdc_mock.transfer(accounts[1], 10000000000, {
+  await usdc_mock.transfer(accounts[0], 100000000000, {
+    from: config.rich_account,
+  });
+
+  // Transfer USDC from unlocked account to user account
+  await usdc_mock.transfer(accounts[1], 100000000000, {
     from: config.rich_account,
   });
 
