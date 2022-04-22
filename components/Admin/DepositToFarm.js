@@ -72,6 +72,11 @@ const DepositToFarm = () => {
       <Text fontSize="xl" mt={3} style={{ textAlign: "center" }}>
         <b>Deposit JUSD to Farm</b>
       </Text>
+
+      <Text style={{ textAlign: "center" }}>
+        JUSD Balance from AutoCompound Contract
+      </Text>
+
       <Center>
         <Box width={"50%"}>
           <Grid pt={10} templateColumns="repeat(10, 1fr)" gap={0}>
