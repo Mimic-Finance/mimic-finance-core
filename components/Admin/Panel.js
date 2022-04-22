@@ -4,23 +4,30 @@ import DepositToFarm from "./DepositToFarm";
 import Whitelisted from "./Whitelisted";
 
 const Panel = () => {
-  const menu = ["Whitelisted", "Deposit to Farm", "Claim & Swap"];
-  const MenuList = menu.map((name) => <Tab key={name}>{name}</Tab>);
+  const _menu = [
+    {
+      name: "Whitelisted",
+      component: <Whitelisted />,
+    },
+    {
+      name: "Deposit to Farm",
+      component: <DepositToFarm />,
+    },
+    {
+      name: "Claim & Swap",
+      component: <ClaimAndSwap />,
+    },
+  ];
+  const MenuList = _menu.map((menu, i) => <Tab key={i}>{menu.name}</Tab>);
+  const ComponentMenuList = _menu.map((menu, i) => {
+    return <TabPanel key={i}>{menu.component}</TabPanel>;
+  });
+
   return (
     <>
       <Tabs variant="enclosed">
         <TabList>{MenuList}</TabList>
-        <TabPanels>
-          <TabPanel>
-            <Whitelisted />
-          </TabPanel>
-          <TabPanel>
-            <DepositToFarm />
-          </TabPanel>
-          <TabPanel>
-            <ClaimAndSwap />
-          </TabPanel>
-        </TabPanels>
+        <TabPanels>{ComponentMenuList}</TabPanels>
       </Tabs>
     </>
   );
