@@ -1,8 +1,8 @@
 import Head from "next/head";
-import styles from "../styles/Home.module.css";
+import styles from "styles/Home.module.css";
 import { Text, Grid, Container, Button } from "@chakra-ui/react";
 
-import { Pool } from "../components/Pools/Pool";
+import { Pool } from "components/Pools/Pool";
 
 const Home = () => {
   return (

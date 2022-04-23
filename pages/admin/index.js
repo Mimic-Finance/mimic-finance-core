@@ -1,5 +1,5 @@
-import { Box, Center, Text, Container } from "@chakra-ui/react";
-import { AdminContextProvider } from "../contexts/AdminContext";
+import { Box, Text, Container } from "@chakra-ui/react";
+import { AdminContextProvider } from "contexts/AdminContext";
 import useAccount from "hooks/useAccount";
 
 import Panel from "components/Admin/Panel";

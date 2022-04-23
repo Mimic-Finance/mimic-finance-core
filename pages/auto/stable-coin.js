@@ -1,8 +1,8 @@
 import Head from "next/head";
-import styles from "../../styles/Home.module.css";
+import styles from "styles/Home.module.css";
 import Web3 from "web3";
 import { useRouter } from "next/router";
-import TVD from "../../components/StableCoinAutoCompound/TVD";
+import TVD from "components/StableCoinAutoCompound/TVD";
 
 import {
   Text,
