@@ -33,6 +33,14 @@ const Stake = () => {
     const _whitelisted = await Farm.methods.getWhitelisted().call();
     var whitelistWithSymbol = [];
     for (var i = 0; i < _whitelisted.length; i++) {
+      if (i == 0) {
+        const _coinBalance = await ERC20Utils.methods
+          .balanceOf(_whitelisted[i], account)
+          .call();
+        setCoin(_whitelisted[i]);
+        setCoinBalance(_coinBalance);
+      }
+
       const symbol = await ERC20Utils.methods.symbol(_whitelisted[i]).call();
       whitelistWithSymbol.push({
         address: _whitelisted[i],
@@ -41,7 +49,7 @@ const Stake = () => {
     }
 
     setWhitelisted(whitelistWithSymbol);
-  }, [ERC20Utils.methods, Farm.methods]);
+  }, [ERC20Utils.methods, Farm.methods, account]);
 
   useEffect(() => {
     if (whitelisted.length == 0) {
@@ -51,9 +59,7 @@ const Stake = () => {
 
   //Stake Value
   const [stakeValue, setStakeValue] = useState(0);
-  const [coin, setCoin] = useState(
-    whitelisted.length != 0 ? whitelisted[0].address : ""
-  );
+  const [coin, setCoin] = useState();
   const [coinBalance, setCoinBalance] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
@@ -151,8 +157,13 @@ const Stake = () => {
     }
   };
 
+  const checkDecimals = async (address) => {
+    const decimals = await ERC20Utils.methods.decimals(address).call();
+    return decimals;
+  };
+
   const setStakeValueMax = async () => {
-    const decimals = await ERC20Utils.methods.decimals(coin.toString()).call();
+    const decimals = await checkDecimals(coin.toString());
     if (decimals == 6) {
       setStakeValue(coinBalance / Math.pow(10, 6));
     } else {
@@ -160,8 +171,28 @@ const Stake = () => {
     }
   };
 
-  const handleChangeStakeValue = (e) => {
+  const handleChangeStakeValue = async (e) => {
     setStakeValue(e.target.value);
+    const decimals = await checkDecimals(coin.toString());
+    let value = 0;
+    if (decimals == 6) {
+      value = coinBalance / Math.pow(10, 6);
+    } else {
+      if (e.target.value != 0) {
+        value = Web3.utils.fromWei(coinBalance.toString());
+      }
+    }
+
+    if (
+      parseFloat(e.target.value) > parseFloat(value) ||
+      parseFloat(e.target.value) < 0
+    ) {
+      setStakeValue(0);
+      Toast.fire({
+        icon: "error",
+        title: "Please enter value less than your balance",
+      });
+    }
   };
 
   const handleChangeToken = async (e) => {
@@ -201,7 +232,12 @@ const Stake = () => {
                 onChange={handleChangeStakeValue}
               />
               <InputRightElement width="4.5rem">
-                <Button h="1.75rem" size="sm" onClick={setStakeValueMax}>
+                <Button
+                  h="1.75rem"
+                  size="sm"
+                  onClick={setStakeValueMax}
+                  disabled={!coin}
+                >
                   Max
                 </Button>
               </InputRightElement>
