@@ -1,5 +1,4 @@
 import { createContext, useEffect, useState, useCallback } from "react";
-import { setContractData, loadContractData } from "../slices/contracts";
 import { setAccountData, detectAccount } from "../slices/account";
 import useAppDispatch from "../hooks/useAppDispatch";
 import Loading from "../components/Utils/Loading/Loading";
@@ -9,21 +8,16 @@ import useAppSelector from "../hooks/useAppSelector";
 export const MimicFinanceContext = createContext(false);
 
 export const MimicFinanceProvider = ({ children }) => {
-  const [accountLoading, setAccountLoading] = useState(true);
-  const [contractLoading, setContractLoading] = useState(true);
-
-  const { account } = useAppSelector((state) => state.account);
-
   const dispatch = useAppDispatch();
+  const [accountLoading, setAccountLoading] = useState(true);
+  const { account } = useAppSelector((state) => state.account);
 
   const loadWeb3 = useCallback(async () => {
     if (window.ethereum) {
       window.web3 = new Web3(window.ethereum);
       await window.ethereum.enable();
-      /**
-       * Detect Account [0]
-       */
-      const accountData = await detectAccount();
+
+      const accountData = await detectAccount(); //detect account[0]
       if (accountData) {
         dispatch(setAccountData(accountData));
         setAccountLoading(false);
@@ -40,21 +34,11 @@ export const MimicFinanceProvider = ({ children }) => {
   useEffect(() => {
     const Loader = async () => {
       await loadWeb3();
-      /**
-       * Load Contract Data
-       */
-      if (account && account !== "0x0") {
-        const contractData = await loadContractData(account);
-        if (contractData) {
-          dispatch(setContractData(contractData));
-          setContractLoading(false);
-        }
-      }
     };
     Loader();
   }, [dispatch, account, loadWeb3]);
 
-  if (!accountLoading && !contractLoading) {
+  if (!accountLoading) {
     return (
       <MimicFinanceContext.Provider>{children}</MimicFinanceContext.Provider>
     );
