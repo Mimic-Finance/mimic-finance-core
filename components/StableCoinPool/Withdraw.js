@@ -3,6 +3,7 @@ import Web3 from "web3";
 
 import useAccount from "hooks/useAccount";
 import { useFarm, useERC20Utils } from "hooks/useContracts";
+import { useWhitelisted } from "hooks/useFunctions";
 
 import {
   Grid,
@@ -19,48 +20,31 @@ import {
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
-
 const WithDraw = () => {
-  //Initialize web3 and contract
+  // Initialize coin and coinbalance state
+  const [coin, setCoin] = useState();
+  const [coinBalance, setCoinBalance] = useState(0);
+
+  // create function for set parent state
+  const setCoinState = (coin) => setCoin(coin);
+  const setCoinBalanceState = (coinBalance) => setCoinBalance(coinBalance);
+
+  //useWhitelisted with set coin and coin balance state
+  const getWhitelisted = useWhitelisted(setCoinState, setCoinBalanceState);
   const [whitelisted, setWhitelisted] = useState([]);
+
+  //get whitelist effect
+  useEffect(() => {
+    setWhitelisted(getWhitelisted);
+  }, [getWhitelisted]);
+
+  //initialize web3 and contract
   const account = useAccount();
   const Farm = useFarm();
   const ERC20Utils = useERC20Utils();
 
-
-  //Get whitelist
-  const getWhitelisted = useCallback(async () => {
-    const _whitelisted = await Farm.methods.getWhitelisted().call();
-    var whitelistWithSymbol = [];
-    for (var i = 0; i < _whitelisted.length; i++) {
-      if (i == 0) {
-        const _coinBalance = await Farm.methods
-        .getStakingBalance(_whitelisted[0].toString(), account)
-        .call();
-        setCoin(_whitelisted[i]);
-        setCoinBalance(_coinBalance);
-      }
-
-      const symbol = await ERC20Utils.methods.symbol(_whitelisted[i]).call();
-      whitelistWithSymbol.push({
-        address: _whitelisted[i],
-        symbol: symbol,
-      });
-    }
-
-    setWhitelisted(whitelistWithSymbol);
-  }, [ERC20Utils.methods, Farm.methods, account]);
-
-  useEffect(() => {
-    if (whitelisted.length == 0) {
-      getWhitelisted();
-    }
-  }, [getWhitelisted, whitelisted]);
-
   //widraw Value
   const [withdrawValue, setWithdrawValue] = useState(0);
-  const [coin, setCoin] = useState();
-  const [coinBalance, setCoinBalance] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
   const [wait_tx, setWaitTx] = useState(false);
@@ -72,7 +56,6 @@ const WithDraw = () => {
   };
 
   const withdraw = async () => {
-    
     if (coin !== null) {
       // => get decimals of token
       const decimals = await ERC20Utils.methods
@@ -95,23 +78,23 @@ const WithDraw = () => {
     setWaitTx(true);
 
     Farm.methods
-    .unstakeTokens(_amount, coin)
-     .send({ from: account})
-     .on("transactionHash", (hash) => {
-       const withdrawCheck = setInterval(async () => {
-         const tx_status = await txStatus(hash);
+      .unstakeTokens(_amount, coin)
+      .send({ from: account })
+      .on("transactionHash", (hash) => {
+        const withdrawCheck = setInterval(async () => {
+          const tx_status = await txStatus(hash);
           if (tx_status && tx_status.status) {
-           setWaitTx(false);
-           setSendTxStatus(false);
-           clearInterval(withdrawCheck);
+            setWaitTx(false);
+            setSendTxStatus(false);
+            clearInterval(withdrawCheck);
             Toast.fire({
-             icon: "success",
-            title: "Withdraw Success!",
-           });
-           setWithdrawValue(0);
-         }
-       }, 1500);
-   });
+              icon: "success",
+              title: "Withdraw Success!",
+            });
+            setWithdrawValue(0);
+          }
+        }, 1500);
+      });
   };
 
   const checkDecimals = async (address) => {
@@ -200,7 +183,7 @@ const WithDraw = () => {
 
       <div style={{ paddingTop: "20px" }}></div>
       <hr />
-      
+
       <Button
         style={{
           color: "#FFFFFF",
