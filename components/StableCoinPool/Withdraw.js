@@ -10,10 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect, useCallback } from "react";
 import Portfolio from "./Portfolio";
+import Toast from "../Utils/Toast/Toast";
 
 import Web3 from "web3";
 import useAppSelector from "../../hooks/useAppSelector";
 
+import ERC20ABI from "../../constants/ERC20ABI.json";
 import useAccount from "hooks/useAccount";
 import { useBUSD, useUSDC, useUSDT, useDAI, useJUSD } from "hooks/useToken";
 import { useFarm, useERC20Utils } from "hooks/useContracts";
@@ -52,7 +54,7 @@ const WithDraw = () => {
   }, [getWhitelisted, whitelisted]);
 
   //widraw Value
-  const [withDrawValue, setWithdrawValue] = useState(0);
+  const [withdrawValue, setWithdrawValue] = useState(0);
   const [coin, setCoin] = useState(
     whitelisted.length != 0 ? whitelisted[0].address : ""
   );
@@ -68,11 +70,8 @@ const WithDraw = () => {
   };
 
   const withdraw = async () => {
-    // => Find coin Contract that user select coin (for use approve function)
-    var CoinConract = coinContractList.find(
-      (contract) => contract._address == coin
-    );
-
+    const web3 = window.web3;
+    
     if (coin !== null) {
       // => get decimals of token
       const decimals = await ERC20Utils.methods
@@ -81,10 +80,10 @@ const WithDraw = () => {
       var _amount = 0;
       if (decimals == 6) {
         // decimal = 6
-        _amount = stakeValue * Math.pow(10, 6);
+        _amount = withdrawValue * Math.pow(10, 6);
       } else {
         // decimal = 18
-        _amount = Web3.utils.toWei(stakeValue.toString());
+        _amount = Web3.utils.toWei(withdrawValue.toString());
       }
 
       console.log("approve value => ", _amount);
@@ -93,9 +92,41 @@ const WithDraw = () => {
     // ========== Transaction Start ==============
     setSendTxStatus(true);
     setWaitTx(true);
+    // => Check Allowance value <<<
 
-    // withdraw
-    // Farm.methods.unstakeToken;
+    // if (_amount <= coinBalance) {
+      Farm.methods
+      .unstakeTokens(_amount, coin)
+      .send({ from: account})
+      .on("transactionHash", (hash) => {
+        const withdrawCheck = setInterval(async () => {
+          const tx_status = await txStatus(hash);
+          if (tx_status && tx_status.status) {
+            setWaitTx(false);
+            setSendTxStatus(false);
+            clearInterval(withdrawCheck);
+            Toast.fire({
+              icon: "success",
+              title: "Withdraw Success!",
+            });
+            setWithdrawValue(0);
+          }
+        }, 1500);
+    });
+  // } else {
+  //   Toast.fire({
+  //     icon: "error",
+  //     title:
+  //       "Please enter withdraw value = " +
+  //       withdrawValue +
+  //       " or less",
+  //   });
+  // }
+
+  console.log("coinbalance => " + coinBalance);
+    // => Withdraw <<<
+    
+
 
     // Farm.methods
     //   .unstakeTokens(amount)
@@ -104,8 +135,13 @@ const WithDraw = () => {
     // set reload after withdraw
     //   });
   };
-  const setWithdrawValueMax = () => {
-    setWithdrawValue(Web3.utils.fromWei(coinBalance.toString()));
+  const setWithdrawValueMax = async () => {
+    const decimals = await ERC20Utils.methods.decimals(coin.toString()).call();
+    if (decimals == 6) {
+      setWithdrawValue(coinBalance / Math.pow(10, 6));
+    } else {
+      setWithdrawValue(Web3.utils.fromWei(coinBalance.toString()));
+    }
   };
 
   const handleChangeWithdrawValue = (e) => {
@@ -145,7 +181,7 @@ const WithDraw = () => {
                 type="number"
                 style={{ borderRadius: "0px 10px 10px 0px" }}
                 placeholder="0.00"
-                value={withDrawValue}
+                value={withdrawValue}
                 onChange={handleChangeWithdrawValue}
               />
               <InputRightElement width="4.5rem">
@@ -169,9 +205,9 @@ const WithDraw = () => {
         mb={5}
         w={"100%"}
         onClick={() => {
-          withdraw(Web3.utils.toWei(withDrawValue.toString()));
+          withdraw(Web3.utils.toWei(withdrawValue.toString()));
         }}
-        // disabled={withDrawValue >= JUSDStakingBalance && JUSDStakingBalance > 0}
+        // disabled={withdrawValue >= JUSDStakingBalance && JUSDStakingBalance > 0}
       >
         Withdraw
       </Button>

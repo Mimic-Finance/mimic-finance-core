@@ -55,7 +55,7 @@ const initialState = {
   JUSDStakingBalance: 0,
 
   // JUSD Auto pool
-  JUSDAutoStakingBalance: 0,
+  StableCoinAutoCompoundStakingBalance: 0,
 };
 
 export const loadContractData = async (account) => {
@@ -93,7 +93,7 @@ export const loadContractData = async (account) => {
       JUSDStakingBalance: 0,
 
       // JUSD Auto pool
-      JUSDAutoStakingBalance: 0,
+      StableCoinAutoCompoundStakingBalance: 0,
     };
 
     // const accounts = await web3.eth.getAccounts();
@@ -338,10 +338,10 @@ export const loadContractData = async (account) => {
           autoContractData.address
         );
         response.AutoContract = AutoContract;
-        let JUSDAutoStakingBalance = await AutoContract.methods
+        let StableCoinAutoCompoundStakingBalance = await AutoContract.methods
           .stakingBalance(currentAccount)
           .call();
-        response.JUSDAutoStakingBalance = JUSDAutoStakingBalance.toString();
+        response.StableCoinAutoCompoundStakingBalance = StableCoinAutoCompoundStakingBalance.toString();
       } else {
         window.alert("Auto Contract not deployed");
       }
@@ -419,7 +419,7 @@ const contractSlice = createSlice({
       state.JUSDBalance = action.payload.JUSDBalance;
       state.MimicBalance = action.payload.MimicBalance;
       state.JUSDStakingBalance = action.payload.JUSDStakingBalance;
-      state.JUSDAutoStakingBalance = action.payload.JUSDAutoStakingBalance;
+      state.StableCoinAutoCompoundStakingBalance = action.payload.StableCoinAutoCompoundStakingBalance;
 
       //Contracts
       state.cJUSDContract = action.payload.cJUSDContract;

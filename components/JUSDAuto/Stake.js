@@ -139,11 +139,11 @@ const Stake = () => {
       </Button>
 
       {/* <Portfolio
-        balance={Web3.utils.fromWei(JUSDAutoStakingBalance.toString())}
+        balance={Web3.utils.fromWei(StableCoinAutoCompoundStakingBalance.toString())}
         reward={Web3.utils.fromWei(RewardBalance.toString())}
         total={
           parseInt(Web3.utils.fromWei(RewardBalance.toString())) +
-          parseInt(Web3.utils.fromWei(JUSDAutoStakingBalance.toString()))
+          parseInt(Web3.utils.fromWei(StableCoinAutoCompoundStakingBalance.toString()))
         }
       /> */}
     </>

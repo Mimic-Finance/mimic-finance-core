@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "../../styles/Home.module.css";
 import Web3 from "web3";
 import { useRouter } from "next/router";
-import TVD from "../../components/JUSDAuto/TVD";
+import TVD from "../../components/StableCoinAutoCompound/TVD";
 
 import {
   Text,
@@ -20,11 +20,11 @@ import {
 import { useEffect, useState } from "react";
 import { FaCalculator } from "react-icons/fa";
 import CountUp from "react-countup";
-import Portfolio from "../../components/JUSDAuto/Portfolio";
+import Portfolio from "../../components/StableCoinAutoCompound/Portfolio";
 
-import { Panel } from "../../components/JUSDAuto/Panel";
+import { Panel } from "../../components/StableCoinAutoCompound/Panel";
 
-const JUSDAuto = () => {
+const StableCoinAutoCompound = () => {
   const info = {
     poolName: "",
     label: "",
@@ -99,4 +99,4 @@ const JUSDAuto = () => {
   );
 };
 
-export default JUSDAuto;
+export default StableCoinAutoCompound;

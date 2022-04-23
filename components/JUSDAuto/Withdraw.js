@@ -21,7 +21,7 @@ const WithDraw = () => {
   const {
     FarmingContract,
     MimicBalance,
-    JUSDAutoStakingBalance,
+    StableCoinAutoCompoundStakingBalance,
     RewardBalance,
     AutoContract,
     cJUSDBalance,
