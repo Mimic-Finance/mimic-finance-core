@@ -1,6 +1,9 @@
-import Web3 from "web3";
 import { useState, useCallback, useEffect } from "react";
-import useAppSelector from "../../hooks/useAppSelector";
+import Web3 from "web3";
+
+import ERC20ABI from "../../constants/ERC20ABI.json";
+import useAccount from "hooks/useAccount";
+import { useFarm, useERC20Utils } from "hooks/useContracts";
 
 import {
   Grid,
@@ -17,9 +20,6 @@ import {
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
-import ERC20ABI from "../../constants/ERC20ABI.json";
-import useAccount from "hooks/useAccount";
-import { useFarm, useERC20Utils } from "hooks/useContracts";
 
 const Stake = () => {
   //Initialize web3 and contract
@@ -246,6 +246,9 @@ const Stake = () => {
         </GridItem>
       </Grid>
 
+      <div style={{ paddingTop: "20px" }}></div>
+      <hr />
+      
       <Button
         style={{
           color: "#FFFFFF",

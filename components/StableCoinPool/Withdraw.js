@@ -1,3 +1,9 @@
+import { useState, useEffect, useCallback } from "react";
+import Web3 from "web3";
+
+import useAccount from "hooks/useAccount";
+import { useFarm, useERC20Utils } from "hooks/useContracts";
+
 import {
   Grid,
   GridItem,
@@ -6,19 +12,13 @@ import {
   Input,
   Button,
   InputRightElement,
+  Spinner,
   InputGroup,
 } from "@chakra-ui/react";
-import { useState, useEffect, useCallback } from "react";
+
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
-import Web3 from "web3";
-import useAppSelector from "../../hooks/useAppSelector";
-
-import ERC20ABI from "../../constants/ERC20ABI.json";
-import useAccount from "hooks/useAccount";
-import { useBUSD, useUSDC, useUSDT, useDAI, useJUSD } from "hooks/useToken";
-import { useFarm, useERC20Utils } from "hooks/useContracts";
 
 const WithDraw = () => {
   //Initialize web3 and contract
@@ -26,17 +26,21 @@ const WithDraw = () => {
   const account = useAccount();
   const Farm = useFarm();
   const ERC20Utils = useERC20Utils();
-  const BUSD = useBUSD();
-  const USDT = useUSDT();
-  const DAI = useDAI();
-  const USDC = useUSDC();
-  const JUSD = useJUSD();
+
 
   //Get whitelist
   const getWhitelisted = useCallback(async () => {
     const _whitelisted = await Farm.methods.getWhitelisted().call();
     var whitelistWithSymbol = [];
     for (var i = 0; i < _whitelisted.length; i++) {
+      if (i == 0) {
+        const _coinBalance = await Farm.methods
+        .getStakingBalance(_whitelisted[0].toString(), account)
+        .call();
+        setCoin(_whitelisted[i]);
+        setCoinBalance(_coinBalance);
+      }
+
       const symbol = await ERC20Utils.methods.symbol(_whitelisted[i]).call();
       whitelistWithSymbol.push({
         address: _whitelisted[i],
@@ -45,7 +49,7 @@ const WithDraw = () => {
     }
 
     setWhitelisted(whitelistWithSymbol);
-  }, [ERC20Utils.methods, Farm.methods]);
+  }, [ERC20Utils.methods, Farm.methods, account]);
 
   useEffect(() => {
     if (whitelisted.length == 0) {
@@ -55,9 +59,7 @@ const WithDraw = () => {
 
   //widraw Value
   const [withdrawValue, setWithdrawValue] = useState(0);
-  const [coin, setCoin] = useState(
-    whitelisted.length != 0 ? whitelisted[0].address : ""
-  );
+  const [coin, setCoin] = useState();
   const [coinBalance, setCoinBalance] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
@@ -70,7 +72,6 @@ const WithDraw = () => {
   };
 
   const withdraw = async () => {
-    const web3 = window.web3;
     
     if (coin !== null) {
       // => get decimals of token
@@ -92,51 +93,34 @@ const WithDraw = () => {
     // ========== Transaction Start ==============
     setSendTxStatus(true);
     setWaitTx(true);
-    // => Check Allowance value <<<
 
-    // if (_amount <= coinBalance) {
-      Farm.methods
-      .unstakeTokens(_amount, coin)
-      .send({ from: account})
-      .on("transactionHash", (hash) => {
-        const withdrawCheck = setInterval(async () => {
-          const tx_status = await txStatus(hash);
+    Farm.methods
+    .unstakeTokens(_amount, coin)
+     .send({ from: account})
+     .on("transactionHash", (hash) => {
+       const withdrawCheck = setInterval(async () => {
+         const tx_status = await txStatus(hash);
           if (tx_status && tx_status.status) {
-            setWaitTx(false);
-            setSendTxStatus(false);
-            clearInterval(withdrawCheck);
+           setWaitTx(false);
+           setSendTxStatus(false);
+           clearInterval(withdrawCheck);
             Toast.fire({
-              icon: "success",
-              title: "Withdraw Success!",
-            });
-            setWithdrawValue(0);
-          }
-        }, 1500);
-    });
-  // } else {
-  //   Toast.fire({
-  //     icon: "error",
-  //     title:
-  //       "Please enter withdraw value = " +
-  //       withdrawValue +
-  //       " or less",
-  //   });
-  // }
-
-  console.log("coinbalance => " + coinBalance);
-    // => Withdraw <<<
-    
-
-
-    // Farm.methods
-    //   .unstakeTokens(amount)
-    //   .send({ from: account })
-    //   .on("transactionHash", (hash) => {
-    // set reload after withdraw
-    //   });
+             icon: "success",
+            title: "Withdraw Success!",
+           });
+           setWithdrawValue(0);
+         }
+       }, 1500);
+   });
   };
+
+  const checkDecimals = async (address) => {
+    const decimals = await ERC20Utils.methods.decimals(address).call();
+    return decimals;
+  };
+
   const setWithdrawValueMax = async () => {
-    const decimals = await ERC20Utils.methods.decimals(coin.toString()).call();
+    const decimals = await checkDecimals(coin.toString());
     if (decimals == 6) {
       setWithdrawValue(coinBalance / Math.pow(10, 6));
     } else {
@@ -144,8 +128,28 @@ const WithDraw = () => {
     }
   };
 
-  const handleChangeWithdrawValue = (e) => {
+  const handleChangeWithdrawValue = async (e) => {
     setWithdrawValue(e.target.value);
+    const decimals = await checkDecimals(coin.toString());
+    let value = 0;
+    if (decimals == 6) {
+      value = coinBalance / Math.pow(10, 6);
+    } else {
+      if (e.target.value != 0) {
+        value = Web3.utils.fromWei(coinBalance.toString());
+      }
+    }
+
+    if (
+      parseFloat(e.target.value) > parseFloat(value) ||
+      parseFloat(e.target.value) < 0
+    ) {
+      setWithdrawValue(0);
+      Toast.fire({
+        icon: "error",
+        title: "Please enter value less than your staking balance",
+      });
+    }
   };
 
   const handleChangeToken = async (e) => {
@@ -196,20 +200,27 @@ const WithDraw = () => {
 
       <div style={{ paddingTop: "20px" }}></div>
       <hr />
+      
       <Button
         style={{
           color: "#FFFFFF",
           background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
         }}
+        disabled={withdrawValue == 0 || (wait_tx && send_tx_status)}
         mt={2}
         mb={5}
         w={"100%"}
         onClick={() => {
-          withdraw(Web3.utils.toWei(withdrawValue.toString()));
+          withdraw();
         }}
-        // disabled={withdrawValue >= JUSDStakingBalance && JUSDStakingBalance > 0}
       >
-        Withdraw
+        {wait_tx && send_tx_status ? (
+          <>
+            <Spinner size={"sm"} mr={2} /> Waiting the transaction ...
+          </>
+        ) : (
+          "Withdraw"
+        )}
       </Button>
       {/* <Portfolio
         balance={Web3.utils.fromWei(JUSDStakingBalance.toString())}
