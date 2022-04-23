@@ -18,7 +18,6 @@ import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
 import useAccount from "hooks/useAccount";
-import { useBUSD, useUSDC, useUSDT, useDAI, useJUSD } from "hooks/useToken";
 import { useFarm, useERC20Utils } from "hooks/useContracts";
 
 const Stake = () => {
@@ -27,19 +26,6 @@ const Stake = () => {
   const account = useAccount();
   const Farm = useFarm();
   const ERC20Utils = useERC20Utils();
-  const BUSD = useBUSD();
-  const USDT = useUSDT();
-  const DAI = useDAI();
-  const USDC = useUSDC();
-  const JUSD = useJUSD();
-
-  const coinContractList = [
-    USDC.contract,
-    BUSD.contract,
-    DAI.contract,
-    USDT.contract,
-    JUSD.contract,
-  ];
 
   //Get whitelist
   const getWhitelisted = useCallback(async () => {
@@ -64,7 +50,9 @@ const Stake = () => {
 
   //Stake Value
   const [stakeValue, setStakeValue] = useState(0);
-  const [coin, setCoin] = useState(whitelisted.length != 0 ? whitelisted[0].address : "");
+  const [coin, setCoin] = useState(
+    whitelisted.length != 0 ? whitelisted[0].address : ""
+  );
   const [coinBalance, setCoinBalance] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
@@ -77,9 +65,19 @@ const Stake = () => {
   };
 
   const deposit = async () => {
-    // => Find coin Contract that user select coin (for use approve function)
-    var CoinConract = coinContractList.find(
-      (contract) => contract._address == coin
+    //Create contract instance
+    const coinContractABI = await fetch(
+      "https://api.etherscan.io/api?module=contract&action=getabi&address=" +
+        coin
+    ).then((res) => {
+      return res.json();
+    });
+
+    const web3 = window.web3;
+
+    const coinContract = new web3.eth.Contract(
+      JSON.parse(coinContractABI.result),
+      coin
     );
 
     // => set amount with decimals
@@ -104,7 +102,8 @@ const Stake = () => {
       setWaitTx(true);
       // => Approve <<<
       // => approve with coin that user select
-      await CoinConract.methods
+
+      await coinContract.methods
         .approve(Farm.address, _amount)
         .send({ from: account })
         .on("transactionHash", (hash) => {
@@ -164,9 +163,7 @@ const Stake = () => {
   };
 
   const setStakeValueMax = async () => {
-    const decimals = await ERC20Utils.methods
-      .decimals(coin.toString())
-      .call();
+    const decimals = await ERC20Utils.methods.decimals(coin.toString()).call();
     if (decimals == 6) {
       setStakeValue(coinBalance / Math.pow(10, 6));
     } else {
@@ -198,9 +195,7 @@ const Stake = () => {
             {whitelisted.map((token) => {
               return (
                 <>
-                  <option value={token.address}>
-                    {token.symbol}
-                  </option>
+                  <option value={token.address}>{token.symbol}</option>
                 </>
               );
             })}

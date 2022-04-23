@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
-
 contract ERC20Utils {
     using SafeMath for uint256;
 
@@ -18,8 +17,13 @@ contract ERC20Utils {
         return ERC20(_token).balanceOf(_account);
     }
 
-    function approve(address _token,address _spender,uint256 _amount) public returns (bool) {
-        return IERC20(_token).approve(_spender, _amount);
+    function approve(
+        address _token,
+        address _spender,
+        uint256 _amount
+    ) public returns (bool) {
+        ERC20(_token).approve(_spender, _amount);
+        return true;
     }
 
     function transferFrom(
