@@ -16,7 +16,6 @@ import {
 
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
-import StableCoin from "../../constants/StableCoin.json";
 
 import useAccount from "hooks/useAccount";
 import { useBUSD, useUSDC, useUSDT, useDAI, useJUSD } from "hooks/useToken";
@@ -65,7 +64,7 @@ const Stake = () => {
 
   //Stake Value
   const [stakeValue, setStakeValue] = useState(0);
-  const [coin, setCoin] = useState(StableCoin[0].address);
+  const [coin, setCoin] = useState(whitelisted.length != 0 ? whitelisted[0].address : "");
   const [coinBalance, setCoinBalance] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
