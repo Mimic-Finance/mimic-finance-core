@@ -30,10 +30,6 @@ const WithDraw = () => {
   const USDC = useUSDC();
   const JUSD = useJUSD();
 
-  //const { account } = useAppSelector((state) => state.account);
-  const { FarmingContract, MimicBalance, JUSDStakingBalance, RewardBalance } =
-    useAppSelector((state) => state.contracts);
-
   //Get whitelist
   const getWhitelisted = useCallback(async () => {
     const _whitelisted = await Farm.methods.getWhitelisted().call();
@@ -57,7 +53,9 @@ const WithDraw = () => {
 
   //widraw Value
   const [withDrawValue, setWithdrawValue] = useState(0);
-  const [coin, setCoin] = useState(whitelisted.length != 0 ? whitelisted[0].address : "");
+  const [coin, setCoin] = useState(
+    whitelisted.length != 0 ? whitelisted[0].address : ""
+  );
   const [coinBalance, setCoinBalance] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
@@ -90,25 +88,24 @@ const WithDraw = () => {
       }
 
       console.log("approve value => ", _amount);
-
     }
-    
+
     // ========== Transaction Start ==============
     setSendTxStatus(true);
     setWaitTx(true);
 
     // withdraw
-    Farm.methods.unstakeToken
+    // Farm.methods.unstakeToken;
 
     // Farm.methods
     //   .unstakeTokens(amount)
     //   .send({ from: account })
     //   .on("transactionHash", (hash) => {
-    //     // set reload after withdraw
+    // set reload after withdraw
     //   });
   };
   const setWithdrawValueMax = () => {
-    setWithdrawValue(Web3.utils.fromWei(JUSDStakingBalance.toString()));
+    setWithdrawValue(Web3.utils.fromWei(coinBalance.toString()));
   };
 
   const handleChangeWithdrawValue = (e) => {
@@ -118,8 +115,8 @@ const WithDraw = () => {
   const handleChangeToken = async (e) => {
     setWithdrawValue(0);
     setCoin(e.target.value);
-    let _coinBalance = await ERC20Utils.methods
-      .balanceOf(e.target.value.toString(), account)
+    let _coinBalance = await Farm.methods
+      .getStakingBalance(e.target.value.toString(), account)
       .call();
     setCoinBalance(_coinBalance);
   };
@@ -128,15 +125,14 @@ const WithDraw = () => {
     <>
       <Grid templateColumns="repeat(10, 1fr)" gap={0} mt={0}>
         <GridItem colSpan={3}>
-          <Select 
-          onClick={handleChangeToken}
-          style={{ borderRadius: "10px 0px 0px 10px" }}>
-          {whitelisted.map((token) => {
+          <Select
+            onChange={handleChangeToken}
+            style={{ borderRadius: "10px 0px 0px 10px" }}
+          >
+            {whitelisted.map((token) => {
               return (
                 <>
-                  <option value={token.address}>
-                    {token.symbol}
-                  </option>
+                  <option value={token.address}>{token.symbol}</option>
                 </>
               );
             })}
@@ -175,7 +171,7 @@ const WithDraw = () => {
         onClick={() => {
           withdraw(Web3.utils.toWei(withDrawValue.toString()));
         }}
-        disabled={withDrawValue >= JUSDStakingBalance && JUSDStakingBalance > 0}
+        // disabled={withDrawValue >= JUSDStakingBalance && JUSDStakingBalance > 0}
       >
         Withdraw
       </Button>
