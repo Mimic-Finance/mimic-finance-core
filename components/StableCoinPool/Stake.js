@@ -19,7 +19,7 @@ import Toast from "../Utils/Toast/Toast";
 import StableCoin from "../../constants/StableCoin.json";
 
 import useAccount from "hooks/useAccount";
-import { useBUSD, useUSDC, useUSDT, useDAI } from "hooks/useToken";
+import { useBUSD, useUSDC, useUSDT, useDAI, useJUSD } from "hooks/useToken";
 import { useFarm, useERC20Utils } from "hooks/useContracts";
 
 const Stake = () => {
@@ -32,12 +32,14 @@ const Stake = () => {
   const USDT = useUSDT();
   const DAI = useDAI();
   const USDC = useUSDC();
+  const JUSD = useJUSD();
 
   const coinContractList = [
     USDC.contract,
     BUSD.contract,
     DAI.contract,
     USDT.contract,
+    JUSD.contract,
   ];
 
   //Get whitelist
@@ -194,10 +196,12 @@ const Stake = () => {
             onChange={handleChangeCoin}
             style={{ borderRadius: "10px 0px 0px 10px" }}
           >
-            {StableCoin.map((coin) => {
+            {whitelisted.map((token) => {
               return (
                 <>
-                  <option value={coin.address}>{coin.symbol}</option>
+                  <option value={token.address}>
+                    {token.symbol}
+                    </option>
                 </>
               );
             })}
