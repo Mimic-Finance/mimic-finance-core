@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useFarm, useERC20Utils } from "../useContracts";
+import useAccount from "hooks/useAccount";
 
-const useWhitelisted = () => {
+const useWhitelisted = (setCoin, setCoinBalance) => {
   const [whitelisted, setWhitelisted] = useState([]);
+  const account = useAccount();
   const Farm = useFarm();
   const ERC20Utils = useERC20Utils();
 
@@ -10,6 +12,15 @@ const useWhitelisted = () => {
     const _whitelisted = await Farm.methods.getWhitelisted().call();
     var whitelistWithSymbol = [];
     for (var i = 0; i < _whitelisted.length; i++) {
+      if (setCoin && setCoinBalance) {
+        if (i == 0) {
+          const _coinBalance = await ERC20Utils.methods
+            .balanceOf(_whitelisted[i], account)
+            .call();
+          setCoin(_whitelisted[i]);
+          setCoinBalance(_coinBalance);
+        }
+      }
       const symbol = await ERC20Utils.methods.symbol(_whitelisted[i]).call();
       whitelistWithSymbol.push({
         address: _whitelisted[i],
@@ -18,6 +29,7 @@ const useWhitelisted = () => {
     }
 
     setWhitelisted(whitelistWithSymbol);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ERC20Utils.methods, Farm.methods]);
 
   useEffect(() => {

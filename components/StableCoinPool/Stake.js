@@ -3,6 +3,7 @@ import Web3 from "web3";
 
 import ERC20ABI from "../../constants/ERC20ABI.json";
 import useAccount from "hooks/useAccount";
+import { useWhitelisted } from "hooks/useFunctions";
 import { useFarm, useERC20Utils } from "hooks/useContracts";
 
 import {
@@ -20,47 +21,31 @@ import {
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
-
 const Stake = () => {
-  //Initialize web3 and contract
+  // Initialize coin and coinbalance state
+  const [coin, setCoin] = useState();
+  const [coinBalance, setCoinBalance] = useState(0);
+
+  // create function for set parent state
+  const setCoinState = (coin) => setCoin(coin);
+  const setCoinBalanceState = (coinBalance) => setCoinBalance(coinBalance);
+
+  //useWhitelisted with set coin and coin balance state
+  const getWhitelisted = useWhitelisted(setCoinState, setCoinBalanceState);
   const [whitelisted, setWhitelisted] = useState([]);
+
+  //get whitelist effect
+  useEffect(() => {
+    setWhitelisted(getWhitelisted);
+  }, [getWhitelisted]);
+
+  //initialize web3 and contract
   const account = useAccount();
   const Farm = useFarm();
   const ERC20Utils = useERC20Utils();
 
-  //Get whitelist
-  const getWhitelisted = useCallback(async () => {
-    const _whitelisted = await Farm.methods.getWhitelisted().call();
-    var whitelistWithSymbol = [];
-    for (var i = 0; i < _whitelisted.length; i++) {
-      if (i == 0) {
-        const _coinBalance = await ERC20Utils.methods
-          .balanceOf(_whitelisted[i], account)
-          .call();
-        setCoin(_whitelisted[i]);
-        setCoinBalance(_coinBalance);
-      }
-
-      const symbol = await ERC20Utils.methods.symbol(_whitelisted[i]).call();
-      whitelistWithSymbol.push({
-        address: _whitelisted[i],
-        symbol: symbol,
-      });
-    }
-
-    setWhitelisted(whitelistWithSymbol);
-  }, [ERC20Utils.methods, Farm.methods, account]);
-
-  useEffect(() => {
-    if (whitelisted.length == 0) {
-      getWhitelisted();
-    }
-  }, [getWhitelisted, whitelisted]);
-
   //Stake Value
   const [stakeValue, setStakeValue] = useState(0);
-  const [coin, setCoin] = useState();
-  const [coinBalance, setCoinBalance] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
   const [wait_tx, setWaitTx] = useState(false);
@@ -248,7 +233,7 @@ const Stake = () => {
 
       <div style={{ paddingTop: "20px" }}></div>
       <hr />
-      
+
       <Button
         style={{
           color: "#FFFFFF",
