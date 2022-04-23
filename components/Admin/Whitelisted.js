@@ -16,38 +16,24 @@ import {
   Divider,
 } from "@chakra-ui/react";
 
-import { useFarm, useERC20Utils } from "hooks/useContracts";
-import { useState, useEffect, useCallback } from "react";
 import useAccount from "hooks/useAccount";
+import { useFarm, useERC20Utils } from "hooks/useContracts";
+import { useWhitelisted } from "hooks/useFunctions";
+import { useState, useEffect, useCallback } from "react";
 
 import Toast from "components/Utils/Toast/Toast";
 
 const Whitelisted = () => {
+  const getWhitelisted = useWhitelisted();
   const [whitelisted, setWhitelisted] = useState([]);
   const [tokenAddress, setTokenAddress] = useState();
   const account = useAccount();
   const Farm = useFarm();
   const ERC20Utils = useERC20Utils();
 
-  const getWhitelisted = useCallback(async () => {
-    const _whitelisted = await Farm.methods.getWhitelisted().call();
-    var whitelistWithSymbol = [];
-    for (var i = 0; i < _whitelisted.length; i++) {
-      const symbol = await ERC20Utils.methods.symbol(_whitelisted[i]).call();
-      whitelistWithSymbol.push({
-        address: _whitelisted[i],
-        symbol: symbol,
-      });
-    }
-
-    setWhitelisted(whitelistWithSymbol);
-  }, [ERC20Utils.methods, Farm.methods]);
-
   useEffect(() => {
-    if (whitelisted.length == 0) {
-      getWhitelisted();
-    }
-  }, [getWhitelisted, whitelisted]);
+    setWhitelisted(getWhitelisted);
+  }, [getWhitelisted]);
 
   const handleChangeAddress = (e) => {
     setTokenAddress(e.target.value);
