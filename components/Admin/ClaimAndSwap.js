@@ -9,18 +9,22 @@ import {
   Divider,
   Spinner,
 } from "@chakra-ui/react";
-import { useState, useEffect, useCallback } from "react";
-import { useFarm, useERC20Utils, useAutoCompound } from "hooks/useContracts";
+import { useState, useEffect } from "react";
+import { useAutoCompound } from "hooks/useContracts";
 import useAccount from "hooks/useAccount";
+import { useWhitelisted } from "hooks/useFunctions";
 
 import Toast from "components/Utils/Toast/Toast";
 
 const ClaimAndSwap = () => {
+  const getWhitelisted = useWhitelisted();
   const [whitelisted, setWhitelisted] = useState([]);
   const account = useAccount();
-  const Farm = useFarm();
   const AutoCompound = useAutoCompound();
-  const ERC20Utils = useERC20Utils();
+
+  useEffect(() => {
+    setWhitelisted(getWhitelisted);
+  }, [getWhitelisted]);
 
   const [claimAddress, setClaimAddress] = useState(null);
 
@@ -36,26 +40,6 @@ const ClaimAndSwap = () => {
   const handleChangeClaimAddress = (e) => {
     setClaimAddress(e.target.value);
   };
-
-  const getWhitelisted = useCallback(async () => {
-    const _whitelisted = await Farm.methods.getWhitelisted().call();
-    var whitelistWithSymbol = [];
-    for (var i = 0; i < _whitelisted.length; i++) {
-      const symbol = await ERC20Utils.methods.symbol(_whitelisted[i]).call();
-      whitelistWithSymbol.push({
-        address: _whitelisted[i],
-        symbol: symbol,
-      });
-    }
-
-    setWhitelisted(whitelistWithSymbol);
-  }, [ERC20Utils.methods, Farm.methods]);
-
-  useEffect(() => {
-    if (whitelisted.length == 0) {
-      getWhitelisted();
-    }
-  }, [getWhitelisted, whitelisted]);
 
   const handleClaimAndSwap = async () => {
     setSendTxStatus(true);

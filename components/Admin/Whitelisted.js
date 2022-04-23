@@ -19,7 +19,7 @@ import {
 import useAccount from "hooks/useAccount";
 import { useFarm, useERC20Utils } from "hooks/useContracts";
 import { useWhitelisted } from "hooks/useFunctions";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 import Toast from "components/Utils/Toast/Toast";
 

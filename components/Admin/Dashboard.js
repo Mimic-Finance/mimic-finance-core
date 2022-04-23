@@ -7,15 +7,20 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 
-import { useFarm, useERC20Utils } from "hooks/useContracts";
+import { useFarm } from "hooks/useContracts";
 import { useUSDC, useBUSD, useDAI, useUSDT, useJUSD } from "hooks/useToken";
-import { useState, useEffect, useCallback } from "react";
+import { useWhitelisted } from "hooks/useFunctions";
+import { useState, useEffect } from "react";
 import Web3 from "web3";
 
 const Dashboard = () => {
+  const getWhitelisted = useWhitelisted();
   const [whitelisted, setWhitelisted] = useState([]);
   const Farm = useFarm();
-  const ERC20Utils = useERC20Utils();
+
+  useEffect(() => {
+    setWhitelisted(getWhitelisted);
+  }, [getWhitelisted]);
 
   /**
    * Stable Coin contract
@@ -25,26 +30,6 @@ const Dashboard = () => {
   const USDT = useUSDT(Farm.address);
   const USDC = useUSDC(Farm.address);
   const JUSD = useJUSD(Farm.address);
-
-  const getWhitelisted = useCallback(async () => {
-    const _whitelisted = await Farm.methods.getWhitelisted().call();
-    var whitelistWithSymbol = [];
-    for (var i = 0; i < _whitelisted.length; i++) {
-      const symbol = await ERC20Utils.methods.symbol(_whitelisted[i]).call();
-      whitelistWithSymbol.push({
-        address: _whitelisted[i],
-        symbol: symbol,
-      });
-    }
-
-    setWhitelisted(whitelistWithSymbol);
-  }, [ERC20Utils.methods, Farm.methods]);
-
-  useEffect(() => {
-    if (whitelisted.length == 0) {
-      getWhitelisted();
-    }
-  }, [getWhitelisted, whitelisted]);
 
   const fromWei = (balance) => {
     if (balance == 0) {
