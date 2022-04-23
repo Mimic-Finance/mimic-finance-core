@@ -178,7 +178,7 @@ const Stake = () => {
     setStakeValue(e.target.value);
   };
 
-  const handleChangeCoin = async (e) => {
+  const handleChangeToken = async (e) => {
     setStakeValue(0);
     setCoin(e.target.value);
     let _coinBalance = await ERC20Utils.methods
@@ -192,7 +192,7 @@ const Stake = () => {
       <Grid templateColumns="repeat(10, 1fr)" gap={0}>
         <GridItem colSpan={3}>
           <Select
-            onChange={handleChangeCoin}
+            onChange={handleChangeToken}
             style={{ borderRadius: "10px 0px 0px 10px" }}
           >
             {whitelisted.map((token) => {
@@ -200,7 +200,7 @@ const Stake = () => {
                 <>
                   <option value={token.address}>
                     {token.symbol}
-                    </option>
+                  </option>
                 </>
               );
             })}
