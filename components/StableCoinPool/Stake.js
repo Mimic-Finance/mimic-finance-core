@@ -17,6 +17,7 @@ import {
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
+import ERC20ABI from "../../constants/ERC20ABI.json";
 import useAccount from "hooks/useAccount";
 import { useFarm, useERC20Utils } from "hooks/useContracts";
 
@@ -65,20 +66,8 @@ const Stake = () => {
   };
 
   const deposit = async () => {
-    //Create contract instance
-    const coinContractABI = await fetch(
-      "https://api.etherscan.io/api?module=contract&action=getabi&address=" +
-        coin
-    ).then((res) => {
-      return res.json();
-    });
-
     const web3 = window.web3;
-
-    const coinContract = new web3.eth.Contract(
-      JSON.parse(coinContractABI.result),
-      coin
-    );
+    const coinContract = new web3.eth.Contract(ERC20ABI, coin);
 
     // => set amount with decimals
     if (coin !== null) {
