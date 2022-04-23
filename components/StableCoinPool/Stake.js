@@ -50,7 +50,6 @@ const Stake = () => {
         address: _whitelisted[i],
         symbol: symbol,
       });
-      console.log("whitelist Symbol: " + symbol + " address: " + _whitelisted[i]);
     }
 
     setWhitelisted(whitelistWithSymbol);
@@ -85,7 +84,7 @@ const Stake = () => {
     // => set amount with decimals
     if (coin !== null) {
       // => get decimals of token
-      const decimals = await ERC20Utils.contract.methods
+      const decimals = await ERC20Utils.methods
         .decimals(coin.toString())
         .call();
       var _amount = 0;
@@ -118,7 +117,7 @@ const Stake = () => {
               });
 
               // => Check Allowance value <<<
-              const allowance = await ERC20Utils.contract.methods
+              const allowance = await ERC20Utils.methods
                 .allowance(coin, account, Farm.address)
                 .call();
               console.log("Allowance ===> ", allowance);
@@ -164,7 +163,7 @@ const Stake = () => {
   };
 
   const setStakeValueMax = async () => {
-    const decimals = await ERC20Utils.contract.methods
+    const decimals = await ERC20Utils.methods
       .decimals(coin.toString())
       .call();
     if (decimals == 6) {
@@ -181,7 +180,7 @@ const Stake = () => {
   const handleChangeCoin = async (e) => {
     setStakeValue(0);
     setCoin(e.target.value);
-    let _coinBalance = await ERC20Utils.contract.methods
+    let _coinBalance = await ERC20Utils.methods
       .balanceOf(e.target.value.toString(), account)
       .call();
     setCoinBalance(_coinBalance);
