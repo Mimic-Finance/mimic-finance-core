@@ -1,22 +1,22 @@
 import { Tab, Tabs, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
 
 import Stake from "./Stake";
-import WithDraw from "./Withdraw";
+// import WithDraw from "./Withdraw";
 
 export const Panel = (props) => {
   return (
     <Tabs variant="enclosed">
       <TabList>
         <Tab>Stake</Tab>
-        <Tab>Withdraw</Tab>
+        {/* <Tab>Withdraw</Tab> */}
       </TabList>
       <TabPanels>
         <TabPanel>
           <Stake />
         </TabPanel>
-        <TabPanel>
+        {/* <TabPanel>
           <WithDraw />
-        </TabPanel>
+        </TabPanel> */}
       </TabPanels>
     </Tabs>
   );

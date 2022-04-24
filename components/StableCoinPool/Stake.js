@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Web3 from "web3";
 
 import ERC20ABI from "../../constants/ERC20ABI.json";

@@ -1,3 +1,11 @@
+import { useState, useEffect } from "react";
+import Web3 from "web3";
+
+import ERC20ABI from "../../constants/ERC20ABI.json";
+import useAccount from "hooks/useAccount";
+import { useWhitelisted } from "hooks/useFunctions";
+import { useAutoCompound, useERC20Utils } from "hooks/useContracts";
+
 import {
   Grid,
   GridItem,
@@ -11,19 +19,34 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 
-import { useState } from "react";
-
 import Portfolio from "./Portfolio";
-
-import Web3 from "web3";
-import useAppSelector from "../../hooks/useAppSelector";
 import Toast from "../Utils/Toast/Toast";
 
 const Stake = () => {
-  const { account } = useAppSelector((state) => state.account);
-  const { AutoContract, JUSDContract, JUSDBalance } = useAppSelector(
-    (state) => state.contracts
-  );
+  // Initialize coin and coinbalance state
+  const [coin, setCoin] = useState();
+  const [coinBalance, setCoinBalance] = useState(0);
+
+  // create function for set parent state
+  const setCoinState = (coin) => setCoin(coin);
+  const setCoinBalanceState = (coinBalance) => setCoinBalance(coinBalance);
+
+  //useWhitelisted with set coin and coin balance state
+  const getWhitelisted = useWhitelisted(setCoinState, setCoinBalanceState);
+  const [whitelisted, setWhitelisted] = useState([]);
+
+  //get whitelist effect
+  useEffect(() => {
+    setWhitelisted(getWhitelisted);
+  }, [getWhitelisted]);
+
+  //initialize web3 and contract
+  const account = useAccount();
+  const AutoCompound = useAutoCompound();
+  const ERC20Utils = useERC20Utils();
+
+  //Stake Value
+  const [stakeValue, setStakeValue] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
   const [wait_tx, setWaitTx] = useState(false);
@@ -34,66 +57,196 @@ const Stake = () => {
     return status;
   };
 
-  //Stake Value
-  const [stakeValue, setStakeValue] = useState(0);
-
   //Deposit function
-  const stakeTokens = async (amount) => {
-    setSendTxStatus(true);
-    setWaitTx(true);
-    await JUSDContract.methods
-      .approve(AutoContract._address, amount)
-      .send({ from: account })
-      .on("transactionHash", async (hash) => {
-        const refreshId = setInterval(async () => {
-          const tx_status = await txStatus(hash);
-          if (tx_status && tx_status.status) {
-            setWaitTx(false);
-            setSendTxStatus(false);
-            clearInterval(refreshId);
-            Toast.fire({
-              icon: "success",
-              title: "Approved Success!",
-            });
-            setSendTxStatus(true);
-            setWaitTx(true);
-            AutoContract.methods
-              .deposit(amount)
-              .send({ from: account })
-              .on("transactionHash", async (hash) => {
-                const depositCheck = setInterval(async () => {
-                  const tx_status = await txStatus(hash);
-                  if (tx_status && tx_status.status) {
-                    setWaitTx(false);
-                    setSendTxStatus(false);
-                    clearInterval(depositCheck);
-                    Toast.fire({
-                      icon: "success",
-                      title: "Deposit Success!",
-                    });
-                    setStakeValue(0);
-                  }
-                }, 1500);
+  const deposit = async () => {
+    const web3 = window.web3;
+    const coinContract = new web3.eth.Contract(ERC20ABI, coin);
+
+    // => set amount with decimals
+    if (coin !== null) {
+      // => get decimals of token
+      const decimals = await ERC20Utils.methods
+        .decimals(coin.toString())
+        .call();
+      const _amount = 0;
+      if (decimals == 6) {
+        // decimal = 6
+        _amount = stakeValue * Math.pow(10, 6);
+      } else {
+        // decimal = 18
+        _amount = Web3.utils.toWei(stakeValue.toString());
+      }
+
+      console.log("approve value => ", _amount);
+
+      // ========== Transaction Start ==============
+      setSendTxStatus(true);
+      setWaitTx(true);
+      // => Approve <<<
+      // => approve with coin that user select
+
+      await coinContract.methods
+        .approve(AutoCompound.address, _amount)
+        .send({ from: account })
+        .on("transactionHash", (hash) => {
+          const refreshId = setInterval(async () => {
+            const tx_status = await txStatus(hash);
+            if (tx_status && tx_status.status) {
+              clearInterval(refreshId);
+              Toast.fire({
+                icon: "success",
+                title: "Approved Success!",
               });
-          }
-        }, 1500);
+
+              // => Check Allowance value <<<
+              const allowance = await ERC20Utils.methods
+                .allowance(coin, account, AutoCompound.address)
+                .call();
+              console.log("Allowance ===> ", allowance);
+
+              if (allowance == _amount) {
+                // => Deposit <<<
+                AutoCompound.methods
+                  .deposit(_amount, coin)
+                  .send({ from: account })
+                  .on("transactionHash", (hash) => {
+                    const depositCheck = setInterval(async () => {
+                      const tx_status = await txStatus(hash);
+                      if (tx_status && tx_status.status) {
+                        setWaitTx(false);
+                        setSendTxStatus(false);
+                        clearInterval(depositCheck);
+                        Toast.fire({
+                          icon: "success",
+                          title: "Deposit Success!",
+                        });
+                        setStakeValue(0);
+                      }
+                    }, 1500);
+                  });
+              } else {
+                Toast.fire({
+                  icon: "error",
+                  title:
+                    "Please set approve value = " +
+                    stakeValue +
+                    " on your wallet",
+                });
+              }
+            }
+          }, 1500);
+        });
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "Please select coin",
       });
+    }
   };
 
-  const setStakeValueMax = () => {
-    setStakeValue(Web3.utils.fromWei(JUSDBalance.toString()));
+  // const stakeTokens = async (amount) => {
+  //   setSendTxStatus(true);
+  //   setWaitTx(true);
+  //   await JUSDContract.methods
+  //     .approve(AutoContract._address, amount)
+  //     .send({ from: account })
+  //     .on("transactionHash", async (hash) => {
+  //       const refreshId = setInterval(async () => {
+  //         const tx_status = await txStatus(hash);
+  //         if (tx_status && tx_status.status) {
+  //           setWaitTx(false);
+  //           setSendTxStatus(false);
+  //           clearInterval(refreshId);
+  //           Toast.fire({
+  //             icon: "success",
+  //             title: "Approved Success!",
+  //           });
+  //           setSendTxStatus(true);
+  //           setWaitTx(true);
+  //           AutoContract.methods
+  //             .deposit(amount)
+  //             .send({ from: account })
+  //             .on("transactionHash", async (hash) => {
+  //               const depositCheck = setInterval(async () => {
+  //                 const tx_status = await txStatus(hash);
+  //                 if (tx_status && tx_status.status) {
+  //                   setWaitTx(false);
+  //                   setSendTxStatus(false);
+  //                   clearInterval(depositCheck);
+  //                   Toast.fire({
+  //                     icon: "success",
+  //                     title: "Deposit Success!",
+  //                   });
+  //                   setStakeValue(0);
+  //                 }
+  //               }, 1500);
+  //             });
+  //         }
+  //       }, 1500);
+  //     });
+  // };
+
+  const checkDecimals = async (address) => {
+    const decimals = await ERC20Utils.methods.decimals(address).call();
+    return decimals;
   };
 
-  const handleChangeStakeValue = (e) => {
+  const setStakeValueMax = async () => {
+    const decimals = await checkDecimals(coin.toString());
+    if (decimals == 6) {
+      setStakeValue(coinBalance / Math.pow(10, 6));
+    } else {
+      setStakeValue(Web3.utils.fromWei(coinBalance.toString()));
+    }
+  };
+
+  const handleChangeStakeValue = async (e) => {
     setStakeValue(e.target.value);
+    const decimals = await checkDecimals(coin.toString());
+    let value = 0;
+    if (decimals == 6) {
+      value = coinBalance / Math.pow(10, 6);
+    } else {
+      if (e.target.value != 0) {
+        value = Web3.utils.fromWei(coinBalance.toString());
+      }
+    }
+
+    if (
+      parseFloat(e.target.value) > parseFloat(value) ||
+      parseFloat(e.target.value) < 0
+    ) {
+      setStakeValue(0);
+      Toast.fire({
+        icon: "error",
+        title: "Please enter value less than your balance",
+      });
+    }
+  };
+
+  const handleChangeToken = async (e) => {
+    setStakeValue(0);
+    setCoin(e.target.value);
+    let _coinBalance = await ERC20Utils.methods
+      .balanceOf(e.target.value.toString(), account)
+      .call();
+    setCoinBalance(_coinBalance);
   };
 
   return (
     <>
       <Grid templateColumns="repeat(10, 1fr)" gap={0}>
         <GridItem colSpan={3}>
-          <Select style={{ borderRadius: "10px 0px 0px 10px" }}>
-            <option>JUSD</option>
+          <Select 
+          onChange={handleChangeToken}
+          style={{ borderRadius: "10px 0px 0px 10px" }}>
+            {whitelisted.map((token) => {
+              return (
+                <>
+                  <option value={token.address}>{token.symbol}</option>
+                </>
+              );
+            })}
           </Select>
         </GridItem>
         <GridItem colSpan={7}>
@@ -126,7 +279,7 @@ const Stake = () => {
         mb={5}
         w={"100%"}
         onClick={() => {
-          stakeTokens(Web3.utils.toWei(stakeValue.toString()));
+          deposit();
         }}
       >
         {wait_tx && send_tx_status ? (
