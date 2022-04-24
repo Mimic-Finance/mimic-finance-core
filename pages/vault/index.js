@@ -18,7 +18,7 @@ const Home = () => {
       </Text>
       <Text fontSize="2xl" align="center" pt={4}>
         Deposit with whitelisted Token{" "}
-        <a href="#" style={{ color: "teal" }}>
+        <a href="/whitelisted" style={{ color: "teal" }}>
           <small>Check here</small>
         </a>
       </Text>
