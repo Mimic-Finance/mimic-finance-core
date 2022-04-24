@@ -1,6 +1,7 @@
 import Head from "next/head";
 import styles from "styles/Home.module.css";
 import { Text, Grid, Container, Button } from "@chakra-ui/react";
+import Link from "next/link";
 
 import { Pool } from "components/Pools/Pool";
 
@@ -18,8 +19,12 @@ const Home = () => {
       </Text>
       <Text fontSize="2xl" align="center" pt={4}>
         Deposit with whitelisted Token{" "}
-        <a href="/whitelisted" style={{ color: "teal" }}>
-          <small>Check here</small>
+        <a href="#">
+          <Link href="/whitelisted" passHref style={{ color: "teal" }}>
+            <small>
+              <u>Check here</u>
+            </small>
+          </Link>
         </a>
       </Text>
       {/* <Text align="center" pt={2} style={{ color: "#999" }}>

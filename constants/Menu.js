@@ -1,20 +1,17 @@
 const MENU = [
-  // {
-  //   label: "Swap",
-  //   href: "/swap",
-  // },
-  // {
-  //   label: "Dex",
-  //   href: "/dex",
-  // },
+  {
+    label: "Home",
+    href: "/",
+  },
+  {
+    label: "Exchange",
+    href: "https://mimic-exchange.vercel.app/",
+  },
   {
     label: "Vault",
     href: "/vault",
   },
-  // {
-  //   label: "Faucet",
-  //   href: "/faucet",
-  // },
+
   {
     label: "Portfolio",
     href: "/portfolio",
