@@ -144,48 +144,6 @@ const Stake = () => {
     }
   };
 
-  // const stakeTokens = async (amount) => {
-  //   setSendTxStatus(true);
-  //   setWaitTx(true);
-  //   await JUSDContract.methods
-  //     .approve(AutoContract._address, amount)
-  //     .send({ from: account })
-  //     .on("transactionHash", async (hash) => {
-  //       const refreshId = setInterval(async () => {
-  //         const tx_status = await txStatus(hash);
-  //         if (tx_status && tx_status.status) {
-  //           setWaitTx(false);
-  //           setSendTxStatus(false);
-  //           clearInterval(refreshId);
-  //           Toast.fire({
-  //             icon: "success",
-  //             title: "Approved Success!",
-  //           });
-  //           setSendTxStatus(true);
-  //           setWaitTx(true);
-  //           AutoContract.methods
-  //             .deposit(amount)
-  //             .send({ from: account })
-  //             .on("transactionHash", async (hash) => {
-  //               const depositCheck = setInterval(async () => {
-  //                 const tx_status = await txStatus(hash);
-  //                 if (tx_status && tx_status.status) {
-  //                   setWaitTx(false);
-  //                   setSendTxStatus(false);
-  //                   clearInterval(depositCheck);
-  //                   Toast.fire({
-  //                     icon: "success",
-  //                     title: "Deposit Success!",
-  //                   });
-  //                   setStakeValue(0);
-  //                 }
-  //               }, 1500);
-  //             });
-  //         }
-  //       }, 1500);
-  //     });
-  // };
-
   const checkDecimals = async (address) => {
     const decimals = await ERC20Utils.methods.decimals(address).call();
     return decimals;
@@ -268,6 +226,9 @@ const Stake = () => {
           </FormControl>
         </GridItem>
       </Grid>
+
+      <div style={{ paddingTop: "20px" }}></div>
+      <hr />
 
       <Button
         style={{
