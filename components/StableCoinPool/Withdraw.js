@@ -30,7 +30,7 @@ const WithDraw = () => {
   const setCoinBalanceState = (coinBalance) => setCoinBalance(coinBalance);
 
   //useWhitelisted with set coin and coin balance state
-  const getWhitelisted = useWhitelisted(setCoinState, setCoinBalanceState);
+  const getWhitelisted = useWhitelisted("withdraw", setCoinState, setCoinBalanceState);
   const [whitelisted, setWhitelisted] = useState([]);
 
   //get whitelist effect

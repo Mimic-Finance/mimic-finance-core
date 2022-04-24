@@ -31,7 +31,7 @@ const Stake = () => {
   const setCoinBalanceState = (coinBalance) => setCoinBalance(coinBalance);
 
   //useWhitelisted with set coin and coin balance state
-  const getWhitelisted = useWhitelisted(setCoinState, setCoinBalanceState);
+  const getWhitelisted = useWhitelisted("stake", setCoinState, setCoinBalanceState);
   const [whitelisted, setWhitelisted] = useState([]);
 
   //get whitelist effect
