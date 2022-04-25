@@ -52,8 +52,8 @@ export const PoolContextProvider = ({ children, address }) => {
             <WarningIcon w={20} h={20} mt={10} mb={5} />
           </Center>
           <Box style={{ textAlign: "center" }}>
-            <Text fontSize="4xl">ยังไม่เปิดให้ฟาร์มจร้าาาาาาาา</Text>
-            <Text>ถ้าอยากให้เปิด ก็มาดิ</Text>
+            <Text fontSize="4xl">The time has not come yet</Text>
+            <Text>Please contact admin to vote open this pool</Text>
           </Box>
         </>
       </PoolContext.Provider>
