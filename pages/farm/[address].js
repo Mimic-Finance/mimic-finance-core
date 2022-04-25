@@ -82,7 +82,7 @@ const StableCoinPool = () => {
               </GridItem>
               <GridItem colSpan={7}>
                 <Text fontSize="4xl">
-                  <b>{symbol}</b>
+                  <b>{symbol} Pool</b>
                 </Text>
               </GridItem>
               <GridItem colSpan={2} style={{ textAlign: "right" }}>

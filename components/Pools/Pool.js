@@ -4,6 +4,10 @@ import Link from "next/link";
 import { FaGavel, FaRegChartBar } from "react-icons/fa";
 
 export const Pool = (props) => {
+  const getImage = (address) => {
+    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
+  };
+
   return (
     <Box
       p={10}
@@ -11,10 +15,11 @@ export const Pool = (props) => {
       bg={props.color}
     >
       <Image
-        src={"/assets/images/pools/" + props.label + ".png"}
+        src={getImage(props.address)}
         alt={props.label}
+        fallbackSrc="/assets/images/logo-box.png"
         className="pool-logo"
-        width={150}
+        width={100}
       />
       <Text fontWeight="bold" fontSize="2xl">
         {props.poolName}
@@ -24,7 +29,7 @@ export const Pool = (props) => {
       <Text pt={3} fontWeight="bold">
         APY : {props.apy} %
       </Text>
-      <Link href={"/farm/" + props.label} passHref>
+      <Link href={"/farm/" + props.address} passHref>
         <Button
           leftIcon={<FaGavel />}
           mt={4}
@@ -32,10 +37,10 @@ export const Pool = (props) => {
           width={200}
           variant="solid"
         >
-          Stake Pool
+          Stake
         </Button>
       </Link>
-      <Link href={"/auto/" + props.label} passHref>
+      {/* <Link href={"/auto/" + props.label} passHref>
         <Button
           ml={5}
           leftIcon={<FaRegChartBar />}
@@ -46,7 +51,7 @@ export const Pool = (props) => {
         >
           Auto Compound
         </Button>
-      </Link>
+      </Link> */}
     </Box>
   );
 };

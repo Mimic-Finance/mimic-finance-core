@@ -2,7 +2,7 @@ import Head from "next/head";
 import styles from "styles/Home.module.css";
 import { Text, Grid, Container, Button } from "@chakra-ui/react";
 import Link from "next/link";
-
+import OpenPool from "constants/OpenPool.json";
 import { Pool } from "components/Pools/Pool";
 
 const Home = () => {
@@ -37,14 +37,20 @@ const Home = () => {
         </Text>
 
         <Grid templateColumns="repeat(1, 1fr)" gap={20} pt={5}>
-          <Pool
-            poolName="Stable Coin Pool"
-            description="Stable Coin Pool is a pool that allows you to deposit any stable coin to get a yield of 1% per day."
-            token="Token: BUSD, USDC, DAI, USDT, JUSD"
-            apy={122.32}
-            label="stable-coin"
-            color="#98dfe7"
-          />
+          {OpenPool.map((pool) => {
+            return (
+              <Pool
+                key={pool.address}
+                address={pool.address}
+                poolName={pool.symbol}
+                description={pool.description}
+                token={pool.token}
+                apy={pool.apy}
+                label={pool.symbol}
+                color={pool.color}
+              />
+            );
+          })}
         </Grid>
       </Container>
     </div>

@@ -1,0 +1,22 @@
+[
+  {
+    "address": "0x4Fabb145d64652a948d72533023f6E7A623C7C53",
+    "symbol": "BUSD",
+    "description": "BUSD pool naja",
+    "token": "BUSD",
+    "apy": 122.32,
+    "label": "stable-coin",
+    "color": "#98dfe7",
+    "info": " A stablecoin is a class of cryptocurrencies that attempt to offer price stability and are backed by a reserve asset. Stablecoins have gained traction as they attempt to offer the best of both worlds—the instant processing and security or privacy of payments of cryptocurrencies, and the volatility-free stable valuations of fiat currencies."
+  },
+  {
+    "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+    "symbol": "DAI",
+    "description": "DAI pool naja",
+    "token": "DAI",
+    "apy": 122.32,
+    "label": "stable-coin",
+    "color": "#FFCC33",
+    "info": " A stablecoin is a class of cryptocurrencies that attempt to offer price stability and are backed by a reserve asset. Stablecoins have gained traction as they attempt to offer the best of both worlds—the instant processing and security or privacy of payments of cryptocurrencies, and the volatility-free stable valuations of fiat currencies."
+  }
+]
