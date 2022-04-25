@@ -1,7 +1,6 @@
 import Head from "next/head";
 import styles from "styles/Home.module.css";
 import Web3 from "web3";
-import { useRouter } from "next/router";
 import TVD from "components/StableCoinPool/TVD";
 
 import {
@@ -17,14 +16,24 @@ import {
   ButtonGroup,
   Divider,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { FaCalculator } from "react-icons/fa";
 import CountUp from "react-countup";
 import Portfolio from "components/StableCoinPool/Portfolio";
 
+import { useERC20Utils } from "hooks/useContracts";
+
+import { useRouter } from "next/router";
+
 import { Panel } from "components/StableCoinPool/Panel";
 
 const StableCoinPool = () => {
+  const router = useRouter();
+  const { address } = router.query;
+  const ERC20Utils = useERC20Utils();
+
+  const [symbol, setSymbol] = useState();
+
   const info = {
     poolName: "",
     label: "",
@@ -32,6 +41,19 @@ const StableCoinPool = () => {
     tvd: 100,
     apy: 100,
   };
+
+  const getImage = (address) => {
+    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
+  };
+
+  const getSymbol = useCallback(async () => {
+    const _symbol = await ERC20Utils.methods.symbol(address).call();
+    setSymbol(_symbol);
+  }, [ERC20Utils.methods, address]);
+
+  useEffect(() => {
+    getSymbol();
+  }, [getSymbol]);
 
   return (
     <div className={styles.container}>
@@ -46,15 +68,16 @@ const StableCoinPool = () => {
             <GridItem colSpan={1}>
               <Box>
                 <Image
-                  src={"/assets/images/pools/stable-coin.png"}
-                  alt="stable-coin-pool"
-                  width={100}
+                  src={getImage(address)}
+                  alt={address}
+                  width={75}
+                  fallbackSrc="/assets/images/logo-box.png"
                 />
               </Box>
             </GridItem>
             <GridItem colSpan={7}>
               <Text fontSize="4xl">
-                <b>Stable Coin Pool</b>
+                <b>{symbol}</b>
               </Text>
             </GridItem>
             <GridItem colSpan={2} style={{ textAlign: "right" }}>
@@ -89,7 +112,7 @@ const StableCoinPool = () => {
               </Box>
             </GridItem>
             <GridItem colSpan={4}>
-              <Panel info={info} />
+              <Panel symbol={symbol} tokenAddress={address} />
               {/* <Portfolio></Portfolio> */}
             </GridItem>
           </Grid>

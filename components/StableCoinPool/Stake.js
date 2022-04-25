@@ -21,7 +21,7 @@ import {
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
-const Stake = () => {
+const Stake = ({ tokenAddress }) => {
   // Initialize coin and coinbalance state
   const [coin, setCoin] = useState();
   const [coinBalance, setCoinBalance] = useState(0);
@@ -31,7 +31,11 @@ const Stake = () => {
   const setCoinBalanceState = (coinBalance) => setCoinBalance(coinBalance);
 
   //useWhitelisted with set coin and coin balance state
-  const getWhitelisted = useWhitelisted("stake", setCoinState, setCoinBalanceState);
+  const getWhitelisted = useWhitelisted(
+    "stake",
+    setCoinState,
+    setCoinBalanceState
+  );
   const [whitelisted, setWhitelisted] = useState([]);
 
   //get whitelist effect

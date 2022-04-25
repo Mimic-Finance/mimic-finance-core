@@ -1,23 +1,33 @@
-import { Tab, Tabs, TabList, TabPanels, TabPanel } from "@chakra-ui/react";
+import {
+  Tab,
+  Tabs,
+  TabList,
+  TabPanels,
+  TabPanel,
+  Text,
+} from "@chakra-ui/react";
 
 import Stake from "./Stake";
 import WithDraw from "./Withdraw";
 
-export const Panel = (props) => {
+export const Panel = ({ symbol, tokenAddress }) => {
   return (
-    <Tabs variant="enclosed">
-      <TabList>
-        <Tab>Stake</Tab>
-        <Tab>Withdraw</Tab>
-      </TabList>
-      <TabPanels>
-        <TabPanel>
-          <Stake />
-        </TabPanel>
-        <TabPanel>
-          <WithDraw />
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
+    <>
+      <Text fontSize={"3xl"}>{symbol}</Text>
+      <Tabs variant="enclosed">
+        <TabList>
+          <Tab>Stake</Tab>
+          <Tab>Withdraw</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            <Stake tokenAddress={tokenAddress} />
+          </TabPanel>
+          <TabPanel>
+            <WithDraw tokenAddress={tokenAddress} />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    </>
   );
 };

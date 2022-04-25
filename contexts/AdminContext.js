@@ -4,12 +4,9 @@ import useAccount from "../hooks/useAccount";
 import { Text, Center, Box } from "@chakra-ui/react";
 import { WarningIcon } from "@chakra-ui/icons";
 
-import router, { useRouter } from "next/router";
-
 export const AdminContext = createContext(false);
 
 export const AdminContextProvider = ({ children, nav }) => {
-  const Router = useRouter();
   const account = useAccount();
   const [accessible, setAccessible] = useState(false);
   const Farm = useFarm();

@@ -20,7 +20,7 @@ import {
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
-const WithDraw = () => {
+const WithDraw = ({ tokenAddress }) => {
   // Initialize coin and coinbalance state
   const [coin, setCoin] = useState();
   const [coinBalance, setCoinBalance] = useState(0);
@@ -30,7 +30,11 @@ const WithDraw = () => {
   const setCoinBalanceState = (coinBalance) => setCoinBalance(coinBalance);
 
   //useWhitelisted with set coin and coin balance state
-  const getWhitelisted = useWhitelisted("withdraw", setCoinState, setCoinBalanceState);
+  const getWhitelisted = useWhitelisted(
+    "withdraw",
+    setCoinState,
+    setCoinBalanceState
+  );
   const [whitelisted, setWhitelisted] = useState([]);
 
   //get whitelist effect
