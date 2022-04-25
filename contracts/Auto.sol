@@ -101,7 +101,7 @@ contract Auto {
 
     function claimAndSwap(address _token) public {
         /* Claim Mimic Token */
-        FarmContract.issueTokens(_token);
+        FarmContract.claimRewards(_token);
         /* Check Mimic Token balance */
         uint256 mimbal = MimicToken.balanceOf(address(this));
         /* Swap Mimic To JUSD */
