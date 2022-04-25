@@ -14,6 +14,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { useWhitelisted } from "hooks/useFunctions";
+import Link from "next/link";
 
 const WhitelistedPage = () => {
   const getWhitelisted = useWhitelisted();
@@ -60,13 +61,9 @@ const WhitelistedPage = () => {
                         </Td>
                         <Td>{token.symbol}</Td>
                         <Td>
-                          <a
-                            href={"https://etherscan.io/token/" + token.address}
-                            rel="noreferrer"
-                            target="_blank"
-                          >
+                          <Link passHref href={"/farm/" + token.address}>
                             {token.address}
-                          </a>
+                          </Link>
                         </Td>
                       </Tr>
                     );
