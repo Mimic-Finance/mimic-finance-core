@@ -110,7 +110,7 @@ contract Farming is Ownable {
     }
 
     //Issuing Token
-    function issueTokens(address _token) public {
+    function claimRewards(address _token) public {
         uint256 balance = stakingBalance[_token][msg.sender];
         uint256 reward = calculateRewards(msg.sender, _token);
         require(reward >= 0 && balance >= 0);
@@ -121,12 +121,10 @@ contract Farming is Ownable {
     //Unstake with amount
     function unstakeTokens(uint256 _amount, address _token) public {
         require(_amount > 0);
+        uint256 reward = calculateRewards(msg.sender, _token);
         ERC20(_token).transfer(msg.sender, _amount);
         uint256 remain = stakingBalance[_token][msg.sender].sub(_amount);
         stakingBalance[_token][msg.sender] = remain;
-
-        //withdraw and claim reward
-        uint256 reward = calculateRewards(msg.sender, _token);
         // require(reward > 0 && stakingBalance[msg.sender] >= 0);
         MimicToken.transfer(msg.sender, reward);
         updateTime[_token][msg.sender] = block.timestamp;
