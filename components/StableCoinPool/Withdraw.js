@@ -32,6 +32,7 @@ const WithDraw = ({ tokenAddress }) => {
   //useWhitelisted with set coin and coin balance state
   const getWhitelisted = useWhitelisted(
     "withdraw",
+    tokenAddress,
     setCoinState,
     setCoinBalanceState
   );

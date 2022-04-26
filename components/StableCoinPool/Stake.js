@@ -21,7 +21,7 @@ import {
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
-const Stake = ({ tokenAddress }) => {
+const Stake = ({ symbol, tokenAddress }) => {
   // Initialize coin and coinbalance state
   const [coin, setCoin] = useState();
   const [coinBalance, setCoinBalance] = useState(0);
@@ -33,6 +33,7 @@ const Stake = ({ tokenAddress }) => {
   //useWhitelisted with set coin and coin balance state
   const getWhitelisted = useWhitelisted(
     "stake",
+    tokenAddress,
     setCoinState,
     setCoinBalanceState
   );
@@ -186,9 +187,9 @@ const Stake = ({ tokenAddress }) => {
 
   const handleChangeToken = async (e) => {
     setStakeValue(0);
-    setCoin(e.target.value);
+    setCoin(tokenAddress);
     let _coinBalance = await ERC20Utils.methods
-      .balanceOf(e.target.value.toString(), account)
+      .balanceOf(tokenAddress.toString(), account)
       .call();
     setCoinBalance(_coinBalance);
   };
@@ -201,13 +202,9 @@ const Stake = ({ tokenAddress }) => {
             onChange={handleChangeToken}
             style={{ borderRadius: "10px 0px 0px 10px" }}
           >
-            {whitelisted.map((token) => {
-              return (
-                <>
-                  <option value={token.address}>{token.symbol}</option>
-                </>
-              );
-            })}
+            {
+              <option value={tokenAddress}>{symbol}</option>
+            }
           </Select>
         </GridItem>
         <GridItem colSpan={7}>

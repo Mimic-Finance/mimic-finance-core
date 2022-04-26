@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useFarm, useERC20Utils } from "../useContracts";
 import useAccount from "hooks/useAccount";
 
-const useWhitelisted = (from, setCoin, setCoinBalance) => {
+const useWhitelisted = (from, tokenAddress, setCoin, setCoinBalance) => {
   const [whitelisted, setWhitelisted] = useState([]);
   const account = useAccount();
   const Farm = useFarm();
@@ -17,14 +17,14 @@ const useWhitelisted = (from, setCoin, setCoinBalance) => {
           var _coinBalance = 0;
           if (from == "stake") {
             _coinBalance = await ERC20Utils.methods
-              .balanceOf(_whitelisted[i], account)
+              .balanceOf(tokenAddress, account)
               .call();
           } else {
             _coinBalance = await Farm.methods
-              .getStakingBalance(_whitelisted[i], account)
+              .getStakingBalance(tokenAddress, account)
               .call();
           }
-          setCoin(_whitelisted[i]);
+          setCoin(tokenAddress);
           setCoinBalance(_coinBalance);
         }
       }
