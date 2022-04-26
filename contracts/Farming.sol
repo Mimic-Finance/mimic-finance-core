@@ -100,16 +100,16 @@ contract Farming is Ownable {
         view
         returns (uint256)
     {
+        uint256 decimals = (ERC20(_token).decimals());
+        uint256 expo = 10**decimals;
         uint256 time = calculateTime(_account, _token).mul(1e18);
         uint256 rate = 86400;
         uint256 timeRate = time.div(rate);
-        uint256 reward = stakingBalance[_token][_account].mul(timeRate).div(
-            1e18
-        );
+        uint256 reward = stakingBalance[_token][_account].mul(timeRate).div(expo);
         return reward;
     }
 
-    //Issuing Token
+    //ClaimRewards
     function claimRewards(address _token) public {
         uint256 balance = stakingBalance[_token][msg.sender];
         uint256 reward = calculateRewards(msg.sender, _token);

@@ -78,16 +78,6 @@ module.exports = async function (deployer, network, accounts) {
     from: config.rich_account,
   });
 
-  // Transfer USDC from unlocked account to user account
-  await usdc_mock.transfer(accounts[0], 100000000000, {
-    from: config.rich_account,
-  });
-
-  // Transfer USDC from unlocked account to user account
-  await usdc_mock.transfer(accounts[1], 100000000000, {
-    from: config.rich_account,
-  });
-
   /**
    *
    * Deploy Farm and Other Token
