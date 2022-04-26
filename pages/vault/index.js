@@ -1,6 +1,6 @@
 import Head from "next/head";
 import styles from "styles/Home.module.css";
-import { Text, Grid, Container, Button } from "@chakra-ui/react";
+import { Text, Box, Container, SimpleGrid } from "@chakra-ui/react";
 import Link from "next/link";
 import OpenPool from "constants/OpenPool.json";
 import { Pool } from "components/Pools/Pool";
@@ -27,31 +27,32 @@ const Home = () => {
           </Link>
         </a>
       </Text>
-      {/* <Text align="center" pt={2} style={{ color: "#999" }}>
-        BTC, ETH, BNB, ADA, DOT, DOGE, AVAX, LTC, UNI, CAKE AND ALL STABLE COINS{" "}
-      </Text> */}
 
       <Container maxW="container.lg">
         <Text fontWeight="bold" fontSize="xl" pt={20}>
           Available Farming Pools
         </Text>
 
-        <Grid templateColumns="repeat(1, 1fr)" gap={20} pt={5}>
+        <SimpleGrid mt={10} minChildWidth='300px' gap={10} spacing='60px'>
           {OpenPool.map((pool) => {
             return (
-              <Pool
-                key={pool.address}
-                address={pool.address}
-                poolName={pool.symbol}
-                description={pool.description}
-                token={pool.token}
-                apy={pool.apy}
-                label={pool.symbol}
-                color={pool.color}
-              />
+              <>
+                <Box m={2}>
+                  <Pool
+                    key={pool.address}
+                    address={pool.address}
+                    poolName={pool.symbol}
+                    description={pool.description}
+                    token={pool.token}
+                    apy={pool.apy}
+                    label={pool.symbol}
+                    color={pool.color}
+                  />
+                </Box>
+              </>
             );
           })}
-        </Grid>
+        </SimpleGrid>
       </Container>
     </div>
   );

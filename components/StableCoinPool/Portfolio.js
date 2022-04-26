@@ -3,13 +3,10 @@ import {
   Text,
   Grid,
   GridItem,
-  Button,
-  Flex,
-  Spacer,
 } from "@chakra-ui/react";
 import { useFarm, useERC20Utils } from "hooks/useContracts";
 import useAccount from "hooks/useAccount";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Web3 from "web3";
 
 const Portfolio = ({ token }) => {
@@ -20,7 +17,7 @@ const Portfolio = ({ token }) => {
   const [balance, setBalance] = useState(0);
   const [reward, setReward] = useState(0);
 
-  const getBalanceAndReward = async () => {
+  const getBalanceAndReward = useCallback(async () => {
     const decimal = await ERC20Utils.methods.decimals(token).call();
     console.log(decimal);
     const _balance = await Farm.methods
@@ -35,11 +32,11 @@ const Portfolio = ({ token }) => {
       setBalance(Web3.utils.fromWei(_balance, "ether"));
       setReward(Web3.utils.fromWei(_reward, "ether"));
     }
-  };
+  },[account, token, ERC20Utils, Farm]);
 
   useEffect(() => {
     getBalanceAndReward();
-  }, []);
+  }, [getBalanceAndReward]);
 
   return (
       <>

@@ -91,11 +91,11 @@ const theme = extendTheme({
         paddingBottom: "15px",
       },
       ".pool-logo": {
-        top: -30,
-        right: -34,
+        top: -5,
+        right: -8,
         position: "absolute",
         zIndex: 1,
-        width: 150,
+        // width: 150,
       },
       ".stat-active": {
         bg: mode("#f5f5f5", "#4c4f53")(props),

@@ -10,7 +10,7 @@ export const Pool = (props) => {
 
   return (
     <Box
-      p={10}
+      p={8}
       style={{ borderRadius: 10, color: "#000000", position: "relative" }}
       bg={props.color}
     >
@@ -19,7 +19,7 @@ export const Pool = (props) => {
         alt={props.label}
         fallbackSrc="/assets/images/logo-box.png"
         className="pool-logo"
-        width={100}
+        width="70px"
       />
       <Text fontWeight="bold" fontSize="2xl">
         {props.poolName}
@@ -34,24 +34,12 @@ export const Pool = (props) => {
           leftIcon={<FaGavel />}
           mt={4}
           style={{ backgroundColor: "#232137", color: "#fff" }}
-          width={200}
+          width={"100%"}
           variant="solid"
         >
           Stake
         </Button>
       </Link>
-      {/* <Link href={"/auto/" + props.label} passHref>
-        <Button
-          ml={5}
-          leftIcon={<FaRegChartBar />}
-          mt={4}
-          style={{ backgroundColor: "#232137", color: "#fff" }}
-          width={200}
-          variant="solid"
-        >
-          Auto Compound
-        </Button>
-      </Link> */}
     </Box>
   );
 };
