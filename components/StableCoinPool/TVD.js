@@ -9,7 +9,7 @@ const TVD = ({ tokenAddress, symbol }) => {
   const ERC20Utils = useERC20Utils();
   const [tvd, setTVD] = useState(0);
 
-  const loadTVD = async () => {
+  const loadTVD = useCallback(async () => {
     const _tvd = await ERC20Utils.methods
       .balanceOf(tokenAddress, Farm.address)
       .call();
@@ -20,11 +20,11 @@ const TVD = ({ tokenAddress, symbol }) => {
     } else {
       setTVD(Web3.utils.fromWei(_tvd.toString()));
     }
-  };
+  }, [ERC20Utils, tokenAddress, Farm]);
 
   useEffect(() => {
     loadTVD();
-  }, []);
+  }, [loadTVD]);
 
   return (
     <>
