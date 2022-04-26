@@ -91,11 +91,19 @@ const theme = extendTheme({
         paddingBottom: "15px",
       },
       ".pool-logo": {
-        top: -5,
-        right: -8,
+        left: "38%",
+        top: -10,
         position: "absolute",
         zIndex: 1,
-        // width: 150,
+        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+        // border: mode("5px solid #f5f5f5", "5px solid #ffffff")(props),
+        borderRadius: "50%",
+      },
+      ".pool-box": {
+        borderRadius: 10,
+        color: "#000000",
+        position: "relative",
+        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
       },
       ".stat-active": {
         bg: mode("#f5f5f5", "#4c4f53")(props),

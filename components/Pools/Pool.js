@@ -10,22 +10,44 @@ export const Pool = (props) => {
 
   return (
     <Box
-      p={8}
-      style={{ borderRadius: 10, color: "#000000", position: "relative" }}
-      bg={props.color}
+      pt={"50px"}
+      pl={8}
+      pr={8}
+      pb={8}
+      style={
+        props.gradient
+          ? {
+              background: `linear-gradient(40deg ,${props.gradient.color1} 0%, ${props.gradient.color2} 100%)`,
+            }
+          : { background: props.color }
+      }
+      className="pool-box"
     >
       <Image
         src={getImage(props.address)}
         alt={props.label}
         fallbackSrc="/assets/images/logo-box.png"
         className="pool-logo"
-        width="70px"
+        width="80px"
       />
       <Text fontWeight="bold" fontSize="2xl">
         {props.poolName}
       </Text>
-      {props.description}
-      <Text pt={3}>{props.token}</Text>
+      {props.type === "lp-token" ? (
+        <>
+          <Text>
+            <Link passHref href="https://mimic-exchange.vercel.app/">
+              <a>
+                <u>{props.description}</u>
+              </a>
+            </Link>
+          </Text>
+        </>
+      ) : (
+        <>{props.description}</>
+      )}
+
+      {/* <Text pt={3}>{props.token}</Text> */}
       <Text pt={3} fontWeight="bold">
         APR : {props.apr} %
       </Text>

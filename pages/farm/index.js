@@ -28,16 +28,16 @@ const Home = () => {
         </a>
       </Text>
 
-      <Container maxW="container.lg">
+      <Container maxW="container.xl">
         <Text fontWeight="bold" fontSize="xl" pt={20}>
           Available Farming Pools
         </Text>
 
-        <SimpleGrid mt={10} minChildWidth='300px' gap={10} spacing='60px'>
+        <SimpleGrid mt={5} minChildWidth="300px" gap={10} spacing="60px">
           {OpenPool.map((pool) => {
             return (
               <>
-                <Box m={2}>
+                <Box mt={20} ml={5}>
                   <Pool
                     key={pool.address}
                     address={pool.address}
@@ -47,6 +47,15 @@ const Home = () => {
                     apr={pool.apr}
                     label={pool.symbol}
                     color={pool.color}
+                    type={pool.type}
+                    gradient={
+                      pool.gradient
+                        ? {
+                            color1: pool.gradient.color1,
+                            color2: pool.gradient.color2,
+                          }
+                        : null
+                    }
                   />
                 </Box>
               </>
