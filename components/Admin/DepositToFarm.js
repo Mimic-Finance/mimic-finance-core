@@ -12,6 +12,7 @@ import {
   Box,
   Center,
   Divider,
+  useToast,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import Web3 from "web3";
@@ -20,13 +21,13 @@ import { useAutoCompound } from "hooks/useContracts";
 import { useJUSD } from "hooks/useToken";
 import useAccount from "hooks/useAccount";
 
-import Toast from "components/Utils/Toast/Toast";
-
 const DepositToFarm = () => {
   const account = useAccount();
   const JUSD = useJUSD();
   const AutoCompound = useAutoCompound();
   const [depositAmount, setDepositAmount] = useState(0);
+
+  const toast = useToast();
 
   const [send_tx_status, setSendTxStatus] = useState(false);
   const [wait_tx, setWaitTx] = useState(false);
@@ -59,9 +60,12 @@ const DepositToFarm = () => {
             setWaitTx(false);
             setSendTxStatus(false);
             clearInterval(depositCheck);
-            Toast.fire({
-              icon: "success",
-              title: "Deposit Success!",
+            toast({
+              title: "Success",
+              description: "Deposit success!",
+              status: "success",
+              duration: 1500,
+              isClosable: true,
             });
             setDepositAmount(0);
           }

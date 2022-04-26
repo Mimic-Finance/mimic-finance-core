@@ -31,23 +31,22 @@ git clone -b develop git@github.com:Mimic-Finance/mimic-farm-core.git
 ```bash
 yarn install
 ```
-```bash
-npm install --save-dev @openzeppelin/contracts
-```
 
-- Compile Smart Contract and Deploy to Ganache
+- Run fork chain for development
 ```bash
-truffle compile && truffle migrate --reset --network=development
+make chain
 ```
-- Test Smart Contract
+- Open new terminal for deploy smart contract to blockchain
 ```bash
-truffle test
+make deploy
 ```
 - Run your app (http://localhost:3000)
 ```bash
 yarn run dev
 ```
-- Distribution mDAI Token to test dev accounts
-```bash
-truffle exec scripts/distribute-mdai.js --network=development
-```
+
+## Configure Metamask wallet network
+- Network Name: `localchain`
+- New RPC URL: `http://localhost:8545/`
+- Chain ID: `1` (fork form Ethereum mainnet)
+- Currency Symbol: `ETH`

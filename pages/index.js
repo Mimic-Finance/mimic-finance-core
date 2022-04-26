@@ -65,7 +65,7 @@ const Home = () => {
                       <Button>Documents</Button>
                     </GridItem>
                     <GridItem colSpan={1}>
-                      <Link href="/vault" passHref>
+                      <Link href="/farm" passHref>
                         <Button
                           style={{
                             color: "#FFFFFF",

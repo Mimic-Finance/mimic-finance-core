@@ -3,6 +3,7 @@
 pragma solidity ^0.6.6;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 
 contract ERC20Utils {
@@ -20,8 +21,9 @@ contract ERC20Utils {
         address _token,
         address _spender,
         uint256 _amount
-    ) public payable returns (bool) {
-        return ERC20(_token).approve(_spender, _amount);
+    ) public returns (bool) {
+        ERC20(_token).approve(_spender, _amount);
+        return true;
     }
 
     function transferFrom(

@@ -67,10 +67,7 @@ contract Auto {
         return (uint256(price), decimals);
     }
 
-    function stakingValue(address _account, address _token)
-        public
-        view
-        returns (uint256)
+    function stakingValue(address _account, address _token) public view returns (uint256)
     {
         if (stakingBalance[_token][_account] <= 0) {
             return 0;
@@ -83,29 +80,28 @@ contract Auto {
         require(FarmContract.checkWhitelisted(_token) && _amount > 0);
         /* Transfer any token that in whitelist from user to Auto-Compound Contract */
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
-        stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender]
-            .add(_amount);
+        stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender].add(_amount);
         /* Calculate staking value */
         uint256 value = stakingValue(msg.sender, _token);
-        /*Swap any token to jusd*/
-        SwapContract.swapToJUSD(value);
-        /*Transfer to Swap Contract*/
-        ERC20(_token).transfer(SwapAddress, _amount);
-        /* Auto-Compound:: Approve JUSD for spend amount to Farm */
-        JUSDToken.approve(FarmAddress, value);
-        /* Stake JUSD in Farm Contract with Auto-Compound */
-        FarmContract.stakeTokens(value, JUSDAddress);
+        // /*Swap any token to jusd*/
+        // SwapContract.swapToJUSD(value);
+        // /*Transfer to Swap Contract*/
+        // ERC20(_token).transfer(SwapAddress, _amount);
+        // /* Auto-Compound:: Approve JUSD for spend amount to Farm */
+        // JUSDToken.approve(FarmAddress, value);
+        // /* Stake JUSD in Farm Contract with Auto-Compound */
+        // FarmContract.stakeTokens(value, JUSDAddress);
 
-        /**
-         * Transfer cJUSD to user (Force return cJUSD)
-         * to do: swap in uniswap router based-on LP price.
-         */
-        cJUSDToken.transfer(msg.sender, value);
+        // /**
+        //  * Transfer cJUSD to user (Force return cJUSD)
+        //  * to do: swap in uniswap router based-on LP price.
+        //  */
+        // cJUSDToken.transfer(msg.sender, value);
     }
 
     function claimAndSwap(address _token) public {
         /* Claim Mimic Token */
-        FarmContract.issueTokens(_token);
+        FarmContract.claimRewards(_token);
         /* Check Mimic Token balance */
         uint256 mimbal = MimicToken.balanceOf(address(this));
         /* Swap Mimic To JUSD */

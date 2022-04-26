@@ -1,39 +1,45 @@
 import { useState, useEffect, useCallback } from "react";
-import useAppSelector from "../../hooks/useAppSelector";
 import Web3 from "web3";
 import CountUp from "react-countup";
+import { useFarm, useERC20Utils } from "hooks/useContracts";
+import { Text, Box } from "@chakra-ui/react";
 
-import { Text } from "@chakra-ui/react";
-
-const TVD = () => {
-  const { FarmingContract, JUSDContract } = useAppSelector(
-    (state) => state.contracts
-  );
-
+const TVD = ({ tokenAddress, symbol }) => {
+  const Farm = useFarm();
+  const ERC20Utils = useERC20Utils();
   const [tvd, setTVD] = useState(0);
 
   const loadTVD = useCallback(async () => {
-    if (FarmingContract._address && JUSDContract) {
-      let _tvd = await JUSDContract.methods
-        .balanceOf(FarmingContract._address)
-        .call();
-      setTVD(_tvd.toString());
+    const _tvd = await ERC20Utils.methods
+      .balanceOf(tokenAddress, Farm.address)
+      .call();
+
+    const decimal = await ERC20Utils.methods.decimals(tokenAddress).call();
+    if (decimal == 6) {
+      setTVD(_tvd / Math.pow(10, 6));
+    } else {
+      setTVD(Web3.utils.fromWei(_tvd.toString()));
     }
-  }, [FarmingContract._address, JUSDContract]);
+  }, [ERC20Utils, tokenAddress, Farm]);
 
   useEffect(() => {
     loadTVD();
-  }, [FarmingContract, loadTVD]);
+  }, [loadTVD]);
 
   return (
-    <Text fontSize="5xl">
-      ${" "}
-      <CountUp
-        duration={2}
-        end={Web3.utils.fromWei(tvd.toString())}
-        separator=","
-      />
-    </Text>
+    <>
+      {tvd > 0 && (
+        <Box>
+          <Text fontSize="xl">
+            <b>Total Value Deposited</b>
+          </Text>
+          <Text fontSize="5xl">
+            <CountUp duration={2} end={tvd} separator="," />
+            <font size="6">{" " + symbol}</font>
+          </Text>
+        </Box>
+      )}
+    </>
   );
 };
 

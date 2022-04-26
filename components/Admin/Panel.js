@@ -4,6 +4,7 @@ import ClaimAndSwap from "./ClaimAndSwap";
 import DepositToFarm from "./DepositToFarm";
 import Whitelisted from "./Whitelisted";
 import Dashboard from "./Dashboard";
+import HappyAdmin from "./HappyAdmin";
 
 const Panel = () => {
   const _menu = [
@@ -22,6 +23,10 @@ const Panel = () => {
     {
       name: "Claim & Swap",
       component: <ClaimAndSwap />,
+    },
+    {
+      name: "Happy Admin",
+      component: <HappyAdmin />,
     },
   ];
 

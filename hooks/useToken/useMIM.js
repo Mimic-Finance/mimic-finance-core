@@ -5,8 +5,11 @@ import useAppSelector from "hooks/useAppSelector";
 
 import { useCallback, useEffect, useState } from "react";
 
-const useMIMIC = () => {
+const useMIMIC = (_account) => {
   const { account } = useAppSelector((state) => state.account);
+  if (_account) {
+    account = _account;
+  }
 
   const abi = MIMIC_ABI.abi;
   const contract = useContract(abi, MIMIC_ABI.networks[1].address);

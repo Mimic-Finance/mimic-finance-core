@@ -1,20 +1,25 @@
 import { Text, Box, Button, IconButton } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 import Link from "next/link";
-import { FaGavel, FaRegChartBar } from "react-icons/fa";
+import { FaGavel } from "react-icons/fa";
 
 export const Pool = (props) => {
+  const getImage = (address) => {
+    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
+  };
+
   return (
     <Box
-      p={10}
+      p={8}
       style={{ borderRadius: 10, color: "#000000", position: "relative" }}
       bg={props.color}
     >
       <Image
-        src={"/assets/images/pools/" + props.label + ".png"}
+        src={getImage(props.address)}
         alt={props.label}
+        fallbackSrc="/assets/images/logo-box.png"
         className="pool-logo"
-        width={100}
+        width="70px"
       />
       <Text fontWeight="bold" fontSize="2xl">
         {props.poolName}
@@ -22,29 +27,17 @@ export const Pool = (props) => {
       {props.description}
       <Text pt={3}>{props.token}</Text>
       <Text pt={3} fontWeight="bold">
-        APY : {props.apy} %
+        APR : {props.apr} %
       </Text>
-      <Link href={"/farm/" + props.label} passHref>
+      <Link href={"/farm/" + props.address} passHref>
         <Button
           leftIcon={<FaGavel />}
           mt={4}
           style={{ backgroundColor: "#232137", color: "#fff" }}
-          width={200}
+          width={"100%"}
           variant="solid"
         >
-          Stake Pool
-        </Button>
-      </Link>
-      <Link href={"/auto/" + props.label} passHref>
-        <Button
-          ml={5}
-          leftIcon={<FaRegChartBar />}
-          mt={4}
-          style={{ backgroundColor: "#232137", color: "#fff" }}
-          width={200}
-          variant="solid"
-        >
-          Auto Compound
+          Stake
         </Button>
       </Link>
     </Box>

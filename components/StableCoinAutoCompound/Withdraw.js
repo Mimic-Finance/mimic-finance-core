@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Web3 from "web3";
 
 import useAccount from "hooks/useAccount";
-import { useFarm, useERC20Utils } from "hooks/useContracts";
+import { useAutoCompound, useERC20Utils } from "hooks/useContracts";
 import { useWhitelisted } from "hooks/useFunctions";
 
 import {
@@ -13,16 +13,14 @@ import {
   Input,
   Button,
   InputRightElement,
-  Spinner,
   InputGroup,
-  useToast,
+  Spinner,
 } from "@chakra-ui/react";
 
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
-const WithDraw = ({ symbol, tokenAddress }) => {
-  const toast = useToast();
+const WithDraw = () => {
   // Initialize coin and coinbalance state
   const [coin, setCoin] = useState();
   const [coinBalance, setCoinBalance] = useState(0);
@@ -32,12 +30,7 @@ const WithDraw = ({ symbol, tokenAddress }) => {
   const setCoinBalanceState = (coinBalance) => setCoinBalance(coinBalance);
 
   //useWhitelisted with set coin and coin balance state
-  const getWhitelisted = useWhitelisted(
-    "withdraw",
-    tokenAddress,
-    setCoinState,
-    setCoinBalanceState
-  );
+  const getWhitelisted = useWhitelisted("withdraw", setCoinState, setCoinBalanceState);
   const [whitelisted, setWhitelisted] = useState([]);
 
   //get whitelist effect
@@ -47,11 +40,11 @@ const WithDraw = ({ symbol, tokenAddress }) => {
 
   //initialize web3 and contract
   const account = useAccount();
-  const Farm = useFarm();
+  const AutoCompound = useAutoCompound();
   const ERC20Utils = useERC20Utils();
 
   //widraw Value
-  const [withdrawValue, setWithdrawValue] = useState(0);
+  const [withDrawValue, setWithdrawValue] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
   const [wait_tx, setWaitTx] = useState(false);
@@ -84,7 +77,7 @@ const WithDraw = ({ symbol, tokenAddress }) => {
     setSendTxStatus(true);
     setWaitTx(true);
 
-    Farm.methods
+    AutoCompound.methods
       .unstakeTokens(_amount, coin)
       .send({ from: account })
       .on("transactionHash", (hash) => {
@@ -94,12 +87,9 @@ const WithDraw = ({ symbol, tokenAddress }) => {
             setWaitTx(false);
             setSendTxStatus(false);
             clearInterval(withdrawCheck);
-            toast({
-              title: "Success",
-              description: "Withdraw Success!",
-              status: "success",
-              duration: 1500,
-              isClosable: true,
+            Toast.fire({
+              icon: "success",
+              title: "Withdraw Success!",
             });
             setWithdrawValue(0);
           }
@@ -107,10 +97,54 @@ const WithDraw = ({ symbol, tokenAddress }) => {
       });
   };
 
+  // const unstakeTokens = async (amount) => {
+  //   setSendTxStatus(true);
+  //   setWaitTx(true);
+
+  //   await cJUSDContract.methods
+  //     .approve(AutoContract._address, amount)
+  //     .send({ from: account })
+  //     .on("transactionHash", (hash) => {
+  //       const refreshId = setInterval(async () => {
+  //         const tx_status = await txStatus(hash);
+  //         if (tx_status && tx_status.status) {
+  //           setWaitTx(false);
+  //           setSendTxStatus(false);
+  //           clearInterval(refreshId);
+  //           Toast.fire({
+  //             icon: "success",
+  //             title: "Approved Success!",
+  //           });
+  //           setSendTxStatus(true);
+  //           setWaitTx(true);
+  //           AutoContract.methods
+  //             .withdraw(amount)
+  //             .send({ from: account })
+  //             .on("transactionHash", async (hash) => {
+  //               const withdrawCheck = setInterval(async () => {
+  //                 const tx_status = await txStatus(hash);
+  //                 if (tx_status && tx_status.status) {
+  //                   setWaitTx(false);
+  //                   setSendTxStatus(false);
+  //                   clearInterval(withdrawCheck);
+  //                   Toast.fire({
+  //                     icon: "success",
+  //                     title: "Withdraw Success!",
+  //                   });
+  //                   setWithdrawValue(0);
+  //                 }
+  //               }, 1500);
+  //             });
+  //         }
+  //       }, 1500);
+  //     });
+  // };
+
   const checkDecimals = async (address) => {
     const decimals = await ERC20Utils.methods.decimals(address).call();
     return decimals;
   };
+
 
   const setWithdrawValueMax = async () => {
     const decimals = await checkDecimals(coin.toString());
@@ -138,34 +172,37 @@ const WithDraw = ({ symbol, tokenAddress }) => {
       parseFloat(e.target.value) < 0
     ) {
       setWithdrawValue(0);
-      toast({
-        title: "Error",
-        description: "Please enter value less than your staking balance",
-        status: "error",
-        duration: 1500,
-        isClosable: true,
+      Toast.fire({
+        icon: "error",
+        title: "Please enter value less than your staking balance",
       });
     }
   };
 
   const handleChangeToken = async (e) => {
     setWithdrawValue(0);
-    setCoin(tokenAddress);
-    let _coinBalance = await Farm.methods
-      .getStakingBalance(tokenAddress.toString(), account)
+    setCoin(e.target.value);
+    let _coinBalance = await AutoCompound.methods
+      .getStakingBalance(e.target.value.toString(), account)
       .call();
     setCoinBalance(_coinBalance);
   };
+
 
   return (
     <>
       <Grid templateColumns="repeat(10, 1fr)" gap={0} mt={0}>
         <GridItem colSpan={3}>
-          <Select
+          <Select 
             onChange={handleChangeToken}
-            style={{ borderRadius: "10px 0px 0px 10px" }}
-          >
-            {<option value={tokenAddress}>{symbol}</option>}
+            style={{ borderRadius: "10px 0px 0px 10px" }}>
+            {whitelisted.map((token) => {
+              return (
+                <>
+                  <option value={token.address}>{token.symbol}</option>
+                </>
+              );
+            })}
           </Select>
         </GridItem>
         <GridItem colSpan={7}>
@@ -175,7 +212,7 @@ const WithDraw = ({ symbol, tokenAddress }) => {
                 type="number"
                 style={{ borderRadius: "0px 10px 10px 0px" }}
                 placeholder="0.00"
-                value={withdrawValue}
+                value={withDrawValue}
                 onChange={handleChangeWithdrawValue}
               />
               <InputRightElement width="4.5rem">
@@ -190,19 +227,18 @@ const WithDraw = ({ symbol, tokenAddress }) => {
 
       <div style={{ paddingTop: "20px" }}></div>
       <hr />
-
       <Button
         style={{
           color: "#FFFFFF",
           background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
         }}
-        disabled={withdrawValue == 0 || (wait_tx && send_tx_status)}
         mt={2}
         mb={5}
         w={"100%"}
         onClick={() => {
           withdraw();
         }}
+        disabled={withDrawValue == 0 || (wait_tx && send_tx_status)}
       >
         {wait_tx && send_tx_status ? (
           <>
@@ -212,7 +248,14 @@ const WithDraw = ({ symbol, tokenAddress }) => {
           "Withdraw"
         )}
       </Button>
-      <Portfolio token={tokenAddress} symbol={symbol} />
+      {/* <Portfolio
+        balance={Web3.utils.fromWei(cJUSDBalance.toString())}
+        reward={Web3.utils.fromWei(RewardBalance.toString())}
+        total={
+          parseInt(Web3.utils.fromWei(RewardBalance.toString())) +
+          parseInt(Web3.utils.fromWei(cJUSDBalance.toString()))
+        }
+      /> */}
     </>
   );
 };
