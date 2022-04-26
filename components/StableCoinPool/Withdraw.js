@@ -20,7 +20,7 @@ import {
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
-const WithDraw = ({ tokenAddress }) => {
+const WithDraw = ({ symbol, tokenAddress }) => {
   // Initialize coin and coinbalance state
   const [coin, setCoin] = useState();
   const [coinBalance, setCoinBalance] = useState(0);
@@ -142,9 +142,9 @@ const WithDraw = ({ tokenAddress }) => {
 
   const handleChangeToken = async (e) => {
     setWithdrawValue(0);
-    setCoin(e.target.value);
+    setCoin(tokenAddress);
     let _coinBalance = await Farm.methods
-      .getStakingBalance(e.target.value.toString(), account)
+      .getStakingBalance(tokenAddress.toString(), account)
       .call();
     setCoinBalance(_coinBalance);
   };
@@ -157,13 +157,9 @@ const WithDraw = ({ tokenAddress }) => {
             onChange={handleChangeToken}
             style={{ borderRadius: "10px 0px 0px 10px" }}
           >
-            {whitelisted.map((token) => {
-              return (
-                <>
-                  <option value={token.address}>{token.symbol}</option>
-                </>
-              );
-            })}
+            {
+              <option value={tokenAddress}>{symbol}</option>
+            }
           </Select>
         </GridItem>
         <GridItem colSpan={7}>

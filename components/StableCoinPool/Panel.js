@@ -24,7 +24,7 @@ export const Panel = ({ symbol, tokenAddress }) => {
             <Stake symbol={symbol} tokenAddress={tokenAddress} />
           </TabPanel>
           <TabPanel>
-            <WithDraw tokenAddress={tokenAddress} />
+            <WithDraw symbol={symbol} tokenAddress={tokenAddress} />
           </TabPanel>
         </TabPanels>
       </Tabs>
