@@ -202,9 +202,7 @@ const Stake = ({ symbol, tokenAddress }) => {
             onChange={handleChangeToken}
             style={{ borderRadius: "10px 0px 0px 10px" }}
           >
-            {
-              <option value={tokenAddress}>{symbol}</option>
-            }
+            {<option value={tokenAddress}>{symbol}</option>}
           </Select>
         </GridItem>
         <GridItem colSpan={7}>
@@ -257,14 +255,7 @@ const Stake = ({ symbol, tokenAddress }) => {
         )}
       </Button>
 
-      {/* <Portfolio
-        balance={Web3.utils.fromWei(JUSDStakingBalance.toString())}
-        reward={Web3.utils.fromWei(RewardBalance.toString())}
-        total={
-          parseInt(Web3.utils.fromWei(RewardBalance.toString())) +
-          parseInt(Web3.utils.fromWei(JUSDStakingBalance.toString()))
-        }
-      /> */}
+      <Portfolio token={tokenAddress}/>
     </>
   );
 };

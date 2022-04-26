@@ -13,7 +13,6 @@ import WithDraw from "./Withdraw";
 export const Panel = ({ symbol, tokenAddress }) => {
   return (
     <>
-      <Text fontSize={"3xl"}>{symbol}</Text>
       <Tabs variant="enclosed">
         <TabList>
           <Tab>Stake</Tab>

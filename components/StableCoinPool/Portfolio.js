@@ -1,58 +1,101 @@
-import { Box, Text, Grid, GridItem, Button } from "@chakra-ui/react";
-import useAppSelector from "../../hooks/useAppSelector";
+import {
+  Box,
+  Text,
+  Grid,
+  GridItem,
+  Button,
+  Flex,
+  Spacer,
+} from "@chakra-ui/react";
+import { useFarm, useERC20Utils } from "hooks/useContracts";
+import useAccount from "hooks/useAccount";
+import { useState, useEffect } from "react";
+import Web3 from "web3";
 
-const Portfolio = ({ balance, reward, total }) => {
-  const { FarmingContract } = useAppSelector((state) => state.contracts);
-  const { account } = useAppSelector((state) => state.account);
+const Portfolio = ({ token }) => {
+  const account = useAccount();
+  const Farm = useFarm();
+  const ERC20Utils = useERC20Utils();
 
-  const claimReward = async () => {
-    await FarmingContract.methods
-      .issueTokens()
-      .send({ from: account })
-      .on("transactionHash", (hash) => {
-        // set reload after withdraw
-      });
+  const [balance, setBalance] = useState(0);
+  const [reward, setReward] = useState(0);
+
+  const getBalanceAndReward = async () => {
+    const decimal = await ERC20Utils.methods.decimals(token).call();
+    console.log(decimal);
+    const _balance = await Farm.methods
+      .getStakingBalance(token, account)
+      .call();
+    const _reward = await Farm.methods.calculateRewards(account, token).call();
+
+    if (decimal <= 8) {
+      setBalance(_balance / Math.pow(10, decimal));
+      setReward(_reward / Math.pow(10, decimal));
+    } else {
+      setBalance(Web3.utils.fromWei(_balance, "ether"));
+      setReward(Web3.utils.fromWei(_reward, "ether"));
+    }
   };
 
+  useEffect(() => {
+    getBalanceAndReward();
+  }, []);
+
   return (
-    <Box mt={5}>
-      <Text fontSize="xl">
-        <b>Portfolio</b>
-      </Text>
-      <Box mt={2} p={4} className="portfolio-box">
-        <Grid templateColumns="repeat(9, 1fr)" gap={6}>
-          <GridItem colSpan={3}>
-            <Text fontSize="l">Balance</Text>
-            <Text mt={2} fontSize="m">
-              $ {balance}
-            </Text>
-          </GridItem>
-          <GridItem colSpan={3}>
-            <Text fontSize="l">Reward</Text>
-            <Text mt={2} fontSize="m">
-              $ {reward}
-            </Text>
-            <Box pt={3}>
-              <Button
-                onClick={() => {
-                  claimReward();
-                }}
-                size="xs"
-                colorScheme="purple"
-              >
-                Claim
-              </Button>
-            </Box>
-          </GridItem>
-          <GridItem colSpan={3}>
-            <Text fontSize="l">Totals</Text>
-            <Text mt={2} fontSize="m">
-              $ {total}
-            </Text>
-          </GridItem>
-        </Grid>
-      </Box>
-    </Box>
+      <>
+        {balance > 0 && (
+          <Box mt={5}>
+          <Text fontSize="xl">
+            <b>Portfolio</b>
+          </Text>
+          <Box p={4} mt={3} className="portfolio-box">
+            <Grid
+              templateColumns="repeat(9, 1fr)"
+              style={{ textAlign: "left" }}
+              gap={6}
+            >
+              <GridItem colSpan={3} style={{ textAlign: "center" }}>
+                <Box mb={3}>
+                  <b>Balance</b>
+                </Box>
+    
+                <Box>
+                  {parseFloat(balance).toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </Box>
+              </GridItem>
+              <GridItem colSpan={3} style={{ textAlign: "center" }}>
+                <Box mb={3}>
+                  <b>Reward</b>
+                </Box>
+    
+                <Box>
+                  {parseFloat(reward).toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </Box>
+              </GridItem>
+              <GridItem colSpan={3} style={{ textAlign: "center" }}>
+                <Box mb={3}>
+                  <b>Totals</b>
+                </Box>
+    
+                <Box>
+                  {(parseFloat(balance) + parseFloat(reward)).toLocaleString(
+                    "en-US",
+                    { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+                  )}
+                </Box>
+              </GridItem>
+            </Grid>
+          </Box>
+        </Box>
+        )}
+      </>
+    
   );
 };
 

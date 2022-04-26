@@ -101,7 +101,7 @@ contract Farming is Ownable {
         returns (uint256)
     {
         uint256 time = calculateTime(_account, _token).mul(1e18);
-        uint256 rate = 864;
+        uint256 rate = 86400;
         uint256 timeRate = time.div(rate);
         uint256 reward = stakingBalance[_token][_account].mul(timeRate).div(
             1e18

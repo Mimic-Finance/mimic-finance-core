@@ -1,7 +1,13 @@
-import Head from "next/head";
+import { useEffect, useState, useCallback } from "react";
+
 import styles from "styles/Home.module.css";
-import Web3 from "web3";
-import TVD from "components/StableCoinPool/TVD";
+import Head from "next/head";
+import CountUp from "react-countup";
+import OpenPool from "constants/OpenPool.json"
+import { PoolContextProvider } from "contexts/PoolContext";
+import { Panel } from "components/StableCoinPool/Panel";
+import { useERC20Utils } from "hooks/useContracts";
+import { useRouter } from "next/router";
 
 import {
   Text,
@@ -16,33 +22,16 @@ import {
   ButtonGroup,
   Divider,
 } from "@chakra-ui/react";
-import { useEffect, useState, useCallback } from "react";
+
 import { FaCalculator } from "react-icons/fa";
-import CountUp from "react-countup";
-import Portfolio from "components/StableCoinPool/Portfolio";
-
-import { useERC20Utils } from "hooks/useContracts";
-
-import { useRouter } from "next/router";
-
-import { Panel } from "components/StableCoinPool/Panel";
-
-import { PoolContextProvider } from "contexts/PoolContext";
+import TVD from "components/StableCoinPool/TVD";
 
 const StableCoinPool = () => {
   const router = useRouter();
   const { address } = router.query;
   const ERC20Utils = useERC20Utils();
-
   const [symbol, setSymbol] = useState();
-
-  const info = {
-    poolName: "",
-    label: "",
-    description: "",
-    tvd: 100,
-    apy: 100,
-  };
+  const info = OpenPool.find((pool) => pool.address == address)
 
   const getImage = (address) => {
     return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
@@ -100,13 +89,7 @@ const StableCoinPool = () => {
             <Grid templateColumns="repeat(10, 1fr)" gap={10} mt={7}>
               <GridItem colSpan={6}>
                 <Text fontSize="xl">
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; A stablecoin
-                  is a class of cryptocurrencies that attempt to offer price
-                  stability and are backed by a reserve asset. Stablecoins have
-                  gained traction as they attempt to offer the best of both
-                  worlds—the instant processing and security or privacy of
-                  payments of cryptocurrencies, and the volatility-free stable
-                  valuations of fiat currencies.
+                {info.info}
                 </Text>
 
                 <Box mt={10}>
@@ -118,7 +101,6 @@ const StableCoinPool = () => {
               </GridItem>
               <GridItem colSpan={4}>
                 <Panel symbol={symbol} tokenAddress={address} />
-                {/* <Portfolio></Portfolio> */}
               </GridItem>
             </Grid>
           </>

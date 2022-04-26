@@ -206,14 +206,7 @@ const WithDraw = ({ symbol, tokenAddress }) => {
           "Withdraw"
         )}
       </Button>
-      {/* <Portfolio
-        balance={Web3.utils.fromWei(JUSDStakingBalance.toString())}
-        reward={Web3.utils.fromWei(RewardBalance.toString())}
-        total={
-          parseInt(Web3.utils.fromWei(RewardBalance.toString())) +
-          parseInt(Web3.utils.fromWei(JUSDStakingBalance.toString()))
-        }
-      /> */}
+      <Portfolio token={tokenAddress}/>
     </>
   );
 };
