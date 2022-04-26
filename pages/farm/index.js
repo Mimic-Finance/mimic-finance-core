@@ -44,7 +44,7 @@ const Home = () => {
                     poolName={pool.symbol}
                     description={pool.description}
                     token={pool.token}
-                    apy={pool.apy}
+                    apr={pool.apr}
                     label={pool.symbol}
                     color={pool.color}
                   />

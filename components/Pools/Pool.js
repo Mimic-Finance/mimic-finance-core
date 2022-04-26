@@ -27,7 +27,7 @@ export const Pool = (props) => {
       {props.description}
       <Text pt={3}>{props.token}</Text>
       <Text pt={3} fontWeight="bold">
-        APY : {props.apy} %
+        APR : {props.apr} %
       </Text>
       <Link href={"/farm/" + props.address} passHref>
         <Button

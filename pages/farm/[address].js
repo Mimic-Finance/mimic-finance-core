@@ -81,7 +81,9 @@ const StableCoinPool = () => {
                   />
                 </ButtonGroup>
                 &nbsp; APR
-                <Text fontSize="4xl">50 %</Text>
+                <Text fontSize="4xl">
+                  {info.apr} %
+                </Text>
               </GridItem>
             </Grid>
 
