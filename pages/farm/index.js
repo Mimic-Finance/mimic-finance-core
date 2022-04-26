@@ -15,7 +15,7 @@ const Home = () => {
       </Head>
 
       <Text fontSize="5xl" fontWeight="bold" pt={7} align="center">
-        Enter any Vault with any Token
+        Enter any pool with withlisted token
       </Text>
       <Text fontSize="2xl" align="center" pt={4}>
         Deposit with whitelisted Token{" "}
