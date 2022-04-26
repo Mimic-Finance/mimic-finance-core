@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback } from "react";
 
 import styles from "styles/Home.module.css";
 import Head from "next/head";
-import CountUp from "react-countup";
 import OpenPool from "constants/OpenPool.json"
 import { PoolContextProvider } from "contexts/PoolContext";
 import { Panel } from "components/StableCoinPool/Panel";
@@ -93,10 +92,8 @@ const StableCoinPool = () => {
                 </Text>
 
                 <Box mt={10}>
-                  <Text fontSize="xl">
-                    <b>Total Value Deposited</b>
-                  </Text>
-                  {/* <TVD></TVD> */}
+                 
+                  <TVD tokenAddress={address} symbol={symbol}></TVD>
                 </Box>
               </GridItem>
               <GridItem colSpan={4}>
