@@ -6,7 +6,7 @@
     "token": "BUSD",
     "apy": 122.32,
     "label": "stable-coin",
-    "color": "#98dfe7",
+    "color": "#95c9e2",
     "info": " A stablecoin is a class of cryptocurrencies that attempt to offer price stability and are backed by a reserve asset. Stablecoins have gained traction as they attempt to offer the best of both worlds—the instant processing and security or privacy of payments of cryptocurrencies, and the volatility-free stable valuations of fiat currencies."
   },
   {
@@ -16,7 +16,37 @@
     "token": "DAI",
     "apy": 122.32,
     "label": "stable-coin",
-    "color": "#FFCC33",
+    "color": "#86dbd4",
+    "info": " A stablecoin is a class of cryptocurrencies that attempt to offer price stability and are backed by a reserve asset. Stablecoins have gained traction as they attempt to offer the best of both worlds—the instant processing and security or privacy of payments of cryptocurrencies, and the volatility-free stable valuations of fiat currencies."
+  },
+  {
+    "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "symbol": "USDC",
+    "description": "USDC pool naja",
+    "token": "USDC",
+    "apy": 122.32,
+    "label": "stable-coin",
+    "color": "#fee4a7",
+    "info": " A stablecoin is a class of cryptocurrencies that attempt to offer price stability and are backed by a reserve asset. Stablecoins have gained traction as they attempt to offer the best of both worlds—the instant processing and security or privacy of payments of cryptocurrencies, and the volatility-free stable valuations of fiat currencies."
+  },
+  {
+    "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "symbol": "USDT",
+    "description": "USDT pool naja",
+    "token": "USDT",
+    "apy": 122.32,
+    "label": "stable-coin",
+    "color": "#f6a9bd",
+    "info": " A stablecoin is a class of cryptocurrencies that attempt to offer price stability and are backed by a reserve asset. Stablecoins have gained traction as they attempt to offer the best of both worlds—the instant processing and security or privacy of payments of cryptocurrencies, and the volatility-free stable valuations of fiat currencies."
+  },
+  {
+    "address": "0xF4680c7b67d61C419483d6F553FD6f46fc3602Bf",
+    "symbol": "JUSD",
+    "description": "JUSD pool naja",
+    "token": "JUSD",
+    "apy": 122.32,
+    "label": "stable-coin",
+    "color": "#f4e0e1",
     "info": " A stablecoin is a class of cryptocurrencies that attempt to offer price stability and are backed by a reserve asset. Stablecoins have gained traction as they attempt to offer the best of both worlds—the instant processing and security or privacy of payments of cryptocurrencies, and the volatility-free stable valuations of fiat currencies."
   }
 ]
