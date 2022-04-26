@@ -14,6 +14,7 @@ import {
   Td,
   TableContainer,
   Divider,
+  useToast,
 } from "@chakra-ui/react";
 
 import useAccount from "hooks/useAccount";
@@ -30,6 +31,7 @@ const Whitelisted = () => {
   const account = useAccount();
   const Farm = useFarm();
   const ERC20Utils = useERC20Utils();
+  const toast = useToast();
 
   useEffect(() => {
     setWhitelisted(getWhitelisted);
@@ -49,16 +51,21 @@ const Whitelisted = () => {
           { address: tokenAddress, symbol: _symbol },
         ]);
         setTokenAddress("");
-
-        Toast.fire({
-          icon: "success",
-          title: "Add " + _symbol + " to whitelist successfully",
+        toast({
+          title: "Success",
+          description: "Add " + _symbol + " to whitelist successfully",
+          status: "success",
+          duration: 1500,
+          isClosable: true,
         });
       }
     } catch {
-      Toast.fire({
-        icon: "error",
-        title: "Invalid Token!",
+      toast({
+        title: "error",
+        description: "Invalid Token!",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
       });
     }
   };
@@ -69,14 +76,20 @@ const Whitelisted = () => {
       await Farm.methods.removeWhitelisted(token).send({ from: account });
       setWhitelisted((prev) => prev.filter((item) => item.address !== token));
 
-      Toast.fire({
-        icon: "success",
-        title: "Remove " + _symbol + " from whitelist successfully",
+      toast({
+        title: "Success",
+        description: "Remove " + _symbol + " from whitelist successfully",
+        status: "success",
+        duration: 1500,
+        isClosable: true,
       });
     } catch {
-      Toast.fire({
-        icon: "error",
-        title: "Invalid Token!",
+      toast({
+        title: "error",
+        description: "Invalid Token!",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
       });
     }
   };

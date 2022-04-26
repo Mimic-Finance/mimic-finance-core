@@ -16,12 +16,14 @@ import {
   InputGroup,
   Spinner,
   InputRightElement,
+  useToast,
 } from "@chakra-ui/react";
 
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
 const Stake = ({ symbol, tokenAddress }) => {
+  const toast = useToast();
   // Initialize coin and coinbalance state
   const [coin, setCoin] = useState();
   const [coinBalance, setCoinBalance] = useState(0);
@@ -96,9 +98,13 @@ const Stake = ({ symbol, tokenAddress }) => {
             const tx_status = await txStatus(hash);
             if (tx_status && tx_status.status) {
               clearInterval(refreshId);
-              Toast.fire({
-                icon: "success",
-                title: "Approved Success!",
+
+              toast({
+                title: "Success",
+                description: "Approved Success!",
+                status: "success",
+                duration: 1500,
+                isClosable: true,
               });
 
               // => Check Allowance value <<<
@@ -119,30 +125,39 @@ const Stake = ({ symbol, tokenAddress }) => {
                         setWaitTx(false);
                         setSendTxStatus(false);
                         clearInterval(depositCheck);
-                        Toast.fire({
-                          icon: "success",
-                          title: "Deposit Success!",
+                        toast({
+                          title: "Success",
+                          description: "Deposit Success!",
+                          status: "success",
+                          duration: 1500,
+                          isClosable: true,
                         });
                         setStakeValue(0);
                       }
                     }, 1500);
                   });
               } else {
-                Toast.fire({
-                  icon: "error",
-                  title:
+                toast({
+                  title: "Error",
+                  description:
                     "Please set approve value = " +
                     stakeValue +
                     " on your wallet",
+                  status: "error",
+                  duration: 1500,
+                  isClosable: true,
                 });
               }
             }
           }, 1500);
         });
     } else {
-      Toast.fire({
-        icon: "error",
-        title: "Please select coin",
+      toast({
+        title: "Error",
+        description: "Please select coin",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
       });
     }
   };
@@ -178,9 +193,12 @@ const Stake = ({ symbol, tokenAddress }) => {
       parseFloat(e.target.value) < 0
     ) {
       setStakeValue(0);
-      Toast.fire({
-        icon: "error",
-        title: "Please enter value less than your balance",
+      toast({
+        title: "Error",
+        description: "Please enter value less than your balance",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
       });
     }
   };

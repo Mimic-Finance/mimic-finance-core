@@ -17,12 +17,14 @@ import {
   Text,
   Spinner,
   InputRightElement,
+  useToast,
 } from "@chakra-ui/react";
 
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
 const Stake = () => {
+  const toast = useToast();
   // Initialize coin and coinbalance state
   const [coin, setCoin] = useState();
   const [coinBalance, setCoinBalance] = useState(0);
@@ -32,7 +34,11 @@ const Stake = () => {
   const setCoinBalanceState = (coinBalance) => setCoinBalance(coinBalance);
 
   //useWhitelisted with set coin and coin balance state
-  const getWhitelisted = useWhitelisted("stake", setCoinState, setCoinBalanceState);
+  const getWhitelisted = useWhitelisted(
+    "stake",
+    setCoinState,
+    setCoinBalanceState
+  );
   const [whitelisted, setWhitelisted] = useState([]);
 
   //get whitelist effect
@@ -175,9 +181,12 @@ const Stake = () => {
       parseFloat(e.target.value) < 0
     ) {
       setStakeValue(0);
-      Toast.fire({
-        icon: "error",
-        title: "Please enter value less than your balance",
+      toast({
+        title: "error",
+        description: "Please enter value less than your balance",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
       });
     }
   };
@@ -195,9 +204,10 @@ const Stake = () => {
     <>
       <Grid templateColumns="repeat(10, 1fr)" gap={0}>
         <GridItem colSpan={3}>
-          <Select 
-          onChange={handleChangeToken}
-          style={{ borderRadius: "10px 0px 0px 10px" }}>
+          <Select
+            onChange={handleChangeToken}
+            style={{ borderRadius: "10px 0px 0px 10px" }}
+          >
             {whitelisted.map((token) => {
               return (
                 <>

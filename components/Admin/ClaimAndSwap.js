@@ -8,19 +8,19 @@ import {
   Center,
   Divider,
   Spinner,
+  useToast,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useAutoCompound } from "hooks/useContracts";
 import useAccount from "hooks/useAccount";
 import { useWhitelisted } from "hooks/useFunctions";
 
-import Toast from "components/Utils/Toast/Toast";
-
 const ClaimAndSwap = () => {
   const getWhitelisted = useWhitelisted();
   const [whitelisted, setWhitelisted] = useState([]);
   const account = useAccount();
   const AutoCompound = useAutoCompound();
+  const toast = useToast();
 
   useEffect(() => {
     setWhitelisted(getWhitelisted);
@@ -54,9 +54,12 @@ const ClaimAndSwap = () => {
             setWaitTx(false);
             setSendTxStatus(false);
             clearInterval(claimCheck);
-            Toast.fire({
-              icon: "success",
-              title: "Claim & Swap Success!",
+            toast({
+              title: "Success",
+              description: "Claming and Swap success!",
+              status: "success",
+              duration: 1500,
+              isClosable: true,
             });
           }
         }, 1500);

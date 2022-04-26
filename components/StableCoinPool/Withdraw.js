@@ -15,12 +15,14 @@ import {
   InputRightElement,
   Spinner,
   InputGroup,
+  useToast,
 } from "@chakra-ui/react";
 
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
 const WithDraw = ({ symbol, tokenAddress }) => {
+  const toast = useToast();
   // Initialize coin and coinbalance state
   const [coin, setCoin] = useState();
   const [coinBalance, setCoinBalance] = useState(0);
@@ -92,9 +94,12 @@ const WithDraw = ({ symbol, tokenAddress }) => {
             setWaitTx(false);
             setSendTxStatus(false);
             clearInterval(withdrawCheck);
-            Toast.fire({
-              icon: "success",
-              title: "Withdraw Success!",
+            toast({
+              title: "Success",
+              description: "Withdraw Success!",
+              status: "success",
+              duration: 1500,
+              isClosable: true,
             });
             setWithdrawValue(0);
           }
@@ -133,9 +138,12 @@ const WithDraw = ({ symbol, tokenAddress }) => {
       parseFloat(e.target.value) < 0
     ) {
       setWithdrawValue(0);
-      Toast.fire({
-        icon: "error",
-        title: "Please enter value less than your staking balance",
+      toast({
+        title: "Error",
+        description: "Please enter value less than your staking balance",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
       });
     }
   };
@@ -157,9 +165,7 @@ const WithDraw = ({ symbol, tokenAddress }) => {
             onChange={handleChangeToken}
             style={{ borderRadius: "10px 0px 0px 10px" }}
           >
-            {
-              <option value={tokenAddress}>{symbol}</option>
-            }
+            {<option value={tokenAddress}>{symbol}</option>}
           </Select>
         </GridItem>
         <GridItem colSpan={7}>

@@ -8,6 +8,7 @@ import {
   Grid,
   Box,
   Select,
+  useToast,
 } from "@chakra-ui/react";
 import { useFarm } from "hooks/useContracts";
 import useAccount from "hooks/useAccount";
@@ -21,6 +22,7 @@ const HappyAdmin = () => {
   const [whitelisted, setWhitelisted] = useState([]);
   const [loveToken, setLoveToken] = useState(null);
   const Farm = useFarm();
+  const toast = useToast();
 
   useEffect(() => {
     setWhitelisted(getWhitelisted);
@@ -52,9 +54,13 @@ const HappyAdmin = () => {
             setWaitTx(false);
             setSendTxStatus(false);
             clearInterval(claimCheck);
-            Toast.fire({
-              icon: "success",
-              title: "Told Love you users Success!",
+
+            toast({
+              title: "Success",
+              description: "Told Love you users Success!",
+              status: "success",
+              duration: 1500,
+              isClosable: true,
             });
           }
         }, 1500);

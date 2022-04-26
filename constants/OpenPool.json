@@ -48,5 +48,15 @@
     "label": "stable-coin",
     "color": "#f4e0e1",
     "info": " A stablecoin is a class of cryptocurrencies that attempt to offer price stability and are backed by a reserve asset. Stablecoins have gained traction as they attempt to offer the best of both worlds—the instant processing and security or privacy of payments of cryptocurrencies, and the volatility-free stable valuations of fiat currencies."
+  },
+  {
+    "address": "0xa0ABda1F980e03D7eADb78aed8fC1f2DD0fe83Dd",
+    "symbol": "BUSD-USDT",
+    "description": "LP Token UNI-v2",
+    "token": "BUSD-USDT-LP",
+    "apy": 122.32,
+    "label": "stable-coin",
+    "color": "#f4e0e1",
+    "info": " A stablecoin is a class of cryptocurrencies that attempt to offer price stability and are backed by a reserve asset. Stablecoins have gained traction as they attempt to offer the best of both worlds—the instant processing and security or privacy of payments of cryptocurrencies, and the volatility-free stable valuations of fiat currencies."
   }
 ]
