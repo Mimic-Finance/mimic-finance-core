@@ -1,7 +1,7 @@
 import { Text, Box, Button, IconButton } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 import Link from "next/link";
-import { FaGavel, FaRegChartBar } from "react-icons/fa";
+import { FaGavel } from "react-icons/fa";
 
 export const Pool = (props) => {
   const getImage = (address) => {

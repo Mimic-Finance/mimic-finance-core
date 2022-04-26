@@ -206,7 +206,7 @@ const WithDraw = ({ symbol, tokenAddress }) => {
           "Withdraw"
         )}
       </Button>
-      <Portfolio token={tokenAddress}/>
+      <Portfolio token={tokenAddress} symbol={symbol} />
     </>
   );
 };

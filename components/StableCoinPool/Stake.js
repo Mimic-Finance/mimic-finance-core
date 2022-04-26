@@ -255,7 +255,7 @@ const Stake = ({ symbol, tokenAddress }) => {
         )}
       </Button>
 
-      <Portfolio token={tokenAddress}/>
+      <Portfolio token={tokenAddress} symbol={symbol} />
     </>
   );
 };
