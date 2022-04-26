@@ -35,7 +35,7 @@ const TVD = ({ tokenAddress, symbol }) => {
           </Text>
           <Text fontSize="5xl">
             <CountUp duration={2} end={tvd} separator="," />
-            <small>{" " + symbol}</small>
+            <font size="6">{" " + symbol}</font>
           </Text>
         </Box>
       )}
