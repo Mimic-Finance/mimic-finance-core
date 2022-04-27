@@ -14,6 +14,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { useWhitelisted } from "hooks/useFunctions";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import Link from "next/link";
 
 const WhitelistedPage = () => {
@@ -62,7 +63,11 @@ const WhitelistedPage = () => {
                         <Td>{token.symbol}</Td>
                         <Td>
                           <Link passHref href={"/farm/" + token.address}>
-                            {token.address}
+                            <a>
+                              <Text>
+                                {token.address} <ExternalLinkIcon />
+                              </Text>
+                            </a>
                           </Link>
                         </Td>
                       </Tr>
