@@ -3,11 +3,13 @@ import styles from "styles/Home.module.css";
 import { Text, Box, Container, SimpleGrid, Button, Image } from "@chakra-ui/react";
 import { FaGavel } from "react-icons/fa";
 import Link from "next/link";
-import OpenPool from "constants/OpenPool.json";
-import { Pool } from "components/Pools/Pool";
+import OpenAutoCompoundPool from "constants/OpenAutoCompoundPool.json";
+import AutoCompoundPool from "components/AutoCompoundPools/AutoCompoundPool";
+
 import { useJUSD } from "hooks/useToken";
 
 const Home = () => {
+  const JUSD = useJUSD();
   return (
     <div className={styles.container}>
       <Head>
@@ -41,21 +43,21 @@ const Home = () => {
 
       <Container maxW="container.xl">
         <Text fontWeight="bold" fontSize="xl" pt={20}>
-          Available Farming Pools
+          Available Auto-compound Pools
         </Text>
 
         <SimpleGrid mt={5} minChildWidth="300px" gap={10} spacing="60px">
-          {OpenPool.map((pool) => {
+        {OpenAutoCompoundPool.map((pool) => {
             return (
               <>
-                <Box mt={20} ml={5}>
-                  <Pool
-                    key={pool.address}
-                    address={pool.address}
+                <Box w={"45.89%"} mt={20} ml={5}>
+                  <AutoCompoundPool
+                    key={JUSD.address}
+                    address={JUSD.address}
                     poolName={pool.symbol}
                     description={pool.description}
                     token={pool.token}
-                    apr={pool.apr}
+                    apy={pool.apy}
                     label={pool.symbol}
                     color={pool.color}
                     type={pool.type}
@@ -74,7 +76,6 @@ const Home = () => {
           })}
         </SimpleGrid>
       </Container>
-
     </div>
   );
 };
