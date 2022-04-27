@@ -121,7 +121,7 @@ const Home = () => {
           <Grid templateColumns="repeat(2, 1fr)" gap={5} pt={5}>
             <Box
               w="100%"
-              p={10}
+              p={{ base: "6", md: "8", lg: "10" }}
               style={{ borderRadius: 10 }}
               className="community-box"
             >
@@ -129,19 +129,19 @@ const Home = () => {
                 <Image
                   src="/assets/images/blue-twitter-icon.svg"
                   alt="mimic_finance"
-                  width="80px"
+                  width={{ base: "40px", md: "60px", lg: "80px" }}
                   className="community-icon"
                 />
               </Center>
-              <Text fontWeight="bold" fontSize="2xl">
+              <Text fontWeight="bold" fontSize={{ base: "lg", md: "xl", lg: "2xl" }}>
                 Twitter
               </Text>
 
-              <Text fontSize="medium">@MimicFinance</Text>
+              <Text fontSize={{ base: "xs", md: "sm", lg: "md" }}>@MimicFinance</Text>
             </Box>
             <Box
               w="100%"
-              p={10}
+              p={{ base: "6", md: "8", lg: "10" }}
               style={{ borderRadius: 10 }}
               className="community-box"
             >
@@ -149,15 +149,15 @@ const Home = () => {
                 <Image
                   src="/assets/images/blue-telegram-icon.svg"
                   alt="mimic_finance"
-                  width="80px"
+                  width={{ base: "40px", md: "60px", lg: "80px" }}
                   className="community-icon"
                 />
               </Center>
-              <Text fontWeight="bold" fontSize="2xl">
+              <Text fontWeight="bold" fontSize={{ base: "lg", md: "xl", lg: "2xl" }}>
                 Telegram
               </Text>
 
-              <Text fontSize="medium">@MimicFinance</Text>
+              <Text fontSize={{ base: "xs", md: "sm", lg: "md" }}>@MimicFinance</Text>
             </Box>
           </Grid>
         </Container>
