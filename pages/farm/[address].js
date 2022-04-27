@@ -15,16 +15,9 @@ import {
   Box,
   GridItem,
   Image,
-  Spinner,
-  Center,
   IconButton,
   ButtonGroup,
-  Divider,
-  SimpleGrid,
-  Flex,
 } from "@chakra-ui/react";
-
-import { Row, Col } from "react-bootstrap";
 
 import { FaCalculator } from "react-icons/fa";
 import TVD from "components/StableCoinPool/TVD";
@@ -95,7 +88,7 @@ const StableCoinPool = () => {
             <div className="row">
               <div className="col-md-7" style={{ paddingTop: "20px" }}>
                 <Text fontSize="lg">
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   {info.info}
                 </Text>
                 <br />
