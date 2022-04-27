@@ -55,10 +55,12 @@ contract Auto is Ownable{
         /* Transfer any token that in whitelist from user to Auto-Compound Contract */
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
         stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender].add(_amount);
-         /*Swap any token to jusd*/
+        if(_token!= JUSDAddress){
+            /*Swap any token to jusd*/
          SwapContract.swapToJUSD(_amount);
          /*Transfer to Swap Contract*/
          ERC20(_token).transfer(SwapAddress, _amount);
+        }
          /* Auto-Compound:: Approve JUSD for spend amount to Farm */
          JUSDToken.approve(FarmAddress, _amount);
          /* Stake JUSD in Farm Contract with Auto-Compound */
@@ -83,11 +85,11 @@ contract Auto is Ownable{
         FarmContract.stakeTokens(_amount, JUSDAddress);
     }
 
-    function withdraw(uint256 _amount, address _token) public {
+    function withdraw(uint256 _amount) public {
         /* Transfer cJUSD to Auto Compound */
         cJUSDToken.transferFrom(msg.sender, address(this), _amount);
         /* Unstake JUSD from Farming Contract */
-        FarmContract.unstakeTokens(_amount, _token);
+        FarmContract.unstakeTokens(_amount, JUSDAddress);
         uint256 rewards = _amount.mul(101).div(100);
         /* Return JUSD to user */
         JUSDToken.transfer(msg.sender, rewards);
