@@ -46,7 +46,7 @@ const Home = () => {
                 <Center>Yields Aggerator System</Center>
               </Text>
               <Text className="text-normal" mt={7}>
-                <Center>
+                <Center style={{ textAlign: "center" }}>
                   Make investment easy low fees & Makes farming easy only one
                   step
                 </Center>
