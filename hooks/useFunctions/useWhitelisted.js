@@ -34,7 +34,7 @@ const useWhitelisted = (from, tokenAddress, setCoin, setCoinBalance) => {
             setCoin(_whitelisted[i]);
           } else if(from == "auto-withdraw") {
             _coinBalance = await ERC20Utils.methods
-              .balanceOf(CJUSD.address, account)
+              .balanceOf(tokenAddress, account)
               .call();
             setCoin(tokenAddress);
           }

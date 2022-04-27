@@ -23,7 +23,7 @@ import {
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
-const Stake = ({ symbol, tokenAddress }) => {
+const Stake = () => {
   const toast = useToast();
   // Initialize coin and coinbalance state
   const [coin, setCoin] = useState();
