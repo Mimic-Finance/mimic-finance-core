@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 
 import styles from "styles/Home.module.css";
 import Head from "next/head";
-import OpenPool from "constants/OpenPool.json"
+import OpenPool from "constants/OpenPool.json";
 import { PoolContextProvider } from "contexts/PoolContext";
 import { Panel } from "components/StableCoinPool/Panel";
 import { useERC20Utils } from "hooks/useContracts";
@@ -24,6 +24,8 @@ import {
   Flex,
 } from "@chakra-ui/react";
 
+import { Row, Col } from "react-bootstrap";
+
 import { FaCalculator } from "react-icons/fa";
 import TVD from "components/StableCoinPool/TVD";
 
@@ -32,7 +34,7 @@ const StableCoinPool = () => {
   const { address } = router.query;
   const ERC20Utils = useERC20Utils();
   const [symbol, setSymbol] = useState();
-  const info = OpenPool.find((pool) => pool.address == address)
+  const info = OpenPool.find((pool) => pool.address == address);
 
   const getImage = (address) => {
     return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
@@ -72,8 +74,8 @@ const StableCoinPool = () => {
                 </Box>
               </GridItem>
               <GridItem colSpan={5}>
-                <Text fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}>
-                  <b>{symbol} Pool</b>
+                <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}>
+                  <b>{symbol}</b>
                 </Text>
               </GridItem>
               <GridItem colSpan={4} style={{ textAlign: "right" }}>
@@ -84,29 +86,25 @@ const StableCoinPool = () => {
                   />
                 </ButtonGroup>
                 &nbsp; APR
-                <Text fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}>
+                <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}>
                   {info.apr} %
                 </Text>
               </GridItem>
             </Grid>
 
-            <SimpleGrid minChildWidth="300px" gap={10} mt={7}>
-              <Box>
-                <Text fontSize="xl">
-                {info.info}
+            <div className="row">
+              <div className="col-md-7" style={{ paddingTop: "20px" }}>
+                <Text fontSize="lg">
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+                  {info.info}
                 </Text>
-                <Box mt={10}>
-                  <TVD tokenAddress={address} symbol={symbol}></TVD>
-                </Box>
-              </Box>
-              <Box>
-                <div style={{right: 0}}>
-                  <Box w={"70%"}>
-                    <Panel symbol={symbol} tokenAddress={address} />
-                  </Box>
-                </div>
-              </Box>
-            </SimpleGrid>
+                <br />
+                <TVD tokenAddress={address} symbol={symbol}></TVD>
+              </div>
+              <div className="col-md-5" style={{ paddingTop: "20px" }}>
+                <Panel symbol={symbol} tokenAddress={address} />
+              </div>
+            </div>
           </>
         </Container>
       </PoolContextProvider>
