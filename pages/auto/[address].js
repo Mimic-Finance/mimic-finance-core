@@ -27,9 +27,8 @@ const StableCoinAutoCompound = () => {
   const { address } = router.query;
   const ERC20Utils = useERC20Utils();
   const [symbol, setSymbol] = useState();
-
-  // force load
-  const PoolInfo = OpenAutoCompoundPool[0];
+  //Force load poolInfo
+  const [poolInfo, setPoolInfo] = useState(OpenAutoCompoundPool[0]);
 
   const getImage = (address) => {
     return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
@@ -82,24 +81,36 @@ const StableCoinAutoCompound = () => {
                 </ButtonGroup>
                 &nbsp; APY
                 <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}>
-                  {info.apy} %
+                  {poolInfo.apy} %
                 </Text>
               </GridItem>
             </Grid>
 
-            <div className="row">
-              <div className="col-md-7" style={{ paddingTop: "20px" }}>
-                <Text fontSize="lg">
+            <Box className="row">
+              <Box className="col-md-7" pt={{ base: 5, md: 3, lg: 3 }}>
+                <Text
+                  fontSize="md"
+                  style={{ textAlign: "justify", textJustify: "inter-word" }}
+                  pr={{ base: 0, md: 0, lg: 7 }}
+                  pl={{ base: 0, md: 0, lg: 7 }}
+                >
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  {PoolInfo.info}
+                  {poolInfo.info}
                 </Text>
                 <br />
-                <TVD tokenAddress={address} symbol={symbol}></TVD>
-              </div>
-              <div className="col-md-5" style={{ paddingTop: "20px" }}>
+                <Box
+                  pl={{ base: 0, md: 0, lg: 10 }}
+                  pt={{ base: 3, md: 0, lg: 0 }}
+                  pb={{ base: 5, md: 0, lg: 0 }}
+                  textAlign={{ base: "center", md: "left", lg: "left" }}
+                >
+                  <TVD tokenAddress={address} symbol={symbol}></TVD>
+                </Box>
+              </Box>
+              <Box className="col-md-5" style={{ paddingTop: "10px" }}>
                 <Panel symbol={symbol} tokenAddress={address} />
-              </div>
-            </div>
+              </Box>
+            </Box>
           </>
         </Container>
       </PoolContextProvider>
