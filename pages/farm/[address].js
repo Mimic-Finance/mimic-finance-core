@@ -27,7 +27,7 @@ const StableCoinPool = () => {
   const { address } = router.query;
   const ERC20Utils = useERC20Utils();
   const [symbol, setSymbol] = useState();
-  const info = OpenPool.find((pool) => pool.address == address);
+  const PoolInfo = OpenPool.find((pool) => pool.address == address);
 
   const getImage = (address) => {
     return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
@@ -89,7 +89,7 @@ const StableCoinPool = () => {
               <div className="col-md-7" style={{ paddingTop: "20px" }}>
                 <Text fontSize="lg">
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  {info.info}
+                  {PoolInfo.info}
                 </Text>
                 <br />
                 <TVD tokenAddress={address} symbol={symbol}></TVD>
