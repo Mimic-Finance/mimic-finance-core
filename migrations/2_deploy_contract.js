@@ -126,7 +126,7 @@ module.exports = async function (deployer, network, accounts) {
   await mimicToken.transfer(farming.address, "100000000000000000000000000");
   await jusdToken.transfer(auto.address, "5000000000000000000000000");
   await jusdToken.transfer(swap.address, "4000000000000000000000000");
-  await cjusdToken.transfer(auto.address, "10000000000000000000000000");
+  await cjusdToken.transfer(auto.address, "100000000000000000000000000");
   await jusdToken.transfer(
     config.mode === "development" ? accounts[1] : config.testerAddress,
     "1000000000000000000000000"
