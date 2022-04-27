@@ -14,10 +14,10 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Text fontSize="5xl" fontWeight="bold" pt={7} align="center">
+      <Text fontSize={{ base: "4xl", md: "4xl", lg: "5xl" }} fontWeight="bold" pt={7} align="center">
         Enter any pool with withlisted token
       </Text>
-      <Text fontSize="2xl" align="center" pt={4}>
+      <Text fontSize={{ base: "lg", md: "xl", lg: "2xl" }} align="center" pt={4}>
         Deposit with whitelisted Token{" "}
         <a href="#">
           <Link href="/whitelisted" passHref style={{ color: "teal" }}>
