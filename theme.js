@@ -96,7 +96,14 @@ const theme = extendTheme({
         position: "absolute",
         zIndex: 1,
         boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
-        // border: mode("5px solid #f5f5f5", "5px solid #ffffff")(props),
+        borderRadius: "50%",
+      },
+      ".autopool-logo": {
+        left: "40%",
+        top: -10,
+        position: "absolute",
+        zIndex: 1,
+        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
         borderRadius: "50%",
       },
       ".pool-box": {

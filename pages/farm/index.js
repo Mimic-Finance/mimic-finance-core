@@ -1,6 +1,13 @@
 import Head from "next/head";
 import styles from "styles/Home.module.css";
-import { Text, Box, Container, SimpleGrid, Button, Image } from "@chakra-ui/react";
+import {
+  Text,
+  Box,
+  Container,
+  SimpleGrid,
+  Button,
+  Image,
+} from "@chakra-ui/react";
 import { FaGavel } from "react-icons/fa";
 import Link from "next/link";
 import OpenPool from "constants/OpenPool.json";
@@ -74,7 +81,6 @@ const Home = () => {
           })}
         </SimpleGrid>
       </Container>
-
     </div>
   );
 };

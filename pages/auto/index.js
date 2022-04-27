@@ -1,6 +1,13 @@
 import Head from "next/head";
 import styles from "styles/Home.module.css";
-import { Text, Box, Container, SimpleGrid, Button, Image } from "@chakra-ui/react";
+import {
+  Text,
+  Box,
+  Container,
+  SimpleGrid,
+  Button,
+  Image,
+} from "@chakra-ui/react";
 import { FaGavel } from "react-icons/fa";
 import Link from "next/link";
 import OpenAutoCompoundPool from "constants/OpenAutoCompoundPool.json";
@@ -47,10 +54,10 @@ const Home = () => {
         </Text>
 
         <SimpleGrid mt={5} minChildWidth="300px" gap={10} spacing="60px">
-        {OpenAutoCompoundPool.map((pool) => {
+          {OpenAutoCompoundPool.map((pool) => {
             return (
               <>
-                <Box w={"45.89%"} mt={20} ml={5}>
+                <Box mt={10} className="col-md-4">
                   <AutoCompoundPool
                     key={JUSD.address}
                     address={JUSD.address}
