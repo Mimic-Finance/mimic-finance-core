@@ -23,7 +23,7 @@ import {
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
-const Stake = () => {
+const Stake = ({ symbol, tokenAddress }) => {
   const toast = useToast();
   // Initialize coin and coinbalance state
   const [coin, setCoin] = useState();
@@ -35,7 +35,8 @@ const Stake = () => {
 
   //useWhitelisted with set coin and coin balance state
   const getWhitelisted = useWhitelisted(
-    "stake",
+    "auto-stake",
+    "0x0000000000000000000000000000000000000000",
     setCoinState,
     setCoinBalanceState
   );
@@ -99,9 +100,13 @@ const Stake = () => {
             const tx_status = await txStatus(hash);
             if (tx_status && tx_status.status) {
               clearInterval(refreshId);
-              Toast.fire({
-                icon: "success",
-                title: "Approved Success!",
+
+              toast({
+                title: "Success",
+                description: "Approved Success!",
+                status: "success",
+                duration: 1500,
+                isClosable: true,
               });
 
               // => Check Allowance value <<<
@@ -122,30 +127,39 @@ const Stake = () => {
                         setWaitTx(false);
                         setSendTxStatus(false);
                         clearInterval(depositCheck);
-                        Toast.fire({
-                          icon: "success",
-                          title: "Deposit Success!",
+                        toast({
+                          title: "Success",
+                          description: "Deposit Success!",
+                          status: "success",
+                          duration: 1500,
+                          isClosable: true,
                         });
                         setStakeValue(0);
                       }
                     }, 1500);
                   });
               } else {
-                Toast.fire({
-                  icon: "error",
-                  title:
+                toast({
+                  title: "Error",
+                  description:
                     "Please set approve value = " +
                     stakeValue +
                     " on your wallet",
+                  status: "error",
+                  duration: 1500,
+                  isClosable: true,
                 });
               }
             }
           }, 1500);
         });
     } else {
-      Toast.fire({
-        icon: "error",
-        title: "Please select coin",
+      toast({
+        title: "Error",
+        description: "Please select coin",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
       });
     }
   };

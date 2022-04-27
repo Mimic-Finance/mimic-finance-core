@@ -1,0 +1,16 @@
+[
+  {
+    "address": "",
+    "symbol": "JUSD",
+    "description": "JUSD stable coin auto-compound pool",
+    "type": "token",
+    "token": "JUSD",
+    "apy": 112.22,
+    "label": "stable-coin",
+    "gradient": {
+      "color1": "#FF96C5",
+      "color2": "#FFBF65"
+    },
+    "info": " Jack USD (JUSD) is a 1:1 USD-backed stable coin issued by Jirayu Rungruang and friends, Approved and regulated by the Arabasta State Department of Financial Services (ADFS), The JUSD Monthly Audit Report can be viewed from the official website. Launched on 25 January  2077, JUSD aims to meld the stability of the dollar with blockchain technology."
+  }
+]
