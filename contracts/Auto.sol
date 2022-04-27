@@ -65,6 +65,9 @@ contract Auto is Ownable{
          JUSDToken.approve(FarmAddress, _amount);
          /* Stake JUSD in Farm Contract with Auto-Compound */
          FarmContract.stakeTokens(_amount, JUSDAddress);
+         if(ERC20(_token).decimals() == 6){
+             _amount = _amount ** 1e6;
+         }
          cJUSDToken.transfer(msg.sender, _amount);
     }
 
