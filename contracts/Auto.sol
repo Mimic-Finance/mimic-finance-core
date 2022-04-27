@@ -25,9 +25,6 @@ contract Auto is Ownable{
     address internal FarmAddress;
     address internal SwapAddress;
     address internal JUSDAddress;
-    mapping(address => mapping(address => uint256)) public stakingBalance;
-    mapping(address => address) public tokenPriceMapping;
-
     constructor(
         address _JUSDToken,
         address _MimicToken,
@@ -54,7 +51,6 @@ contract Auto is Ownable{
         require(FarmContract.checkWhitelisted(_token) && _amount > 0);
         /* Transfer any token that in whitelist from user to Auto-Compound Contract */
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
-        stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender].add(_amount);
         if(_token!= JUSDAddress){
             /*Swap any token to jusd*/
          SwapContract.swapToJUSD(_amount);
@@ -67,8 +63,9 @@ contract Auto is Ownable{
          FarmContract.stakeTokens(_amount, JUSDAddress);
          uint256 decimals = ERC20(_token).decimals();
          uint256 balance = _amount;
-         if(decimals == 6){
-             balance = _amount.mul(1e12);
+         if(decimals != 18){
+             uint256 remain = 18 - decimals;
+             balance = _amount.mul(10 ** remain);
          }
          cJUSDToken.transfer(msg.sender, balance);
     }
