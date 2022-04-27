@@ -39,7 +39,7 @@ export const PoolContextProvider = ({ children, address }) => {
         </Center>
         <Center>
           <Text fontSize="2xl" mt={3}>
-            Verifing Open Pool
+            Verifying Open Pool
           </Text>
         </Center>
       </PoolContext.Provider>

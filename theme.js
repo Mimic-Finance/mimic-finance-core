@@ -91,11 +91,19 @@ const theme = extendTheme({
         paddingBottom: "15px",
       },
       ".pool-logo": {
-        top: -5,
-        right: -8,
+        left: "38%",
+        top: -10,
         position: "absolute",
         zIndex: 1,
-        // width: 150,
+        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
+        // border: mode("5px solid #f5f5f5", "5px solid #ffffff")(props),
+        borderRadius: "50%",
+      },
+      ".pool-box": {
+        borderRadius: 10,
+        color: "#000000",
+        position: "relative",
+        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.1)",
       },
       ".stat-active": {
         bg: mode("#f5f5f5", "#4c4f53")(props),
@@ -108,6 +116,16 @@ const theme = extendTheme({
         borderRadius: "10px",
         border: "2px solid rgba(0, 0, 0, 0.05)",
         margin: "0.5rem",
+        padding: "1rem",
+      },
+      ".balance-box": {
+        color: mode("gray.700", "whiteAlpha.900")(props),
+        borderRadius: "10px",
+        border: mode(
+          "2px solid rgba(0, 0, 0, 0.05)",
+          "2px solid #515151"
+        )(props),
+        // margin: "0.5rem",
         padding: "1rem",
       },
     }),

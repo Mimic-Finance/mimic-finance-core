@@ -3,6 +3,7 @@ import Web3 from "web3";
 
 import useAccount from "hooks/useAccount";
 import { useAutoCompound, useERC20Utils } from "hooks/useContracts";
+import { useCJUSD } from "hooks/useToken";
 import { useWhitelisted } from "hooks/useFunctions";
 
 import {
@@ -15,12 +16,14 @@ import {
   InputRightElement,
   InputGroup,
   Spinner,
+  useToast,
 } from "@chakra-ui/react";
 
 import Portfolio from "./Portfolio";
 import Toast from "../Utils/Toast/Toast";
 
 const WithDraw = () => {
+  const toast = useToast();
   // Initialize coin and coinbalance state
   const [coin, setCoin] = useState();
   const [coinBalance, setCoinBalance] = useState(0);
@@ -29,8 +32,14 @@ const WithDraw = () => {
   const setCoinState = (coin) => setCoin(coin);
   const setCoinBalanceState = (coinBalance) => setCoinBalance(coinBalance);
 
+  const CJUSD = useCJUSD();
   //useWhitelisted with set coin and coin balance state
-  const getWhitelisted = useWhitelisted("withdraw", setCoinState, setCoinBalanceState);
+  const getWhitelisted = useWhitelisted(
+    "auto-withdraw",
+    CJUSD.address,
+    setCoinState,
+    setCoinBalanceState
+  );
   const [whitelisted, setWhitelisted] = useState([]);
 
   //get whitelist effect
@@ -43,8 +52,9 @@ const WithDraw = () => {
   const AutoCompound = useAutoCompound();
   const ERC20Utils = useERC20Utils();
 
+
   //widraw Value
-  const [withDrawValue, setWithdrawValue] = useState(0);
+  const [withdrawValue, setWithdrawValue] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
   const [wait_tx, setWaitTx] = useState(false);
@@ -55,6 +65,7 @@ const WithDraw = () => {
     return status;
   };
 
+  //Withdraw function
   const withdraw = async () => {
     if (coin !== null) {
       // => get decimals of token
@@ -76,75 +87,77 @@ const WithDraw = () => {
     // ========== Transaction Start ==============
     setSendTxStatus(true);
     setWaitTx(true);
+    // => Approve <<<
+    // => approve with coin that user select
 
-    AutoCompound.methods
-      .unstakeTokens(_amount, coin)
+    await CJUSD.methods
+    .approve(AutoCompound.address, _amount)
       .send({ from: account })
       .on("transactionHash", (hash) => {
-        const withdrawCheck = setInterval(async () => {
+        const refreshId = setInterval(async () => {
           const tx_status = await txStatus(hash);
           if (tx_status && tx_status.status) {
-            setWaitTx(false);
-            setSendTxStatus(false);
-            clearInterval(withdrawCheck);
-            Toast.fire({
-              icon: "success",
-              title: "Withdraw Success!",
+            clearInterval(refreshId);
+
+            toast({
+              title: "Success",
+              description: "Approved Success!",
+              status: "success",
+              duration: 1500,
+              isClosable: true,
             });
-            setWithdrawValue(0);
+
+            // ===>>> check allowance value
+            const allowance = await ERC20Utils.methods
+              .allowance(coin, account, AutoCompound.address)
+              .call();
+            console.log("allowance value => ", allowance);
+
+            if (allowance == _amount) {
+              // ->>> Withdraw
+              AutoCompound.methods
+                .withdraw(_amount)
+                .send({ from: account })
+                .on("transactionHash", (hash) => {
+                  const withdrawCheck = setInterval(async () => {
+                    const tx_status = await txStatus(hash);
+                    if (tx_status && tx_status.status) {
+                      setWaitTx(false);
+                      setSendTxStatus(false);
+                      clearInterval(withdrawCheck);
+                      toast({
+                        title: "Success",
+                        description: "Withdraw Success!",
+                        status: "success",
+                        duration: 1500,
+                        isClosable: true,
+                      });
+                      setWithdrawValue(0);
+                    }
+                  }, 1500);
+                })
+            }
+
+          } else {
+            toast({
+              title: "Error",
+              description:
+                "Please set approve value = " +
+                withdrawValue +
+                " on your wallet",
+              status: "error",
+              duration: 1500,
+              isClosable: true,
+            });
           }
         }, 1500);
       });
   };
 
-  // const unstakeTokens = async (amount) => {
-  //   setSendTxStatus(true);
-  //   setWaitTx(true);
-
-  //   await cJUSDContract.methods
-  //     .approve(AutoContract._address, amount)
-  //     .send({ from: account })
-  //     .on("transactionHash", (hash) => {
-  //       const refreshId = setInterval(async () => {
-  //         const tx_status = await txStatus(hash);
-  //         if (tx_status && tx_status.status) {
-  //           setWaitTx(false);
-  //           setSendTxStatus(false);
-  //           clearInterval(refreshId);
-  //           Toast.fire({
-  //             icon: "success",
-  //             title: "Approved Success!",
-  //           });
-  //           setSendTxStatus(true);
-  //           setWaitTx(true);
-  //           AutoContract.methods
-  //             .withdraw(amount)
-  //             .send({ from: account })
-  //             .on("transactionHash", async (hash) => {
-  //               const withdrawCheck = setInterval(async () => {
-  //                 const tx_status = await txStatus(hash);
-  //                 if (tx_status && tx_status.status) {
-  //                   setWaitTx(false);
-  //                   setSendTxStatus(false);
-  //                   clearInterval(withdrawCheck);
-  //                   Toast.fire({
-  //                     icon: "success",
-  //                     title: "Withdraw Success!",
-  //                   });
-  //                   setWithdrawValue(0);
-  //                 }
-  //               }, 1500);
-  //             });
-  //         }
-  //       }, 1500);
-  //     });
-  // };
-
   const checkDecimals = async (address) => {
     const decimals = await ERC20Utils.methods.decimals(address).call();
     return decimals;
   };
-
 
   const setWithdrawValueMax = async () => {
     const decimals = await checkDecimals(coin.toString());
@@ -179,30 +192,14 @@ const WithDraw = () => {
     }
   };
 
-  const handleChangeToken = async (e) => {
-    setWithdrawValue(0);
-    setCoin(e.target.value);
-    let _coinBalance = await AutoCompound.methods
-      .getStakingBalance(e.target.value.toString(), account)
-      .call();
-    setCoinBalance(_coinBalance);
-  };
-
-
   return (
     <>
       <Grid templateColumns="repeat(10, 1fr)" gap={0} mt={0}>
         <GridItem colSpan={3}>
-          <Select 
-            onChange={handleChangeToken}
-            style={{ borderRadius: "10px 0px 0px 10px" }}>
-            {whitelisted.map((token) => {
-              return (
-                <>
-                  <option value={token.address}>{token.symbol}</option>
-                </>
-              );
-            })}
+          <Select
+            style={{ borderRadius: "10px 0px 0px 10px" }}
+          >
+            <option value={CJUSD.address}>cJUSD</option>
           </Select>
         </GridItem>
         <GridItem colSpan={7}>
@@ -212,7 +209,7 @@ const WithDraw = () => {
                 type="number"
                 style={{ borderRadius: "0px 10px 10px 0px" }}
                 placeholder="0.00"
-                value={withDrawValue}
+                value={withdrawValue}
                 onChange={handleChangeWithdrawValue}
               />
               <InputRightElement width="4.5rem">
@@ -238,7 +235,7 @@ const WithDraw = () => {
         onClick={() => {
           withdraw();
         }}
-        disabled={withDrawValue == 0 || (wait_tx && send_tx_status)}
+        disabled={withdrawValue == 0 || (wait_tx && send_tx_status)}
       >
         {wait_tx && send_tx_status ? (
           <>

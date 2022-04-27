@@ -26,6 +26,3 @@ chain:
 	-h localhost \
 	--port 8545 \
 	--wallet.unlockedAccounts 0x6262998Ced04146fA42253a5C0AF90CA02dfd2A3
-
-clean:
-	git restore ./abis/*

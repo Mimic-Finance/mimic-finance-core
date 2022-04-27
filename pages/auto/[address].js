@@ -2,9 +2,9 @@ import { useEffect, useState, useCallback } from "react";
 
 import styles from "styles/Home.module.css";
 import Head from "next/head";
-import OpenPool from "constants/OpenPool.json";
+import OpenAutoCompoundPool from "constants/OpenAutoCompoundPool.json";
 import { PoolContextProvider } from "contexts/PoolContext";
-import { Panel } from "components/StableCoinPool/Panel";
+import { Panel } from "components/StableCoinAutoCompound/Panel";
 import { useERC20Utils } from "hooks/useContracts";
 import { useRouter } from "next/router";
 
@@ -22,12 +22,14 @@ import {
 import { FaCalculator } from "react-icons/fa";
 import TVD from "components/StableCoinPool/TVD";
 
-const StableCoinPool = () => {
+const StableCoinAutoCompound = () => {
   const router = useRouter();
   const { address } = router.query;
   const ERC20Utils = useERC20Utils();
   const [symbol, setSymbol] = useState();
-  const PoolInfo = OpenPool.find((pool) => pool.address == address);
+
+  // force load
+  const PoolInfo = OpenAutoCompoundPool[0];
 
   const getImage = (address) => {
     return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
@@ -78,9 +80,9 @@ const StableCoinPool = () => {
                     icon={<FaCalculator fontSize="15px" />}
                   />
                 </ButtonGroup>
-                &nbsp; APR
+                &nbsp; APY
                 <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}>
-                  {info.apr} %
+                  {info.apy} %
                 </Text>
               </GridItem>
             </Grid>
@@ -105,4 +107,4 @@ const StableCoinPool = () => {
   );
 };
 
-export default StableCoinPool;
+export default StableCoinAutoCompound;

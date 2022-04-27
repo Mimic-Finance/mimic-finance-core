@@ -12,6 +12,10 @@ const MENU = [
     href: "/farm",
   },
   {
+    label: "Auto-compound",
+    href: "/auto",
+  },
+  {
     label: "Rewards",
     href: "/rewards",
   },

@@ -171,78 +171,82 @@ const Rewards = () => {
           </StatGroup>
         </Container>
 
-        <Container maxW={"3xl"} mt={5}>
-          <TableContainer maxWidth="100%">
-            <Table>
-              <Thead>
-                <Tr>
-                  <Th>Icon</Th>
-                  <Th>Symbol</Th>
-                  <Th>Rewards</Th>
-                  <Th style={{ textAlign: "right" }}>Action</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {rewards &&
-                  rewards.map((token, i) => {
-                    return (
-                      <Tr
-                        key={i}
-                        hidden={
-                          parseFloat(
-                            Web3.utils.fromWei(token.reward.toString())
-                          ) <= 0
-                            ? true
-                            : false
-                        }
-                      >
-                        <Td>
-                          <Image
-                            w={8}
-                            src={getImage(token.address)}
-                            alt={token.symbol}
-                            fallbackSrc="/assets/images/logo-box.png"
-                          ></Image>
-                        </Td>
-                        <Td>{token.symbol}</Td>
-                        <Td>
-                          <CountUp
-                            duration={2}
-                            end={parseFloat(
-                              Web3.utils.fromWei(token.reward.toString())
-                            )}
-                            separator=","
-                          />
-                          {" MIM"}
-                        </Td>
-                        <Td style={{ textAlign: "right" }}>
-                          <Button
-                            w={100}
-                            disabled={wait_tx && send_tx_status}
-                            onClick={() => {
-                              handleClickClaim(token.address);
-                            }}
-                            size="sm"
-                            style={{
-                              color: "#FFFFFF",
-                              background:
-                                "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
-                            }}
+        {total_reward > 0 && (
+          <>
+            <Container maxW={"3xl"} mt={5}>
+              <TableContainer maxWidth="100%">
+                <Table>
+                  <Thead>
+                    <Tr>
+                      <Th>Icon</Th>
+                      <Th>Symbol</Th>
+                      <Th>Rewards</Th>
+                      <Th style={{ textAlign: "right" }}>Action</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {rewards &&
+                      rewards.map((token, i) => {
+                        return (
+                          <Tr
+                            key={i}
+                            hidden={
+                              parseFloat(
+                                Web3.utils.fromWei(token.reward.toString())
+                              ) <= 0
+                                ? true
+                                : false
+                            }
                           >
-                            {wait_tx && send_tx_status ? (
-                              <Spinner size="sm" />
-                            ) : (
-                              "Claim"
-                            )}
-                          </Button>
-                        </Td>
-                      </Tr>
-                    );
-                  })}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </Container>
+                            <Td>
+                              <Image
+                                w={8}
+                                src={getImage(token.address)}
+                                alt={token.symbol}
+                                fallbackSrc="/assets/images/logo-box.png"
+                              ></Image>
+                            </Td>
+                            <Td>{token.symbol}</Td>
+                            <Td>
+                              <CountUp
+                                duration={2}
+                                end={parseFloat(
+                                  Web3.utils.fromWei(token.reward.toString())
+                                )}
+                                separator=","
+                              />
+                              {" MIM"}
+                            </Td>
+                            <Td style={{ textAlign: "right" }}>
+                              <Button
+                                w={100}
+                                disabled={wait_tx && send_tx_status}
+                                onClick={() => {
+                                  handleClickClaim(token.address);
+                                }}
+                                size="sm"
+                                style={{
+                                  color: "#FFFFFF",
+                                  background:
+                                    "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
+                                }}
+                              >
+                                {wait_tx && send_tx_status ? (
+                                  <Spinner size="sm" />
+                                ) : (
+                                  "Claim"
+                                )}
+                              </Button>
+                            </Td>
+                          </Tr>
+                        );
+                      })}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </Container>
+          </>
+        )}
       </div>
     </>
   );

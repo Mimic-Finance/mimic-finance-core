@@ -3,7 +3,7 @@ import { Image } from "@chakra-ui/react";
 import Link from "next/link";
 import { FaGavel } from "react-icons/fa";
 
-export const Pool = (props) => {
+const AutoCompoundPool = (props) => {
   const getImage = (address) => {
     return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
   };
@@ -49,9 +49,9 @@ export const Pool = (props) => {
 
       {/* <Text pt={3}>{props.token}</Text> */}
       <Text pt={3} fontWeight="bold">
-        APR : {props.apr} %
+        APY : {props.apy} %
       </Text>
-      <Link href={"/farm/" + props.address} passHref>
+      <Link href={"/auto/" + props.address} passHref>
         <Button
           leftIcon={<FaGavel />}
           mt={4}
@@ -65,3 +65,5 @@ export const Pool = (props) => {
     </Box>
   );
 };
+
+export default AutoCompoundPool;

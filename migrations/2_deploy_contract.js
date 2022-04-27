@@ -123,13 +123,13 @@ module.exports = async function (deployer, network, accounts) {
   await deployer.deploy(ERC20Utils);
   const erc20utils = await ERC20Utils.deployed();
 
-  await mimicToken.transfer(farming.address, "10000000000000000000000000");
-  await jusdToken.transfer(faucet.address, "5000000000000000000000000");
+  await mimicToken.transfer(farming.address, "100000000000000000000000000");
+  await jusdToken.transfer(auto.address, "5000000000000000000000000");
   await jusdToken.transfer(swap.address, "4000000000000000000000000");
-  await cjusdToken.transfer(auto.address, "10000000000000000000000000");
+  await cjusdToken.transfer(auto.address, "100000000000000000000000000");
   await jusdToken.transfer(
     config.mode === "development" ? accounts[1] : config.testerAddress,
-    "1000000000000000000000"
+    "1000000000000000000000000"
   );
 
   /**
@@ -139,6 +139,5 @@ module.exports = async function (deployer, network, accounts) {
   await farming.addWhitelisted(TokenAddress.BUSD);
   await farming.addWhitelisted(TokenAddress.DAI);
   await farming.addWhitelisted(TokenAddress.USDC);
-  await farming.addWhitelisted(TokenAddress.USDT);
   await farming.addWhitelisted(jusdToken.address);
 };
