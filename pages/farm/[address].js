@@ -20,6 +20,8 @@ import {
   IconButton,
   ButtonGroup,
   Divider,
+  SimpleGrid,
+  Flex,
 } from "@chakra-ui/react";
 
 import { FaCalculator } from "react-icons/fa";
@@ -64,16 +66,17 @@ const StableCoinPool = () => {
                     src={getImage(address)}
                     alt={address}
                     width={75}
+                    minWidth={45}
                     fallbackSrc="/assets/images/logo-box.png"
                   />
                 </Box>
               </GridItem>
-              <GridItem colSpan={7}>
-                <Text fontSize="4xl">
+              <GridItem colSpan={5}>
+                <Text fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}>
                   <b>{symbol} Pool</b>
                 </Text>
               </GridItem>
-              <GridItem colSpan={2} style={{ textAlign: "right" }}>
+              <GridItem colSpan={4} style={{ textAlign: "right" }}>
                 <ButtonGroup variant="ghost" color="gray.600">
                   <IconButton
                     aria-label="Calculator"
@@ -81,27 +84,29 @@ const StableCoinPool = () => {
                   />
                 </ButtonGroup>
                 &nbsp; APR
-                <Text fontSize="4xl">
+                <Text fontSize={{ base: '2xl', md: '3xl', lg: '4xl' }}>
                   {info.apr} %
                 </Text>
               </GridItem>
             </Grid>
 
-            <Grid templateColumns="repeat(10, 1fr)" gap={10} mt={7}>
-              <GridItem colSpan={6}>
+            <SimpleGrid minChildWidth="300px" gap={10} mt={7}>
+              <Box>
                 <Text fontSize="xl">
                 {info.info}
                 </Text>
-
                 <Box mt={10}>
-                 
                   <TVD tokenAddress={address} symbol={symbol}></TVD>
                 </Box>
-              </GridItem>
-              <GridItem colSpan={4}>
-                <Panel symbol={symbol} tokenAddress={address} />
-              </GridItem>
-            </Grid>
+              </Box>
+              <Box>
+                <div style={{right: 0}}>
+                  <Box w={"70%"}>
+                    <Panel symbol={symbol} tokenAddress={address} />
+                  </Box>
+                </div>
+              </Box>
+            </SimpleGrid>
           </>
         </Container>
       </PoolContextProvider>
