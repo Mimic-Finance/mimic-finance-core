@@ -27,7 +27,7 @@ const StableCoinPool = () => {
   const { address } = router.query;
   const ERC20Utils = useERC20Utils();
   const [symbol, setSymbol] = useState();
-  const PoolInfo = OpenPool.find((pool) => pool.address == address);
+  const info = OpenPool.find((pool) => pool.address == address);
 
   const getImage = (address) => {
     return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
@@ -85,19 +85,31 @@ const StableCoinPool = () => {
               </GridItem>
             </Grid>
 
-            <div className="row">
-              <div className="col-md-7" style={{ paddingTop: "20px" }}>
-                <Text fontSize="lg">
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  {PoolInfo.info}
+            <Box className="row">
+              <Box className="col-md-7" pt={{ base: 5, md: 3, lg: 3 }}>
+                <Text
+                  fontSize="md"
+                  style={{ textAlign: "justify", textJustify: "inter-word" }}
+                  pr={{ base: 0, md: 0, lg: 7 }}
+                  pl={{ base: 0, md: 0, lg: 7 }}
+                >
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  {info.info}
                 </Text>
                 <br />
-                <TVD tokenAddress={address} symbol={symbol}></TVD>
-              </div>
-              <div className="col-md-5" style={{ paddingTop: "20px" }}>
+                <Box
+                  pl={{ base: 0, md: 0, lg: 10 }}
+                  pt={{ base: 3, md: 0, lg: 0 }}
+                  pb={{ base: 5, md: 0, lg: 0 }}
+                  textAlign={{ base: "center", md: "left", lg: "left" }}
+                >
+                  <TVD tokenAddress={address} symbol={symbol}></TVD>
+                </Box>
+              </Box>
+              <Box className="col-md-5" style={{ paddingTop: "10px" }}>
                 <Panel symbol={symbol} tokenAddress={address} />
-              </div>
-            </div>
+              </Box>
+            </Box>
           </>
         </Container>
       </PoolContextProvider>

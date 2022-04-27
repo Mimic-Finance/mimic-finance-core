@@ -33,7 +33,7 @@ const TVD = ({ tokenAddress, symbol }) => {
           <Text fontSize="xl">
             <b>Total Value Deposited</b>
           </Text>
-          <Text fontSize="5xl">
+          <Text fontSize={{ base: "3xl", md: "5xl", lg: "5xl" }}>
             <CountUp duration={2} end={tvd} separator="," />
             <font size="6">{" " + symbol}</font>
           </Text>
