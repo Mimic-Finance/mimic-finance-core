@@ -81,7 +81,7 @@ const StableCoinAutoCompound = () => {
                 </ButtonGroup>
                 &nbsp; APY
                 <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}>
-                  {poolInfo.apy} %
+                  {poolInfo?.apy} %
                 </Text>
               </GridItem>
             </Grid>
@@ -94,8 +94,8 @@ const StableCoinAutoCompound = () => {
                   pr={{ base: 0, md: 0, lg: 7 }}
                   pl={{ base: 0, md: 0, lg: 7 }}
                 >
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  {poolInfo.info}
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  {poolInfo?.info}
                 </Text>
                 <br />
                 <Box
