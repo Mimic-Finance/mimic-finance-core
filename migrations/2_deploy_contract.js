@@ -142,4 +142,9 @@ module.exports = async function (deployer, network, accounts) {
   await farming.addWhitelisted(TokenAddress.USDT);
   await farming.addWhitelisted(jusdToken.address);
 
+  await swap.addWhitelisted(TokenAddress.BUSD);
+  await swap.addWhitelisted(TokenAddress.DAI);
+  await swap.addWhitelisted(TokenAddress.USDC);
+  await swap.addWhitelisted(TokenAddress.USDT);
+
 };

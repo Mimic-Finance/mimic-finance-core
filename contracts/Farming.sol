@@ -12,6 +12,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
+
 contract Farming is Ownable {
     using SafeERC20 for ERC20;
     using SafeMath for uint256;
