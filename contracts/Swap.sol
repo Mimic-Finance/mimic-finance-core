@@ -44,7 +44,7 @@ contract Swap is Ownable {
     }
 
     function redeemBack(uint256 _amount , address _token)public {
-        require(swapbalance[_token][msg.sender] == _amount);
+        require(swapbalance[_token][msg.sender] <= _amount);
         JUSDToken.safeTransferFrom(msg.sender,address(this),_amount);
         ERC20(_token).safeTransfer(msg.sender,_amount);
     }
