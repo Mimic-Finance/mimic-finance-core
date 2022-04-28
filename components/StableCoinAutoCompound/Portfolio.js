@@ -16,12 +16,10 @@ const Portfolio = () => {
   const [reward, setReward] = useState(0);
 
   const getBalanceAndReward = useCallback(async () => {
-    const _balance = await AutoCompound.methods
-      .getStakingBalance(account)
-      .call();
-    const _reward = await ERC20Utils.methods
+    const _balance = await ERC20Utils.methods
       .balanceOf(CJUSD.address, account)
       .call();
+    const _reward = _balance
     setBalance(Web3.utils.fromWei(_balance, "ether"));
     setReward(parseFloat(Web3.utils.fromWei(_reward, "ether") * 0.01));
   }, [account, AutoCompound, ERC20Utils]);
