@@ -245,14 +245,7 @@ const WithDraw = () => {
           "Withdraw"
         )}
       </Button>
-      {/* <Portfolio
-        balance={Web3.utils.fromWei(cJUSDBalance.toString())}
-        reward={Web3.utils.fromWei(RewardBalance.toString())}
-        total={
-          parseInt(Web3.utils.fromWei(RewardBalance.toString())) +
-          parseInt(Web3.utils.fromWei(cJUSDBalance.toString()))
-        }
-      /> */}
+      <Portfolio/>
     </>
   );
 };
