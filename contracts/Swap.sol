@@ -34,8 +34,13 @@ contract Swap {
         JUSDToken.transfer(msg.sender, rate);
     }
 
-    function swapToJUSD (uint256 _amount) public {
-        JUSDToken.transfer(msg.sender , _amount);
+    function swapToJUSD (uint256 _amount , uint256 _decimals) public {
+        if(_decimals == 18){
+            JUSDToken.transfer(msg.sender , _amount);
+        }
+         uint256 remain = 18 - _decimals;
+         uint256 balance = _amount.mul(10 ** remain);
+         JUSDToken.transfer(msg.sender,balance);
     }
     function mimToJUSD(uint256 _amount) public {
         uint256 balance = _amount.div(10);
