@@ -41,6 +41,10 @@ const StableCoinPool = () => {
   const getSymbol = useCallback(async () => {
     try {
       const _symbol = await ERC20Utils.methods.symbol(address).call();
+      //FIX load JUSD pool info
+      if (_symbol === "JUSD") {
+        setPoolInfo(OpenPool.find((pool) => pool.symbol === "JUSD"));
+      }
       setSymbol(_symbol);
     } catch {}
   }, [ERC20Utils.methods, address]);
@@ -85,7 +89,7 @@ const StableCoinPool = () => {
                 </ButtonGroup>
                 &nbsp; APR
                 <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}>
-                  {poolInfo.apr} %
+                  {poolInfo?.apr} %
                 </Text>
               </GridItem>
             </Grid>
@@ -99,7 +103,7 @@ const StableCoinPool = () => {
                   pl={{ base: 0, md: 0, lg: 7 }}
                 >
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  {poolInfo.info}
+                  {poolInfo?.info}
                   <Box pt={5}>
                     <Badge variant="outline" colorScheme="blue">
                       <Link

@@ -15,6 +15,7 @@ import { Pool } from "components/Pools/Pool";
 import { useJUSD } from "hooks/useToken";
 
 const Home = () => {
+  const JUSD = useJUSD();
   return (
     <div className={styles.container}>
       <Head>
@@ -57,8 +58,10 @@ const Home = () => {
               <>
                 <Box mt={20} ml={5}>
                   <Pool
-                    key={pool.address}
-                    address={pool.address}
+                    key={pool.symbol === "JUSD" ? JUSD.address : pool.address}
+                    address={
+                      pool.symbol === "JUSD" ? JUSD.address : pool.address
+                    }
                     poolName={pool.symbol}
                     description={pool.description}
                     token={pool.token}
