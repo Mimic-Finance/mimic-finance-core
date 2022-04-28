@@ -26,6 +26,7 @@ contract Auto is Ownable{
     address internal FarmAddress;
     address internal SwapAddress;
     address internal JUSDAddress;
+    mapping (address => uint256) cjusdbuyprice;
 
    uint256 stakingBalance;
     constructor(
@@ -72,7 +73,8 @@ contract Auto is Ownable{
          FarmContract.stakeTokens(balance, JUSDAddress);
          stakingBalance = stakingBalance.add(balance);
          uint256 cjp = SwapContract.cJUSDPrice();
-      uint256 cjrate = balance.div(cjp);
+         uint256 cjrate = balance.div(cjp);
+         cjusdbuyprice[msg.sender] = cjp;
           cJUSDToken.safeTransfer(msg.sender, cjrate);
     }
 
@@ -115,5 +117,8 @@ contract Auto is Ownable{
 
     function getJUSDBalance() public view returns (uint256) {
         return JUSDToken.balanceOf(address(this));
+    }
+    function cJUSDBuyPrice(address _account)public view returns (uint256){
+        return cjusdbuyprice[_account];
     }
 }
