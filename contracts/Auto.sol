@@ -27,7 +27,7 @@ contract Auto is Ownable{
     address internal SwapAddress;
     address internal JUSDAddress;
 
-    mapping (address => uint256) public stakingBalance;
+   uint256 stakingBalance;
     constructor(
         address _JUSDToken,
         address _MimicToken,
@@ -70,7 +70,7 @@ contract Auto is Ownable{
          JUSDToken.approve(FarmAddress, balance);
         /* Stake JUSD in Farm Contract with Auto-Compound */
          FarmContract.stakeTokens(balance, JUSDAddress);
-         stakingBalance[msg.sender] = stakingBalance[msg.sender].add(balance);
+         stakingBalance = stakingBalance.add(balance);
          cJUSDToken.safeTransfer(msg.sender, balance);
     }
 
@@ -99,10 +99,12 @@ contract Auto is Ownable{
         uint256 rewards = _amount.mul(101).div(100);
         /* Return JUSD to user */
         JUSDToken.safeTransfer(msg.sender, rewards);
+        uint256 remain = stakingBalance.sub(_amount);
+        stakingBalance = remain;
     }
 
-    function getStakingBalance(address _account)public view returns (uint256){
-        return stakingBalance[_account];
+    function getStakingBalance()public view returns (uint256){
+        return stakingBalance;
     }
     function getcJUSDBalance() public view returns (uint256) {
         return cJUSDToken.balanceOf(address(this));
