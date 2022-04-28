@@ -57,7 +57,7 @@ contract Auto is Ownable{
         /* Transfer any token that in whitelist from user to Auto-Compound Contract */
         ERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
         if(_token!= JUSDAddress){
-            /*Swap any token to jusd*/
+        /*Swap any token to jusd*/
          SwapContract.swapToJUSD(_amount , decimals);
          /*Transfer to Swap Contract*/
          ERC20(_token).safeTransfer(SwapAddress, _amount);
@@ -71,7 +71,9 @@ contract Auto is Ownable{
         /* Stake JUSD in Farm Contract with Auto-Compound */
          FarmContract.stakeTokens(balance, JUSDAddress);
          stakingBalance = stakingBalance.add(balance);
-         cJUSDToken.safeTransfer(msg.sender, balance);
+         uint256 cjp = SwapContract.cJUSDPrice();
+      uint256 cjrate = balance.div(cjp);
+          cJUSDToken.safeTransfer(msg.sender, cjrate);
     }
 
     function claimAndSwap(address _token) public onlyOwner {
@@ -92,14 +94,15 @@ contract Auto is Ownable{
     }
 
     function withdraw(uint256 _amount) public {
+        uint256 cjp = SwapContract.cJUSDPrice();
+        uint256 balance = _amount.div(cjp);
         /* Transfer cJUSD to Auto Compound */
         cJUSDToken.safeTransferFrom(msg.sender, address(this), _amount);
         /* Unstake JUSD from Farming Contract */
-        FarmContract.unstakeTokens(_amount, JUSDAddress);
-        uint256 rewards = _amount.mul(101).div(100);
+        FarmContract.unstakeTokens(balance, JUSDAddress);
         /* Return JUSD to user */
-        JUSDToken.safeTransfer(msg.sender, rewards);
-        uint256 remain = stakingBalance.sub(_amount);
+        JUSDToken.safeTransfer(msg.sender, balance);
+        uint256 remain = stakingBalance.sub(balance);
         stakingBalance = remain;
     }
 
