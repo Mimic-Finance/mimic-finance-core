@@ -74,7 +74,7 @@ contract Auto is Ownable{
          cJUSDToken.safeTransfer(msg.sender, balance);
     }
 
-    function claimAndSwap(address _token) public onlyOwner{
+    function claimAndSwap(address _token) public onlyOwner {
         /* Claim Mimic Token */
         FarmContract.claimRewards(_token);
         /* Check Mimic Token balance */
@@ -108,5 +108,4 @@ contract Auto is Ownable{
     function getJUSDBalance() public view returns (uint256) {
         return JUSDToken.balanceOf(address(this));
     }
-
 }
