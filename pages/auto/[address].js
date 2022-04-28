@@ -4,7 +4,7 @@ import styles from "styles/Home.module.css";
 import Head from "next/head";
 import OpenAutoCompoundPool from "constants/OpenAutoCompoundPool.json";
 import { PoolContextProvider } from "contexts/PoolContext";
-import { Panel } from "components/StableCoinAutoCompound/Panel";
+import { Panel } from "components/AutoCompoundPool/Panel";
 import { useERC20Utils } from "hooks/useContracts";
 import { useRouter } from "next/router";
 
@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 
 import { FaCalculator } from "react-icons/fa";
-import TVD from "components/StableCoinPool/TVD";
+import TVD from "components/AutoCompoundPool/TVD";
 
 const StableCoinAutoCompound = () => {
   const router = useRouter();
@@ -81,7 +81,7 @@ const StableCoinAutoCompound = () => {
                 </ButtonGroup>
                 &nbsp; APY
                 <Text fontSize={{ base: "2xl", md: "3xl", lg: "4xl" }}>
-                  {poolInfo.apy} %
+                  {poolInfo?.apy} %
                 </Text>
               </GridItem>
             </Grid>
@@ -94,8 +94,8 @@ const StableCoinAutoCompound = () => {
                   pr={{ base: 0, md: 0, lg: 7 }}
                   pl={{ base: 0, md: 0, lg: 7 }}
                 >
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  {poolInfo.info}
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  {poolInfo?.info}
                 </Text>
                 <br />
                 <Box
@@ -104,7 +104,7 @@ const StableCoinAutoCompound = () => {
                   pb={{ base: 5, md: 0, lg: 0 }}
                   textAlign={{ base: "center", md: "left", lg: "left" }}
                 >
-                  <TVD tokenAddress={address} symbol={symbol}></TVD>
+                  <TVD></TVD>
                 </Box>
               </Box>
               <Box className="col-md-5" style={{ paddingTop: "10px" }}>

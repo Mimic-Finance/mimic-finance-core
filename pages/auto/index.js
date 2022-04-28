@@ -11,7 +11,7 @@ import {
 import { FaGavel } from "react-icons/fa";
 import Link from "next/link";
 import OpenAutoCompoundPool from "constants/OpenAutoCompoundPool.json";
-import AutoCompoundPool from "components/AutoCompoundPools/AutoCompoundPool";
+import AutoCompoundPool from "components/Pools/AutoCompoundPool";
 
 import { useJUSD } from "hooks/useToken";
 

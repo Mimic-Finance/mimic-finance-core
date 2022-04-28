@@ -67,6 +67,7 @@ const StableCoinPool = () => {
               <GridItem colSpan={1}>
                 <Box>
                   <Image
+                    style={{ borderRadius: "50%" }}
                     src={getImage(address)}
                     alt={address}
                     width={75}
