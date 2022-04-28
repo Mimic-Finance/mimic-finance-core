@@ -54,7 +54,7 @@ contract Auto is Ownable {
         ERC20(_token).transferFrom(msg.sender, address(this), _amount);
         if (_token != JUSDAddress) {
             /*Swap any token to jusd*/
-            SwapContract.swapToJUSD(_amount, _token);
+            SwapContract.swapToJUSD(_amount);
             /*Transfer to Swap Contract*/
             ERC20(_token).transfer(SwapAddress, _amount);
         }
