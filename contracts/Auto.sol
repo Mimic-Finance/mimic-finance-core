@@ -101,6 +101,9 @@ contract Auto is Ownable{
         JUSDToken.safeTransfer(msg.sender, rewards);
     }
 
+    function getStakingBalance(address _account)public view returns (uint256){
+        return stakingBalance[_account];
+    }
     function getcJUSDBalance() public view returns (uint256) {
         return cJUSDToken.balanceOf(address(this));
     }
