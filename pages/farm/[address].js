@@ -18,12 +18,19 @@ import {
   IconButton,
   ButtonGroup,
   Badge,
+  useColorMode,
 } from "@chakra-ui/react";
 
 import { FaCalculator } from "react-icons/fa";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import TVD from "components/StableCoinPool/TVD";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+const Graph = dynamic(() => import("react-tradingview-widget"), {
+  ssr: false,
+});
+
+import { MiniChart } from "react-ts-tradingview-widgets";
 
 const StableCoinPool = () => {
   const router = useRouter();
@@ -33,6 +40,7 @@ const StableCoinPool = () => {
   const [poolInfo, setPoolInfo] = useState(
     OpenPool.find((pool) => pool.address == address)
   );
+  const { colorMode, toggleColorMode } = useColorMode();
 
   const getImage = (address) => {
     return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
@@ -131,6 +139,16 @@ const StableCoinPool = () => {
               </Box>
               <Box className="col-md-5" style={{ paddingTop: "10px" }}>
                 <Panel symbol={symbol} tokenAddress={address} />
+              </Box>
+            </Box>
+            <Box>
+              <Box pt={10} style={{ height: "400px" }}>
+                <MiniChart
+                  symbol={symbol + "USD"}
+                  style={{ border: "0px" }}
+                  colorTheme={colorMode === "dark" ? "dark" : "light"}
+                  width="100%"
+                ></MiniChart>
               </Box>
             </Box>
           </>
