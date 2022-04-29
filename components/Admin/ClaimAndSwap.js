@@ -99,8 +99,8 @@ const ClaimAndSwap = () => {
   };
 
   const handleSwapJUSDtoCJUSD = async () => {
-    await Swap.methods
-      .JUSDTocJUSD(Web3.utils.toWei(jusdBalance.toString(), "ether"))
+    await AutoCompound.methods
+      .swapJUSDtoCJUSD()
       .send({ from: account })
       .on("transactionHash", (hash) => {
         const swapCheck = setInterval(async () => {
