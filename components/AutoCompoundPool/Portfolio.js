@@ -1,8 +1,8 @@
 import { Box, Text, Grid, GridItem } from "@chakra-ui/react";
 import { useState, useEffect, useCallback } from "react";
-import { useAutoCompound, useERC20Utils } from "hooks/useContracts";
+import { useAutoCompound, useERC20Utils, useSwap } from "hooks/useContracts";
 import useAccount from "hooks/useAccount";
-import { useCJUSD, useJUSD } from "hooks/useToken";
+import { useCJUSD } from "hooks/useToken";
 import Web3 from "web3";
 
 const Portfolio = () => {
@@ -10,7 +10,7 @@ const Portfolio = () => {
   const ERC20Utils = useERC20Utils();
   const AutoCompound = useAutoCompound();
   const CJUSD = useCJUSD();
-  const JUSD = useJUSD();
+  const Swap = useSwap();
 
   const [balance, setBalance] = useState(0);
   const [reward, setReward] = useState(0);
@@ -19,9 +19,13 @@ const Portfolio = () => {
     const _balance = await ERC20Utils.methods
       .balanceOf(CJUSD.address, account)
       .call();
-    const _reward = _balance
+    const _cJUSDPrice = await Swap.methods.cJUSDPrice().call();
+    const _cJUSDBuyPrice = await AutoCompound.methods
+      .cJUSDBuyPrice(account)
+      .call();
+    const _reward = (_cJUSDPrice - _cJUSDBuyPrice) * _balance;
     setBalance(Web3.utils.fromWei(_balance, "ether"));
-    setReward(parseFloat(Web3.utils.fromWei(_reward, "ether") * 0.01));
+    setReward(parseFloat(Web3.utils.fromWei(_reward.toString(), "ether")));
   }, [account, AutoCompound, ERC20Utils]);
 
   useEffect(() => {
