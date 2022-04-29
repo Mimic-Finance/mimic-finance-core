@@ -19,6 +19,7 @@ import {
   ButtonGroup,
   Badge,
   useColorMode,
+  Center,
 } from "@chakra-ui/react";
 
 import { FaCalculator } from "react-icons/fa";
@@ -142,16 +143,23 @@ const StableCoinPool = () => {
               </Box>
             </Box>
             <Box>
-              <Box pt={10} style={{ height: "400px" }}>
-                <MiniChart
+              <Box pt={10} style={{ width: "700px" }}>
+                {/* <MiniChart
                   symbol={symbol + "USD"}
                   style={{ border: "0px" }}
                   colorTheme={colorMode === "dark" ? "dark" : "light"}
                   width="100%"
-                ></MiniChart>
+                ></MiniChart> */}
               </Box>
             </Box>
           </>
+          <Center>
+            <Image
+              width={"60%"}
+              alt={"bitkub ads"}
+              src="https://siamblockchain.com/wp-content/uploads/2021/01/bitkub790-scaled.jpg"
+            />
+          </Center>
         </Container>
       </PoolContextProvider>
     </div>
