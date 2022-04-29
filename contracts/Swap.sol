@@ -51,9 +51,23 @@ contract Swap is Ownable {
     }
 
     function mimToJUSD(uint256 _amount) public {
-        uint256 balance = _amount.div(10);
-        MimicToken.transferFrom(msg.sender, address(this), _amount);
-        JUSDToken.transfer(msg.sender, balance);
+        uint256 price = mimicPrice();
+        uint256 balance = _amount.div(price);
+        //mimic 
+        MimicToken.safeTransferFrom(msg.sender, address(this), _amount);
+        liquidity[1][MimicAddress] = liquidity[1][MimicAddress].sub(_amount);
+        //JUSD
+        JUSDToken.safeTransfer(msg.sender, balance);
+        liquidity[1][JUSDAddress] = liquidity[1][JUSDAddress].add(balance);
+    }
+
+    function JUSDTocJUSD(uint256 _amount)public{
+        uint256 price = cJUSDPrice();
+        uint256 rate = _amount.mul(price);
+        JUSDToken.safeTransferFrom(msg.sender,address(this),_amount);
+        liquidity[2][JUSDAddress]= liquidity[2][JUSDAddress].sub(_amount);
+        cJUSDToken.safeTransfer(msg.sender , rate);
+        liquidity[2][cJUSDAddress]= liquidity[2][cJUSDAddress].add(rate);
     }
 
     function addLiquidity(
@@ -90,16 +104,12 @@ contract Swap is Ownable {
     }
 
     function mimicPrice() public view returns (uint256) {
-        uint256 rate = liquidity[1][MimicAddress].div(
-            liquidity[1][JUSDAddress]
-        );
+        uint256 rate = liquidity[1][JUSDAddress].div(liquidity[1][MimicAddress]);
         return rate;
     }
 
     function cJUSDPrice() public view returns (uint256) {
-        uint256 rate = liquidity[2][cJUSDAddress].div(
-            liquidity[2][JUSDAddress]
-        );
+        uint256 rate = liquidity[2][JUSDAddress].div( liquidity[2][cJUSDAddress]);
         return rate;
     }
 

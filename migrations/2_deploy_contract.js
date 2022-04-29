@@ -129,8 +129,7 @@ module.exports = async function (deployer, network, accounts) {
   const erc20utils = await ERC20Utils.deployed();
 
   await mimicToken.transfer(farming.address, "99000000000000000000000000");
-  await jusdToken.transfer(auto.address, "5000000000000000000000000");
-  await jusdToken.transfer(swap.address, "4000000000000000000000000");
+  await jusdToken.transfer(swap.address, "9000000000000000000000000");
   await cjusdToken.transfer(auto.address, "90000000000000000000000000");
   await jusdToken.transfer(
     config.mode === "development" ? accounts[1] : config.testerAddress,
