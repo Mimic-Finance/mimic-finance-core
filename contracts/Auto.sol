@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
-contract Auto is Ownable{
+contract Auto is Ownable {
     using SafeERC20 for ERC20;
     using SafeMath for uint256;
     string public name = "Auto-Compound Contract";
@@ -26,9 +26,10 @@ contract Auto is Ownable{
     address internal FarmAddress;
     address internal SwapAddress;
     address internal JUSDAddress;
-    mapping (address => uint256) cjusdbuyprice;
+    mapping(address => uint256) cjusdbuyprice;
 
-   uint256 stakingBalance;
+    uint256 stakingBalance;
+
     constructor(
         address _JUSDToken,
         address _MimicToken,
@@ -57,30 +58,33 @@ contract Auto is Ownable{
         uint256 balance = _amount;
         /* Transfer any token that in whitelist from user to Auto-Compound Contract */
         ERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
-        if(_token!= JUSDAddress){
-        /*Swap any token to jusd*/
-         SwapContract.swapToJUSD(_amount , decimals);
-         /*Transfer to Swap Contract*/
-         ERC20(_token).safeTransfer(SwapAddress, _amount);
+        if (_token != JUSDAddress) {
+            /*Swap any token to jusd*/
+            SwapContract.swapToJUSD(_amount, decimals);
+            /*Transfer to Swap Contract*/
+            ERC20(_token).safeTransfer(SwapAddress, _amount);
         }
-        if(decimals != 18){
-             uint256 remain = 18 - decimals;
-             balance = _amount.mul(10 ** remain);
-         }
-          /* Auto-Compound:: Approve JUSD for spend amount to Farm */
-         JUSDToken.approve(FarmAddress, balance);
+        if (decimals != 18) {
+            uint256 remain = 18 - decimals;
+            balance = _amount.mul(10**remain);
+        }
+        /* Auto-Compound:: Approve JUSD for spend amount to Farm */
+        JUSDToken.approve(FarmAddress, balance);
         /* Stake JUSD in Farm Contract with Auto-Compound */
-         FarmContract.stakeTokens(balance, JUSDAddress);
-         stakingBalance = stakingBalance.add(balance);
-         uint256 cjp = SwapContract.cJUSDPrice();
-         uint256 cjrate = balance.div(cjp);
-         cjusdbuyprice[msg.sender] = cjp;
-          cJUSDToken.safeTransfer(msg.sender, cjrate);
+        FarmContract.stakeTokens(balance, JUSDAddress);
+        stakingBalance = stakingBalance.add(balance);
+        uint256 cjp = SwapContract.cJUSDPrice();
+        uint256 cjrate = balance.div(cjp);
+        cjusdbuyprice[msg.sender] = cjp;
+        cJUSDToken.safeTransfer(msg.sender, cjrate);
     }
 
     function claimAndSwap(address _token) public onlyOwner {
         /* Claim Mimic Token */
         FarmContract.claimRewards(_token);
+    }
+
+    function swap() public onlyOwner {
         /* Check Mimic Token balance */
         uint256 mimbal = MimicToken.balanceOf(address(this));
         /* Swap Mimic To JUSD */
@@ -108,9 +112,10 @@ contract Auto is Ownable{
         stakingBalance = remain;
     }
 
-    function getStakingBalance()public view returns (uint256){
+    function getStakingBalance() public view returns (uint256) {
         return stakingBalance;
     }
+
     function getcJUSDBalance() public view returns (uint256) {
         return cJUSDToken.balanceOf(address(this));
     }
@@ -118,7 +123,8 @@ contract Auto is Ownable{
     function getJUSDBalance() public view returns (uint256) {
         return JUSDToken.balanceOf(address(this));
     }
-    function cJUSDBuyPrice(address _account)public view returns (uint256){
+
+    function cJUSDBuyPrice(address _account) public view returns (uint256) {
         return cjusdbuyprice[_account];
     }
 }

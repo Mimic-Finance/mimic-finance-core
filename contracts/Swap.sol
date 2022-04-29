@@ -42,17 +42,16 @@ contract Swap is Ownable {
 
     function swapToJUSD(uint256 _amount, uint256 _decimals) public {
         if (_decimals != 18) {
-        uint256 remain = 18 - _decimals;
-        uint256 balance = _amount.mul(10**remain);
-        JUSDToken.safeTransfer(msg.sender, balance);
-    } else if(_decimals == 18){
-         JUSDToken.safeTransfer(msg.sender, _amount);
-    } 
+            uint256 remain = 18 - _decimals;
+            uint256 balance = _amount.mul(10**remain);
+            JUSDToken.safeTransfer(msg.sender, balance);
+        } else if (_decimals == 18) {
+            JUSDToken.safeTransfer(msg.sender, _amount);
+        }
     }
 
     function mimToJUSD(uint256 _amount) public {
-        uint256 price = mimicPrice();
-        uint256 balance = _amount.div(price);
+        uint256 balance = _amount.div(10);
         MimicToken.transferFrom(msg.sender, address(this), _amount);
         JUSDToken.transfer(msg.sender, balance);
     }
@@ -63,8 +62,8 @@ contract Swap is Ownable {
         address _token2,
         uint256 _amount2
     ) public {
-         ERC20(_token1).safeTransferFrom(msg.sender,address(this),_amount1);
-         ERC20(_token2).safeTransferFrom(msg.sender,address(this),_amount2);
+        ERC20(_token1).safeTransferFrom(msg.sender, address(this), _amount1);
+        ERC20(_token2).safeTransferFrom(msg.sender, address(this), _amount2);
         if (
             (_token1 == MimicAddress && _token2 == JUSDAddress) ||
             (_token1 == JUSDAddress && _token2 == MimicAddress)
@@ -78,24 +77,29 @@ contract Swap is Ownable {
             }
         } else if (
             (_token1 == JUSDAddress && _token2 == cJUSDAddress) ||
-            (_token1 == cJUSDAddress && _token2 == JUSDAddress)) {
-                if (_token1 == JUSDAddress && _token2 == cJUSDAddress) {
+            (_token1 == cJUSDAddress && _token2 == JUSDAddress)
+        ) {
+            if (_token1 == JUSDAddress && _token2 == cJUSDAddress) {
                 liquidity[2][_token1] = liquidity[2][_token1].add(_amount1);
                 liquidity[2][_token2] = liquidity[2][_token2].add(_amount2);
             } else if (_token1 == cJUSDAddress && _token2 == JUSDAddress) {
                 liquidity[2][_token1] = liquidity[2][_token2].add(_amount2);
                 liquidity[2][_token2] = liquidity[2][_token1].add(_amount1);
             }
-            }
+        }
     }
 
-    function mimicPrice()public view returns(uint256) {
-        uint256 rate = liquidity[1][MimicAddress].div(liquidity[1][JUSDAddress]);
+    function mimicPrice() public view returns (uint256) {
+        uint256 rate = liquidity[1][MimicAddress].div(
+            liquidity[1][JUSDAddress]
+        );
         return rate;
     }
 
-    function cJUSDPrice () public view returns (uint256){
-        uint256 rate = liquidity[2][cJUSDAddress].div(liquidity[2][JUSDAddress]);
+    function cJUSDPrice() public view returns (uint256) {
+        uint256 rate = liquidity[2][cJUSDAddress].div(
+            liquidity[2][JUSDAddress]
+        );
         return rate;
     }
 
@@ -104,10 +108,12 @@ contract Swap is Ownable {
         uint256 decimals = ERC20(_token).decimals();
         uint256 balance = _amount;
         ERC20(_token).safeTransferFrom(msg.sender, address(this), balance);
-        swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].add(_amount);
-        if(decimals == 18){
+        swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].add(
+            _amount
+        );
+        if (decimals == 18) {
             JUSDToken.safeTransfer(msg.sender, _amount);
-        } else if(decimals != 18){
+        } else if (decimals != 18) {
             uint256 remain = 18 - decimals;
             uint256 deci = _amount.mul(10**remain);
             JUSDToken.safeTransfer(msg.sender, deci);
