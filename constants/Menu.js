@@ -5,12 +5,12 @@ const MENU = [
       {
         label: "Mint",
         subLabel: "Mint JUSD with any Stable coin",
-        href: "#",
+        href: "/mint",
       },
       {
         label: "Redeem",
         subLabel: "Redeem JUSD to any Stable coin",
-        href: "#",
+        href: "/redeem",
       },
     ],
   },

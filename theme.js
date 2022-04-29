@@ -135,6 +135,12 @@ const theme = extendTheme({
         // margin: "0.5rem",
         padding: "1rem",
       },
+      ".mint-box": {
+        border: mode(
+          "2px solid rgba(0, 0, 0, 0.05)",
+          "2px solid #515151"
+        )(props),
+      },
     }),
   },
 });

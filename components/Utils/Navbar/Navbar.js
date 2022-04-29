@@ -136,12 +136,13 @@ const DesktopNav = () => {
           key={navItem.label}
           style={{ cursor: "pointer" }}
           onClick={() => {
-            router.push(navItem.href ?? "#");
+            if (navItem.href) {
+              router.push(navItem.href);
+            }
           }}
         >
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
-              {/* <LinkNext href={navItem.href ?? "#"} passHref> */}
               <Text
                 fontSize={"md"}
                 fontWeight={500}
@@ -153,7 +154,6 @@ const DesktopNav = () => {
               >
                 {navItem.label}
               </Text>
-              {/* </LinkNext> */}
             </PopoverTrigger>
 
             {navItem.children && (
@@ -206,9 +206,12 @@ const DesktopNav = () => {
 };
 
 const DesktopSubNav = ({ label, href, subLabel }) => {
+  const router = useRouter();
   return (
-    <Link
-      href={href}
+    <Box
+      onClick={() => {
+        router.push(href);
+      }}
       role={"group"}
       display={"block"}
       p={2}
@@ -241,7 +244,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
           <Icon color={"pink.400"} w={5} h={5} as={ChevronRightIcon} />
         </Flex>
       </Stack>
-    </Link>
+    </Box>
   );
 };
 
@@ -261,6 +264,7 @@ const MobileNav = () => {
 
 const MobileNavItem = ({ label, children, href }) => {
   const { isOpen, onToggle } = useDisclosure();
+  const router = useRouter();
 
   return (
     <Stack spacing={4} onClick={children && onToggle}>
@@ -307,9 +311,15 @@ const MobileNavItem = ({ label, children, href }) => {
         >
           {children &&
             children.map((child) => (
-              <Link key={child.label} py={2} href={child.href}>
+              <Box
+                onClick={() => {
+                  router.push(child.href);
+                }}
+                key={child.label}
+                py={2}
+              >
                 {child.label}
-              </Link>
+              </Box>
             ))}
         </Stack>
       </Collapse>
