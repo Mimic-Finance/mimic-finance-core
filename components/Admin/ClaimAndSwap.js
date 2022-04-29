@@ -32,6 +32,7 @@ const ClaimAndSwap = () => {
     handleGetMIMBalance();
     handleGetJUSDBalance();
     getMimPrice();
+    getcjusdPrice();
   }, [getWhitelisted]);
 
   const getMimPrice = async () => {
@@ -43,6 +44,7 @@ const ClaimAndSwap = () => {
 
   const [mimBalance, setMIMBalance] = useState(0);
   const [jusdBalance, setJUSDBalance] = useState(0);
+  const [cjusdPrice, setcjusdPrice] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
   const [wait_tx, setWaitTx] = useState(false);
@@ -51,6 +53,11 @@ const ClaimAndSwap = () => {
     const web3 = window.web3;
     const status = await web3.eth.getTransactionReceipt(hash);
     return status;
+  };
+
+  const getcjusdPrice = async () => {
+    const _price = await Swap.methods.cJUSDPrice().call();
+    setcjusdPrice(Web3.utils.fromWei(_price.toString(), "ether"));
   };
 
   const handleGetMIMBalance = async () => {
@@ -70,6 +77,30 @@ const ClaimAndSwap = () => {
   const handleSwap = async () => {
     await AutoCompound.methods
       .swap()
+      .send({ from: account })
+      .on("transactionHash", (hash) => {
+        const swapCheck = setInterval(async () => {
+          const tx_status = await txStatus(hash);
+          if (tx_status && tx_status.status) {
+            setWaitTx(false);
+            setSendTxStatus(false);
+            clearInterval(swapCheck);
+            handleGetJUSDBalance();
+            toast({
+              title: "Success",
+              description: "Swap success!",
+              status: "success",
+              duration: 1500,
+              isClosable: true,
+            });
+          }
+        }, 1500);
+      });
+  };
+
+  const handleSwapJUSDtoCJUSD = async () => {
+    await Swap.methods
+      .JUSDTocJUSD(Web3.utils.toWei(jusdBalance.toString(), "ether"))
       .send({ from: account })
       .on("transactionHash", (hash) => {
         const swapCheck = setInterval(async () => {
@@ -135,6 +166,7 @@ const ClaimAndSwap = () => {
         <Box width={"50%"}>
           <Grid pt={10} templateColumns="repeat(10, 1fr)" gap={0}>
             <GridItem colSpan={10}>
+              <Text fontSize="2xl">Claim MIM Farm {"->"} Auto</Text>
               <Select
                 onChange={handleChangeClaimAddress}
                 placeholder="Choose Pool"
@@ -172,9 +204,10 @@ const ClaimAndSwap = () => {
               "Claim MIM"
             )}
           </Button>
-          {mimBalance}
+          Mim Balance (AutoContract): {mimBalance}
           <hr />
-          <Text fontSize="2xl">Swap na kaaaa</Text>
+          <br />
+          <Text fontSize="2xl">Swap MIM {"->"} JUSD</Text>
           <Button
             style={{
               color: "#FFFFFF",
@@ -196,7 +229,34 @@ const ClaimAndSwap = () => {
               "Swap MIM to JUSD"
             )}
           </Button>
-          {jusdBalance}
+          JUSD Balance (AutoContract) {jusdBalance}
+          <hr />
+          <br />
+          <Text fontSize="2xl">Swap JUSD {"->"} cJUSD</Text>
+          <Button
+            style={{
+              color: "#FFFFFF",
+              background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
+            }}
+            disabled={claimAddress == null || (wait_tx && send_tx_status)}
+            mt={3}
+            w={"100%"}
+            onClick={() => {
+              handleSwapJUSDtoCJUSD();
+            }}
+          >
+            {" "}
+            {wait_tx && send_tx_status ? (
+              <>
+                <Spinner size={"sm"} mr={2} /> Waiting ...
+              </>
+            ) : (
+              "Swap JUSD to cJUSD"
+            )}
+          </Button>
+          JUSD Balance (AutoContract): {jusdBalance}
+          <br />
+          cJUSD Price: {cjusdPrice}
         </Box>
       </Center>
       <Divider mt={20} />
