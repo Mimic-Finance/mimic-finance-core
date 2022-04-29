@@ -63,11 +63,11 @@ contract Swap is Ownable {
 
     function JUSDTocJUSD(uint256 _amount)public{
         uint256 price = cJUSDPrice();
-        uint256 rate = _amount.mul(price);
+        uint256 rate = _amount.div(price);
         JUSDToken.safeTransferFrom(msg.sender,address(this),_amount);
-        liquidity[2][JUSDAddress]= liquidity[2][JUSDAddress].sub(_amount);
+        liquidity[2][JUSDAddress]= liquidity[2][JUSDAddress].add(_amount);
         cJUSDToken.safeTransfer(msg.sender , rate);
-        liquidity[2][cJUSDAddress]= liquidity[2][cJUSDAddress].add(rate);
+        liquidity[2][cJUSDAddress]= liquidity[2][cJUSDAddress].sub(rate);
     }
 
     function addLiquidity(

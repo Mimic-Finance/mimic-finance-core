@@ -92,6 +92,12 @@ contract Auto is Ownable {
         SwapContract.mimToJUSD(mimbal);
     }
 
+    function swapJUSDtoCJUSD()public onlyOwner{
+        uint256 jusd = JUSDToken.balanceOf(address(this));
+        JUSDToken.approve(SwapAddress,jusd);
+        SwapContract.JUSDTocJUSD(jusd);
+    }
+
     function depositToFarm(uint256 _amount) public onlyOwner {
         /* Auto-Compound:: Approve JUSD for spend amount to Farm */
         JUSDToken.approve(FarmAddress, _amount);
