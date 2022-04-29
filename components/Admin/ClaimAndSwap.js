@@ -37,7 +37,6 @@ const ClaimAndSwap = () => {
   const getMimPrice = async () => {
     const _price = await Swap.methods.mimicPrice().call();
     console.log(_price);
-    //alert(_price);
   };
 
   const [claimAddress, setClaimAddress] = useState(null);
