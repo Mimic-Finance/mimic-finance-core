@@ -2,7 +2,7 @@ name: Next-js-Lint
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ develop, refactor/eth-testnet ]
 
 jobs:
   next-js-lint:

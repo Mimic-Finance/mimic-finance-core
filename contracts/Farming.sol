@@ -41,6 +41,9 @@ contract Farming is Ownable {
     //Stake Tokens
     function stakeTokens(uint256 _amount, address _token) public {
         require(_amount > 0 && checkWhitelisted(_token));
+        if(stakingBalance[_token][msg.sender] > 0){
+            claimRewards(_token);
+        }
         ERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
         stakingBalance[_token][msg.sender] = stakingBalance[_token][msg.sender]
             .add(_amount);
