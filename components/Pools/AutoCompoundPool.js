@@ -27,7 +27,7 @@ const AutoCompoundPool = (props) => {
         src={getImage(props.address)}
         alt={props.label}
         fallbackSrc="/assets/images/logo-box.png"
-        className="pool-logo"
+        className="autopool-logo"
         width="80px"
       />
       <Text fontWeight="bold" fontSize="2xl">

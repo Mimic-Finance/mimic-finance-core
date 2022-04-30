@@ -51,7 +51,7 @@ const DepositToFarm = () => {
     setSendTxStatus(true);
     setWaitTx(true);
     await AutoCompound.methods
-      .depositToFarm(depositAmount)
+      .depositToFarm(Web3.utils.toWei(depositAmount.toString()))
       .send({ from: account })
       .on("transactionHash", (hash) => {
         const depositCheck = setInterval(async () => {

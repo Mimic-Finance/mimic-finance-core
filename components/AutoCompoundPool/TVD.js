@@ -1,26 +1,19 @@
 import { useState, useEffect, useCallback } from "react";
 import Web3 from "web3";
 import CountUp from "react-countup";
-import { useFarm, useERC20Utils } from "hooks/useContracts";
+import { useAutoCompound } from "hooks/useContracts";
 import { Text, Box } from "@chakra-ui/react";
 
-const TVD = ({ tokenAddress, symbol }) => {
-  const Farm = useFarm();
-  const ERC20Utils = useERC20Utils();
+const TVD = () => {
+  const AutoCompound = useAutoCompound();
   const [tvd, setTVD] = useState(0);
 
   const loadTVD = useCallback(async () => {
-    const _tvd = await ERC20Utils.methods
-      .balanceOf(tokenAddress, Farm.address)
+    const _tvd = await AutoCompound.methods
+      .getStakingBalance()
       .call();
-
-    const decimal = await ERC20Utils.methods.decimals(tokenAddress).call();
-    if (decimal == 6) {
-      setTVD(_tvd / Math.pow(10, 6));
-    } else {
-      setTVD(Web3.utils.fromWei(_tvd.toString()));
-    }
-  }, [ERC20Utils, tokenAddress, Farm]);
+    setTVD(Web3.utils.fromWei(_tvd.toString()));
+  }, [AutoCompound]);
 
   useEffect(() => {
     loadTVD();
@@ -35,7 +28,7 @@ const TVD = ({ tokenAddress, symbol }) => {
           </Text>
           <Text fontSize={{ base: "3xl", md: "5xl", lg: "5xl" }}>
             <CountUp duration={2} end={tvd} separator="," />
-            <font size="6">{" " + symbol}</font>
+            <font size="6">{" JUSD"}</font>
           </Text>
         </Box>
       )}
