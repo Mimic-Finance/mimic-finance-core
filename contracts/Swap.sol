@@ -14,9 +14,9 @@ contract Swap is Ownable {
     using SafeERC20 for ERC20;
     using SafeMath for uint256;
     string public name = "Swap";
-    ERC20 public JUSDToken;
-    ERC20 public MimicToken;
-    ERC20 public cJUSDToken;
+    ERC20 public JUSD;
+    ERC20 public MIM;
+    ERC20 public cJUSD;
 
     address JUSDAddress;
     address cJUSDAddress;
@@ -27,47 +27,47 @@ contract Swap is Ownable {
     mapping(uint256 => mapping(address => uint256)) public liquidity;
 
     constructor(
-        address _JUSDToken,
-        address _MimicToken,
-        address _cJUSDToken
+        address _JUSD,
+        address _MIM,
+        address _cJUSD
     ) public {
-        JUSDToken = ERC20(_JUSDToken);
-        MimicToken = ERC20(_MimicToken);
-        cJUSDToken = ERC20(_cJUSDToken);
+        JUSD = ERC20(_JUSD);
+        MIM = ERC20(_MIM);
+        cJUSD = ERC20(_cJUSD);
 
-        JUSDAddress = _JUSDToken;
-        cJUSDAddress = _cJUSDToken;
-        MimicAddress = _MimicToken;
+        JUSDAddress = _JUSD;
+        cJUSDAddress = _cJUSD;
+        MimicAddress = _MIM;
     }
 
     function swapToJUSD(uint256 _amount, uint256 _decimals) public {
         if (_decimals != 18) {
             uint256 remain = 18 - _decimals;
             uint256 balance = _amount.mul(10**remain);
-            JUSDToken.safeTransfer(msg.sender, balance);
+            JUSD.safeTransfer(msg.sender, balance);
         } else if (_decimals == 18) {
-            JUSDToken.safeTransfer(msg.sender, _amount);
+            JUSD.safeTransfer(msg.sender, _amount);
         }
     }
 
     function mimToJUSD(uint256 _amount) public {
         uint256 price = mimicPrice();
         uint256 balance = _amount.div(price);
-        //mimic 
-        MimicToken.safeTransferFrom(msg.sender, address(this), _amount);
+        //mimic
+        MIM.safeTransferFrom(msg.sender, address(this), _amount);
         liquidity[1][MimicAddress] = liquidity[1][MimicAddress].sub(_amount);
         //JUSD
-        JUSDToken.safeTransfer(msg.sender, balance);
+        JUSD.safeTransfer(msg.sender, balance);
         liquidity[1][JUSDAddress] = liquidity[1][JUSDAddress].add(balance);
     }
 
-    function JUSDTocJUSD(uint256 _amount)public{
+    function JUSDTocJUSD(uint256 _amount) public {
         uint256 price = cJUSDPrice();
         uint256 rate = _amount.div(price);
-        JUSDToken.safeTransferFrom(msg.sender,address(this),_amount);
-        liquidity[2][JUSDAddress]= liquidity[2][JUSDAddress].add(_amount);
-        cJUSDToken.safeTransfer(msg.sender , rate);
-        liquidity[2][cJUSDAddress]= liquidity[2][cJUSDAddress].sub(rate);
+        JUSD.safeTransferFrom(msg.sender, address(this), _amount);
+        liquidity[2][JUSDAddress] = liquidity[2][JUSDAddress].add(_amount);
+        cJUSD.safeTransfer(msg.sender, rate);
+        liquidity[2][cJUSDAddress] = liquidity[2][cJUSDAddress].sub(rate);
     }
 
     function addLiquidity(
@@ -104,12 +104,16 @@ contract Swap is Ownable {
     }
 
     function mimicPrice() public view returns (uint256) {
-        uint256 rate = liquidity[1][JUSDAddress].div(liquidity[1][MimicAddress]);
+        uint256 rate = liquidity[1][JUSDAddress].div(
+            liquidity[1][MimicAddress]
+        );
         return rate;
     }
 
     function cJUSDPrice() public view returns (uint256) {
-        uint256 rate = liquidity[2][JUSDAddress].div( liquidity[2][cJUSDAddress]);
+        uint256 rate = liquidity[2][JUSDAddress].div(
+            liquidity[2][cJUSDAddress]
+        );
         return rate;
     }
 
@@ -122,17 +126,17 @@ contract Swap is Ownable {
             _amount
         );
         if (decimals == 18) {
-            JUSDToken.safeTransfer(msg.sender, _amount);
+            JUSD.safeTransfer(msg.sender, _amount);
         } else if (decimals != 18) {
             uint256 remain = 18 - decimals;
             uint256 deci = _amount.mul(10**remain);
-            JUSDToken.safeTransfer(msg.sender, deci);
+            JUSD.safeTransfer(msg.sender, deci);
         }
     }
 
     function redeemBack(uint256 _amount, address _token) public {
         require(swapbalance[_token][msg.sender] <= _amount);
-        JUSDToken.safeTransferFrom(msg.sender, address(this), _amount);
+        JUSD.safeTransferFrom(msg.sender, address(this), _amount);
         ERC20(_token).safeTransfer(msg.sender, _amount);
     }
 

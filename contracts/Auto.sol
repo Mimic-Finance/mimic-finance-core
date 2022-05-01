@@ -16,9 +16,9 @@ contract Auto is Ownable {
     using SafeMath for uint256;
     string public name = "Auto-Compound Contract";
 
-    ERC20 internal MimicToken;
-    ERC20 internal JUSDToken;
-    ERC20 internal cJUSDToken;
+    ERC20 internal MIM;
+    ERC20 internal JUSD;
+    ERC20 internal cJUSD;
     Farming internal FarmContract;
     Swap internal SwapContract;
 
@@ -31,16 +31,16 @@ contract Auto is Ownable {
     uint256 stakingBalance;
 
     constructor(
-        address _JUSDToken,
-        address _MimicToken,
+        address _JUSD,
+        address _MIM,
         address _Farming,
-        address _cJUSDToken,
+        address _cJUSD,
         address _Swap
     ) public {
         /* Initial Token with token address */
-        MimicToken = ERC20Burnable(_MimicToken);
-        JUSDToken = ERC20(_JUSDToken);
-        cJUSDToken = ERC20Burnable(_cJUSDToken);
+        MIM = ERC20Burnable(_MIM);
+        JUSD = ERC20(_JUSD);
+        cJUSD = ERC20Burnable(_cJUSD);
 
         /* Initial Farm and Swap Contract with token address */
         SwapContract = Swap(_Swap);
@@ -49,7 +49,7 @@ contract Auto is Ownable {
         /* Initial Farm and Swap Contract address */
         FarmAddress = _Farming;
         SwapAddress = _Swap;
-        JUSDAddress = _JUSDToken;
+        JUSDAddress = _JUSD;
     }
 
     function deposit(uint256 _amount, address _token) public {
@@ -69,14 +69,14 @@ contract Auto is Ownable {
             balance = _amount.mul(10**remain);
         }
         /* Auto-Compound:: Approve JUSD for spend amount to Farm */
-        JUSDToken.approve(FarmAddress, balance);
+        JUSD.approve(FarmAddress, balance);
         /* Stake JUSD in Farm Contract with Auto-Compound */
         FarmContract.stakeTokens(balance, JUSDAddress);
         stakingBalance = stakingBalance.add(balance);
         uint256 cjp = SwapContract.cJUSDPrice();
         uint256 cjrate = balance.div(cjp);
         cjusdbuyprice[msg.sender] = cjp;
-        cJUSDToken.safeTransfer(msg.sender, cjrate);
+        cJUSD.safeTransfer(msg.sender, cjrate);
     }
 
     function claimAndSwap(address _token) public onlyOwner {
@@ -86,21 +86,21 @@ contract Auto is Ownable {
 
     function swap() public onlyOwner {
         /* Check Mimic Token balance */
-        uint256 mimbal = MimicToken.balanceOf(address(this));
+        uint256 mimbal = MIM.balanceOf(address(this));
         /* Swap Mimic To JUSD */
-        MimicToken.approve(SwapAddress, mimbal);
+        MIM.approve(SwapAddress, mimbal);
         SwapContract.mimToJUSD(mimbal);
     }
 
-    function swapJUSDtoCJUSD()public onlyOwner{
-        uint256 jusd = JUSDToken.balanceOf(address(this));
-        JUSDToken.approve(SwapAddress,jusd);
+    function swapJUSDtoCJUSD() public onlyOwner {
+        uint256 jusd = JUSD.balanceOf(address(this));
+        JUSD.approve(SwapAddress, jusd);
         SwapContract.JUSDTocJUSD(jusd);
     }
 
     function depositToFarm(uint256 _amount) public onlyOwner {
         /* Auto-Compound:: Approve JUSD for spend amount to Farm */
-        JUSDToken.approve(FarmAddress, _amount);
+        JUSD.approve(FarmAddress, _amount);
         /* Stake JUSD in Farm Contract with Auto-Compound */
         FarmContract.stakeTokens(_amount, JUSDAddress);
     }
@@ -109,11 +109,11 @@ contract Auto is Ownable {
         uint256 cjp = SwapContract.cJUSDPrice();
         uint256 balance = _amount.div(cjp);
         /* Transfer cJUSD to Auto Compound */
-        cJUSDToken.safeTransferFrom(msg.sender, address(this), _amount);
+        cJUSD.safeTransferFrom(msg.sender, address(this), _amount);
         /* Unstake JUSD from Farming Contract */
         FarmContract.unstakeTokens(balance, JUSDAddress);
         /* Return JUSD to user */
-        JUSDToken.safeTransfer(msg.sender, balance);
+        JUSD.safeTransfer(msg.sender, balance);
         uint256 remain = stakingBalance.sub(balance);
         stakingBalance = remain;
     }
@@ -123,11 +123,11 @@ contract Auto is Ownable {
     }
 
     function getcJUSDBalance() public view returns (uint256) {
-        return cJUSDToken.balanceOf(address(this));
+        return cJUSD.balanceOf(address(this));
     }
 
     function getJUSDBalance() public view returns (uint256) {
-        return JUSDToken.balanceOf(address(this));
+        return JUSD.balanceOf(address(this));
     }
 
     function cJUSDBuyPrice(address _account) public view returns (uint256) {

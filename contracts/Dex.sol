@@ -42,11 +42,10 @@ contract Dex {
         );
     }
 
-    function swapTokenForEth(
-        uint256 tokenAmount,
-        address _account,
-        address _address
-    ) external payable {
+    function swapTokenForEth(uint256 tokenAmount, address _account)
+        external
+        payable
+    {
         uint256 deadline = block.timestamp + 150;
         address[] memory path = getUSDCForEthPath();
         uint256 amountOutMin = uniswapRouter.getAmountsOut(tokenAmount, path)[

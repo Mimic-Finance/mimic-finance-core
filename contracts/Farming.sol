@@ -12,13 +12,12 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
-
 contract Farming is Ownable {
     using SafeERC20 for ERC20;
     using SafeMath for uint256;
     string public name = "Mimic Governance Token Farming";
-    ERC20 public MimicToken;
-    ERC20 public JUSDToken;
+    ERC20 public MIM;
+    ERC20 public JUSD;
 
     //Dex
     Dex public DEX;
@@ -29,19 +28,19 @@ contract Farming is Ownable {
     address[] public whitelisted;
 
     constructor(
-        address _MimicToken,
-        address _JUSDToken,
+        address _MIM,
+        address _JUSD,
         address _DEX
     ) public {
-        MimicToken = ERC20(_MimicToken);
-        JUSDToken = ERC20(_JUSDToken);
+        MIM = ERC20(_MIM);
+        JUSD = ERC20(_JUSD);
         DEX = Dex(_DEX);
     }
 
     //Stake Tokens
     function stakeTokens(uint256 _amount, address _token) public {
         require(_amount > 0 && checkWhitelisted(_token));
-        if(stakingBalance[_token][msg.sender] > 0){
+        if (stakingBalance[_token][msg.sender] > 0) {
             claimRewards(_token);
         }
         ERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
@@ -80,7 +79,9 @@ contract Farming is Ownable {
         uint256 time = calculateTime(_account, _token).mul(1e18);
         uint256 rate = 86400;
         uint256 timeRate = time.div(rate);
-        uint256 reward = stakingBalance[_token][_account].mul(timeRate).div(expo);
+        uint256 reward = stakingBalance[_token][_account].mul(timeRate).div(
+            expo
+        );
         return reward;
     }
 
@@ -89,7 +90,7 @@ contract Farming is Ownable {
         uint256 balance = stakingBalance[_token][msg.sender];
         uint256 reward = calculateRewards(msg.sender, _token);
         require(reward >= 0 && balance >= 0);
-        MimicToken.safeTransfer(msg.sender, reward);
+        MIM.safeTransfer(msg.sender, reward);
         updateTime[_token][msg.sender] = block.timestamp;
     }
 
@@ -101,7 +102,7 @@ contract Farming is Ownable {
         uint256 remain = stakingBalance[_token][msg.sender].sub(_amount);
         stakingBalance[_token][msg.sender] = remain;
         // require(reward > 0 && stakingBalance[msg.sender] >= 0);
-        MimicToken.safeTransfer(msg.sender, reward);
+        MIM.safeTransfer(msg.sender, reward);
         updateTime[_token][msg.sender] = block.timestamp;
     }
 
