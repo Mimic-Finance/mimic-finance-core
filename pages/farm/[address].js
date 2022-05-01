@@ -153,13 +153,6 @@ const StableCoinPool = () => {
               </Box>
             </Box>
           </>
-          <Center>
-            <Image
-              width={"60%"}
-              alt={"bitkub ads"}
-              src="https://siamblockchain.com/wp-content/uploads/2021/01/bitkub790-scaled.jpg"
-            />
-          </Center>
         </Container>
       </PoolContextProvider>
     </div>
