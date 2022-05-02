@@ -139,17 +139,21 @@ contract Auto is Ownable {
         JUSD.safeTransfer(msg.sender, swapbalance);
         if(swapbalance > depositbalance[msg.sender]){
             depositbalance[msg.sender] = 0;
+        } else {
+            uint256 remain = depositbalance[msg.sender].sub(swapbalance);
+            depositbalance[msg.sender] = remain;
         }
         uint256 TVDremain = stakingBalance.sub(swapbalance);
-        uint256 remain = depositbalance[msg.sender].sub(swapbalance);
         stakingBalance = TVDremain;
-        depositbalance[msg.sender] = remain;
     }
 
     function getStakingBalance() public view returns (uint256) {
         return stakingBalance;
     }
 
+    function getDepositBalance(address _account) public view returns (uint256){
+        return depositbalance[_account];
+    }
     function getcJUSDBalance() public view returns (uint256) {
         return CJUSD.balanceOf(address(this));
     }
