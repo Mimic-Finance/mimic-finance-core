@@ -221,12 +221,12 @@ const Redeem = () => {
                         clearInterval(redeemCheck);
                         toast({
                           title: "Success",
-                          description: "Mint JUSD Success!",
+                          description: "Redeem JUSD Success!",
                           status: "success",
                           duration: 1500,
                           isClosable: true,
                         });
-                        setMintValue(0);
+                        setRedeemValue(0);
                       }
                     }, 1500);
                   });
