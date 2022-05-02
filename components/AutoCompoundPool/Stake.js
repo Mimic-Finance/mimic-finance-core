@@ -275,7 +275,7 @@ const Stake = () => {
           "Stake"
         )}
       </Button>
-      <Portfolio/>
+      <Portfolio />
     </>
   );
 };

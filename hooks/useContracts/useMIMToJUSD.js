@@ -1,6 +1,6 @@
 import useContract from "../useContract";
 import config from "../../config.json";
-import MIMToJUSD_ABI from "../../abis/MIMToJUSD.json";
+import MIMToJUSD_ABI from "abis/MIMToJUSD.json";
 
 const useMIMToJUSD = () => {
   const abi = MIMToJUSD_ABI.abi;
