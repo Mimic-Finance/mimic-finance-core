@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.7.6;
 
-import "./JUSD.sol";
-import "./Mimic.sol";
-import "./cJUSD.sol";
+import "./Token/JUSD.sol";
+import "./Token/Mimic.sol";
+import "./Token/cJUSD.sol";
 import "./Farming.sol";
 import "./Swap.sol";
 

@@ -2,9 +2,8 @@
 
 pragma solidity 0.7.6;
 
-import "./Mimic.sol";
-import "./JUSD.sol";
-
+import "./Token/Mimic.sol";
+import "./Token/JUSD.sol";
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -18,16 +17,12 @@ contract Farming is Ownable {
     ERC20 public MIM;
     ERC20 public JUSD;
 
-
     mapping(address => mapping(address => uint256)) public stakingBalance;
     mapping(address => mapping(address => uint256)) public updateTime;
     mapping(address => address) public tokenPriceMapping;
     address[] public whitelisted;
 
-    constructor(
-        address _MIM,
-        address _JUSD
-    ) public {
+    constructor(address _MIM, address _JUSD) {
         MIM = ERC20(_MIM);
         JUSD = ERC20(_JUSD);
     }
