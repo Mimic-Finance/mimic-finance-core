@@ -168,6 +168,105 @@ const Redeem = () => {
     }
   };
 
+  const handleRedeemJUSD = async () => {
+    const web3 = window.web3;
+    const coinContract = new web3.eth.Contract(ERC20ABI, redeemTo);
+
+    // => set amount with decimals
+    if (redeemTo !== null) {
+      // => get decimals of token
+      const decimals = await ERC20Utils.methods
+        .decimals(redeemTo.toString())
+        .call();
+      const _amount = 0;
+      if (decimals == 6) {
+        // decimal = 6
+        _amount = redeemValue * Math.pow(10, 6);
+      } else {
+        // decimal = 18
+        _amount = Web3.utils.toWei(redeemValue.toString());
+      }
+
+      console.log("approve value => ", _amount);
+
+      // ========== Transaction Start ==============
+      setSendTxStatus(true);
+      setWaitTx(true);
+      // => Approve <<<
+      // => approve with coin that user select
+
+      await coinContract.methods
+        .approve(Swap.address, _amount)
+        .send({ from: account })
+        .on("transactionHash", (hash) => {
+          const refreshId = setInterval(async () => {
+            const tx_status = await txStatus(hash);
+            if (tx_status && tx_status.status) {
+              clearInterval(refreshId);
+
+              toast({
+                title: "Success",
+                description: "Approved Success!",
+                status: "success",
+                duration: 1500,
+                isClosable: true,
+              });
+
+              // => Check Allowance value <<<
+              const allowance = await ERC20Utils.methods
+                .allowance(redeemTo, account, Swap.address)
+                .call();
+              console.log("Allowance ===> ", allowance);
+
+              if (allowance == _amount) {
+                // => Redeem <<<
+                Swap.methods
+                  .redeemBack(_amount, redeemTo)
+                  .send({ from: account })
+                  .on("transactionHash", (hash) => {
+                    const redeemCheck = setInterval(async () => {
+                      const tx_status = await txStatus(hash);
+                      if (tx_status && tx_status.status) {
+                        setWaitTx(false);
+                        setSendTxStatus(false);
+                        clearInterval(redeemCheck);
+                        toast({
+                          title: "Success",
+                          description: "Mint JUSD Success!",
+                          status: "success",
+                          duration: 1500,
+                          isClosable: true,
+                        });
+                        setMintValue(0);
+                      }
+                    }, 1500);
+                  });
+              } else {
+                toast({
+                  title: "Error",
+                  description:
+                    "Please set approve value = " +
+                    mintValue +
+                    " on your wallet",
+                  status: "error",
+                  duration: 1500,
+                  isClosable: true,
+                });
+              }
+            }
+          }, 1500);
+        });
+    } else {
+      toast({
+        title: "Error",
+        description: "Please select coin",
+        status: "error",
+        duration: 1500,
+        isClosable: true,
+      });
+    }
+  };
+
   return (
     <>
       <div className={styles.container}>
@@ -232,6 +331,11 @@ const Redeem = () => {
                         })}
                       </Text>
                     </Box>
+
+                    <Box pt={3} pb={3}>
+                      <ArrowDownIcon w={8} h={8} />
+                    </Box>
+
                     {/* From */}
                     <Box className="currency-box" mt={3}>
                       <Text
@@ -249,6 +353,7 @@ const Redeem = () => {
                                 style={{ border: "0" }}
                                 placeholder="0.00"
                                 value={redeemValue}
+                                disabled={!redeemTo}
                                 onChange={handleChangeRedeemValue}
                               />
                               <InputRightElement width="4.5rem">
@@ -273,9 +378,9 @@ const Redeem = () => {
                       colorScheme="pink"
                       height="70px"
                       className="swap-button"
-                      // onClick={() => {
-                      //   handleMintJUSD();
-                      // }}
+                      onClick={() => {
+                        handleRedeemJUSD();
+                      }}
                       disabled={redeemValue == 0 || (wait_tx && send_tx_status)}
                     >
                       {wait_tx && send_tx_status ? (
@@ -291,11 +396,6 @@ const Redeem = () => {
                 </Box>
               </Center>
             </Box>
-            {/* <Box className="col-md-5" pt={6}>
-              <Box className="swap-box " style={{ textAlign: "center" }} p={5}>
-                Guide Box
-              </Box>
-            </Box> */}
           </Box>
         </Container>
       </div>

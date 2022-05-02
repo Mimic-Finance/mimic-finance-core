@@ -86,10 +86,14 @@ contract Swap is Ownable {
         return false;
     }
 
-    function getMintBalance(address _token, address _account)public view returns (uint256){
-        if(swapbalance[_token][_account] > 0){
+    function getMintBalance(address _token, address _account)
+        public
+        view
+        returns (uint256)
+    {
+        if (swapbalance[_token][_account] > 0) {
             return swapbalance[_token][_account];
-        } else{
+        } else {
             return 0;
         }
     }

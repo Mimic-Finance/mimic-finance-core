@@ -161,7 +161,7 @@ const Mint = () => {
               console.log("Allowance ===> ", allowance);
 
               if (allowance == _amount) {
-                // => Deposit <<<
+                // => Mint <<<
                 Swap.methods
                   .JUSDMinter(_amount, coin)
                   .send({ from: account })
@@ -347,11 +347,6 @@ const Mint = () => {
                 </Box>
               </Center>
             </Box>
-            {/* <Box className="col-md-5" pt={6}>
-              <Box className="swap-box " style={{ textAlign: "center" }} p={5}>
-                Guide Box
-              </Box>
-            </Box> */}
           </Box>
         </Container>
       </div>
