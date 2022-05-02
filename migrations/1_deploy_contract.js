@@ -111,9 +111,13 @@ module.exports = async (deployer, network, accounts) => {
     from: config.rich_JUSD,
   });
 
-  await cJUSD.transfer(AUTO.address, Token("90000000"), {
-    from: config.rich_cJUSD,
+  await JUSD.transfer(AUTO.address, Token("10000000"), {
+    from: config.rich_JUSD,
   });
+
+  await cJUSD.transfer(AUTO.address,Token("90000000"),{
+    from: config.rich_cJUSD,
+  })
 
   /* ==>  Add Whitelisted to Contracts  */
   await FARM.addWhitelisted(TokenAddress.DAI);

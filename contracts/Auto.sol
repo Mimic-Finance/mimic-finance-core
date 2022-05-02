@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.7.6;
+pragma abicoder v2;
 
 import "./Token/JUSD.sol";
 import "./Token/Mimic.sol";
@@ -38,6 +39,7 @@ contract Auto is Ownable {
     address internal JUSDTocJUSDAddress;
     address internal cJUSDToJUSDAddress;
 
+    mapping (address => uint256) depositbalance;
     uint256 stakingBalance;
 
     constructor(
@@ -91,11 +93,13 @@ contract Auto is Ownable {
         JUSD.approve(FarmAddress, balance);
         /* Stake JUSD in Farm Contract with Auto-Compound */
         FarmContract.stakeTokens(balance, JUSDAddress);
+        /*Add to TVD*/
         stakingBalance = stakingBalance.add(balance);
+        /*Approve jusd to swap*/
         JUSD.approve(JUSDTocJUSDAddress,balance);
-        JUSDTocJUSDContract.swapExactInputSingle(balance);
-        uint256 cjusdbalance = CJUSD.balanceOf(address(this));
-        CJUSD.safeTransfer(msg.sender,cjusdbalance);
+        depositbalance[msg.sender] = depositbalance[msg.sender].add(balance);
+        uint256 swapbalance = JUSDTocJUSDContract.swapExactInputSingle(balance);
+        CJUSD.safeTransfer(msg.sender,swapbalance);
     }
 
     function claimMIM(address _token) public onlyOwner {
@@ -103,7 +107,7 @@ contract Auto is Ownable {
         FarmContract.claimRewards(_token);
     }
 
-    function swap() public onlyOwner {
+    function swapMIM() public onlyOwner {
         /* Check Mimic Token balance */
         uint256 mimbal = MIM.balanceOf(address(this));
         /* Swap Mimic To JUSD */
@@ -128,13 +132,12 @@ contract Auto is Ownable {
         /* Transfer cJUSD to Auto Compound */
         CJUSD.safeTransferFrom(msg.sender, address(this), _amount);
         CJUSD.approve(cJUSDToJUSDAddress,_amount);
-        cJUSDToJUSDContract.swapExactInputSingle(_amount);
-        uint256 jusdbalance = JUSD.balanceOf(address(this));
+        uint256 swapbalance = cJUSDToJUSDContract.swapExactInputSingle(_amount);
         /* Unstake JUSD from Farming Contract */
-        FarmContract.unstakeTokens( jusdbalance , JUSDAddress);
+        FarmContract.unstakeTokens( swapbalance , JUSDAddress);
         /* Return JUSD to user */
-        JUSD.safeTransfer(msg.sender, jusdbalance);
-        uint256 remain = stakingBalance.sub(jusdbalance);
+        JUSD.safeTransfer(msg.sender, swapbalance);
+        uint256 remain = stakingBalance.sub(swapbalance);
         stakingBalance = remain;
     }
 

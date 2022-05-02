@@ -20,7 +20,7 @@ contract cJUSDToJUSD {
     address public constant JUSD = 0x017303Dc90022D48E1575bd40c4D7C0326CA47d6;
     address public constant CJUSD = 0xa219664AaB0B894F8178Aaf15A04Da810515f6E1;
 
-    // we will set the pool fee to 0.05%.
+    // we will set the pool fee to 0.3%.
     uint24 public constant poolFee = 500;
 
     function swapExactInputSingle(uint256 amountIn) external returns (uint256 amountOut) {
