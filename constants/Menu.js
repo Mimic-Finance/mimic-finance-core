@@ -14,13 +14,9 @@ const MENU = [
       },
     ],
   },
-  // {
-  //   label: "Home",
-  //   href: "/",
-  // },
   {
     label: "Exchange",
-    href: "https://mimic-exchange.vercel.app/",
+    href: "https://app.uniswap.org/#/swap?chain=kovan",
   },
   {
     label: "Farm",
