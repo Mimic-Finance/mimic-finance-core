@@ -1,5 +1,6 @@
 import useContract from "../useContract";
 import JUSD_ABI from "../../abis/JUSD.json";
+import config from "config.json";
 
 import useAppSelector from "hooks/useAppSelector";
 
@@ -12,7 +13,10 @@ const useJUSD = (_account) => {
   }
 
   const abi = JUSD_ABI.abi;
-  const contract = useContract(abi, JUSD_ABI.networks[1].address);
+  const contract = useContract(
+    abi,
+    JUSD_ABI.networks[config.networkId].address
+  );
   const [balance, setBalance] = useState(false);
 
   const methods = contract.methods;

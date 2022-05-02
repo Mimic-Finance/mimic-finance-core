@@ -10,9 +10,7 @@ const cJUSD = artifacts.require("cJUSD");
 const Auto = artifacts.require("Auto");
 const ERC20Utils = artifacts.require("ERC20Utils");
 
-
 //Stable Coin
-const BUSD = artifacts.require("BUSD");
 const DAI = artifacts.require("DAI");
 const USDC = artifacts.require("USDC");
 const USDT = artifacts.require("USDT");
@@ -26,38 +24,27 @@ module.exports = async function (deployer, network, accounts) {
    * Deploy Stable Coin
    * (at Mainnet)
    */
-  const busd = await BUSD.at(TokenAddress.BUSD);
-  await busd.transfer(accounts[0], tokens("100000"), {
-    from: config.rich_account,
-  });
-  await busd.transfer(accounts[1], tokens("100000"), {
-    from: config.rich_account,
-  });
-
   const dai = await DAI.at(TokenAddress.DAI);
   await dai.transfer(accounts[0], tokens("100000"), {
-    from: config.rich_account,
+    from: config.rich_DAI,
   });
   await dai.transfer(accounts[1], tokens("100000"), {
-    from: config.rich_account,
+    from: config.rich_DAI,
   });
   const usdc = await USDC.at(TokenAddress.USDC);
   await usdc.transfer(accounts[0], 100000000000, {
-    from: config.rich_account,
+    from: config.rich_USDC,
   });
   await usdc.transfer(accounts[1], 100000000000, {
-    from: config.rich_account,
+    from: config.rich_USDC,
   });
   const usdt = await USDT.at(TokenAddress.USDT);
   await usdt.transfer(accounts[0], 100000000000, {
-    from: config.rich_account,
+    from: config.rich_USDT,
   });
   await usdt.transfer(accounts[1], 100000000000, {
-    from: config.rich_account,
+    from: config.rich_USDT,
   });
-
-
-
 
   /**
    *
@@ -74,11 +61,7 @@ module.exports = async function (deployer, network, accounts) {
   await deployer.deploy(MimicToken);
   const mimicToken = await MimicToken.deployed();
 
-  await deployer.deploy(
-    Farming,
-    mimicToken.address,
-    jusdToken.address
-  );
+  await deployer.deploy(Farming, mimicToken.address, jusdToken.address);
   const farming = await Farming.deployed();
 
   await deployer.deploy(cJUSD);
@@ -116,13 +99,11 @@ module.exports = async function (deployer, network, accounts) {
    *
    * Add Whitelisted
    */
-  await farming.addWhitelisted(TokenAddress.BUSD);
   await farming.addWhitelisted(TokenAddress.DAI);
   await farming.addWhitelisted(TokenAddress.USDC);
   await farming.addWhitelisted(TokenAddress.USDT);
   await farming.addWhitelisted(jusdToken.address);
 
-  await swap.addWhitelisted(TokenAddress.BUSD);
   await swap.addWhitelisted(TokenAddress.DAI);
   await swap.addWhitelisted(TokenAddress.USDC);
   await swap.addWhitelisted(TokenAddress.USDT);

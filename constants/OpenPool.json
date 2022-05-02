@@ -1,17 +1,5 @@
 [
   {
-    "address": "0x4Fabb145d64652a948d72533023f6E7A623C7C53",
-    "symbol": "BUSD",
-    "description": "BUSD stable coin pool",
-    "type": "token",
-    "token": "BUSD",
-    "apr": 122.32,
-    "label": "stable-coin",
-    "color": "#fee4a7",
-    "info": " Binance USD (BUSD) is a 1:1 USD-backed stable coin issued by Binance (in partnership with Paxos), Approved and regulated by the New York State Department of Financial Services (NYDFS), The BUSD Monthly Audit Report can be viewed from the official website. Launched on 5 Sep 2019, BUSD aims to meld the stability of the dollar with blockchain technology. It is a digital fiat currency, issued as ERC-20 and supports BEP-2. "
-  },
-
-  {
     "address": "0xF4680c7b67d61C419483d6F553FD6f46fc3602Bf",
     "symbol": "JUSD",
     "description": "JUSD stable coin pool",
@@ -23,7 +11,7 @@
     "info": "Jack USD (JUSD) is a 1:1 USD-backed stable coin issued by Jirayu Rungruang and friends, Approved and regulated by the Arabasta State Department of Financial Services (ADFS), The JUSD Monthly Audit Report can be viewed from the official website. Launched on 25 January  2077, JUSD aims to meld the stability of the dollar with blockchain technology."
   },
   {
-    "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "address": "0xb7a4F3E9097C08dA09517b5aB877F7a917224ede",
     "symbol": "USDC",
     "description": "USDC stable coin pool",
     "type": "token",
@@ -34,7 +22,7 @@
     "info": " USD Coin (known by its ticker USDC) is a stablecoin that is pegged to the U.S. dollar on a 1:1 basis. Every unit of this cryptocurrency in circulation is backed up by $1 that is held in reserve, in a mix of cash and short-term U.S. Treasury bonds. The Centre consortium, which is behind this asset, says USDC is issued by regulated financial institutions."
   },
   {
-    "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "address": "0x07de306FF27a2B630B1141956844eB1552B956B5",
     "symbol": "USDT",
     "description": "USDT stable coin pool",
     "type": "token",
@@ -45,7 +33,7 @@
     "info": " USDT is a stablecoin (stable-value cryptocurrency) that mirrors the price of the U.S. dollar, issued by a Hong Kong-based company Tether. The token’s peg to the USD is achieved via maintaining a sum of commercial paper, fiduciary deposits, cash, reserve repo notes, and treasury bills in reserves that is equal in USD value to the number of USDT in circulation."
   },
   {
-    "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+    "address": "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa",
     "symbol": "DAI",
     "description": "DAI stable coin pool",
     "type": "token",
@@ -54,20 +42,5 @@
     "label": "stable-coin",
     "color": "#fee4a7",
     "info": " DAI is an Ethereum-based stablecoin (stable-price cryptocurrency) whose issuance and development is managed by the Maker Protocol and the MakerDAO decentralized autonomous organization. The price of DAI is soft-pegged to the U.S. dollar and is collateralized by a mix of other cryptocurrencies that are deposited into smart-contract vaults every time new DAI is minted."
-  },
-  {
-    "address": "0xa0ABda1F980e03D7eADb78aed8fC1f2DD0fe83Dd",
-    "symbol": "BUSD-USDT",
-    "description": "LP Token UNI-v2",
-    "type": "lp-token",
-    "token": "BUSD-USDT-LP",
-    "apr": 122.32,
-    "label": "stable-coin",
-    "color": "#f4e0e1",
-    "gradient": {
-      "color1": "#86dbd4",
-      "color2": "#fee4a7"
-    },
-    "info": " A stablecoin is a class of cryptocurrencies that attempt to offer price stability and are backed by a reserve asset. Stablecoins have gained traction as they attempt to offer the best of both worlds—the instant processing and security or privacy of payments of cryptocurrencies, and the volatility-free stable valuations of fiat currencies."
   }
 ]

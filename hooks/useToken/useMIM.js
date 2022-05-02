@@ -1,5 +1,6 @@
 import useContract from "../useContract";
 import MIMIC_ABI from "../../abis/Mimic.json";
+import config from "config.json";
 
 import useAppSelector from "hooks/useAppSelector";
 
@@ -12,7 +13,10 @@ const useMIMIC = (_account) => {
   }
 
   const abi = MIMIC_ABI.abi;
-  const contract = useContract(abi, MIMIC_ABI.networks[1].address);
+  const contract = useContract(
+    abi,
+    MIMIC_ABI.networks[config.networkId].address
+  );
   const [balance, setBalance] = useState(false);
 
   const methods = contract.methods;
