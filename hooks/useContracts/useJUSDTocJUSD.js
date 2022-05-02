@@ -15,4 +15,4 @@ const useJUSDTocJUSD = () => {
   return { contract, methods, address };
 };
 
-export default useFarm;
+export default useJUSDTocJUSD;

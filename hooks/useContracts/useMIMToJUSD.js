@@ -15,4 +15,4 @@ const useMIMToJUSD = () => {
   return { contract, methods, address };
 };
 
-export default useFarm;
+export default useMIMToJUSD;
