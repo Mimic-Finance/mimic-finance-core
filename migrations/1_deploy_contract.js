@@ -1,79 +1,79 @@
 const config = require("../config.json");
 const TokenAddress = require("../constants/TokenAddress.json");
 
-//Farm
-const MimicToken = artifacts.require("Mimic");
-const JUSDToken = artifacts.require("JUSD");
-const Farming = artifacts.require("Farming");
-const Swap = artifacts.require("Swap");
-const cJUSD = artifacts.require("cJUSD");
-const Auto = artifacts.require("Auto");
-const ERC20Utils = artifacts.require("ERC20Utils");
+/**==================================================================
+ *                       Import Contract Artifacts
+ ===================================================================*/
 
-//Stable Coin
-const DAI = artifacts.require("DAI");
-const USDC = artifacts.require("USDC");
-const USDT = artifacts.require("USDT");
+// Platform Token Artifacts
+const _MIM = artifacts.require("Mimic");
+const _JUSD = artifacts.require("JUSD");
+const _cJUSD = artifacts.require("cJUSD");
 
-function tokens(n) {
+// Pool Token Artifacts
+const _DAI = artifacts.require("DAI");
+const _USDC = artifacts.require("USDC");
+const _USDT = artifacts.require("USDT");
+
+// Contract Artifacts
+const _FARM = artifacts.require("Farming");
+const _SWAP = artifacts.require("Swap");
+const _AUTO = artifacts.require("Auto");
+const _ERC20UTILS = artifacts.require("ERC20Utils");
+
+/**==================================================================
+ *                         Utils Functions
+ ===================================================================*/
+
+const Token = (n) => {
   return web3.utils.toWei(n, "ether");
-}
+};
 
-module.exports = async function (deployer, network, accounts) {
-  /**
-   * Deploy Stable Coin
-   * (at Mainnet)
-   */
-  const dai = await DAI.at(TokenAddress.DAI);
-  await dai.transfer(accounts[0], tokens("100000"), {
+/**==================================================================
+ *                          Deployment
+ ===================================================================*/
+
+module.exports = async (deployer, network, accounts) => {
+  /* ==>  Use from blockchain network  */
+  const DAI = await _DAI.at(TokenAddress.DAI);
+  const USDT = await _USDT.at(TokenAddress.USDT);
+  const USDC = await _USDC.at(TokenAddress.USDC);
+
+  const JUSD = await _JUSD.at(TokenAddress.JUSD);
+  const cJUSD = await _cJUSD.at(TokenAddress.cJUSD);
+  const MIM = await _MIM.at(TokenAddress.MIM);
+
+  /* ==>  Transfer tokens to accounts[0] (for development)  */
+  await DAI.transfer(accounts[0], Token("100000"), {
     from: config.rich_DAI,
   });
-  await dai.transfer(accounts[1], tokens("100000"), {
+  await DAI.transfer(accounts[0], Token("100000"), {
     from: config.rich_DAI,
   });
-  const usdc = await USDC.at(TokenAddress.USDC);
-  await usdc.transfer(accounts[0], 100000000000, {
-    from: config.rich_USDC,
-  });
-  await usdc.transfer(accounts[1], 100000000000, {
-    from: config.rich_USDC,
-  });
-  const usdt = await USDT.at(TokenAddress.USDT);
-  await usdt.transfer(accounts[0], 100000000000, {
+  await USDT.transfer(accounts[0], Token("100000"), {
     from: config.rich_USDT,
   });
-  await usdt.transfer(accounts[1], 100000000000, {
+  await USDT.transfer(accounts[0], Token("100000"), {
     from: config.rich_USDT,
   });
+  await USDC.transfer(accounts[0], Token("100000"), {
+    from: config.rich_USDC,
+  });
+  await USDC.transfer(accounts[0], Token("100000"), {
+    from: config.rich_USDC,
+  });
 
-  /**
-   *
-   * Deploy Farm and Other Token
-   * JUSD.sol
-   * Mimic.sol
-   * Farming.sol
-   * Swap.sol (Mock Swap Feature)
-   */
-
-  // await deployer.deploy(JUSDToken);
-  // const jusdToken = await JUSDToken.deployed();
-
-  // await deployer.deploy(MimicToken);
-  // const mimicToken = await MimicToken.deployed();
-
-  await deployer.deploy(Farming, mimicToken.address, jusdToken.address);
-  const farming = await Farming.deployed();
-
-  // await deployer.deploy(cJUSD);
-  // const cjusdToken = await cJUSD.deployed();
+  /* ==>  Deploy Platfrom Contract  */
+  await deployer.deploy(_FARM, TokenAddress.MIM, TokenAddress.JUSD);
+  const FARM = await _FARM.deployed();
 
   await deployer.deploy(
-    Swap,
-    jusdToken.address,
-    mimicToken.address,
-    cjusdToken.address
+    _SWAP,
+    TokenAddress.JUSD,
+    TokenAddress.MIM,
+    TokenAddress.cJUSD
   );
-  const swap = await Swap.deployed();
+  const SWAP = await _SWAP.deployed();
 
   await deployer.deploy(
     Auto,
@@ -83,35 +83,29 @@ module.exports = async function (deployer, network, accounts) {
     cjusdToken.address,
     swap.address
   );
-  const auto = await Auto.deployed();
+  const AUTO = await _AUTO.deployed();
 
-  await deployer.deploy(ERC20Utils);
+  await deployer.deploy(_ERC20UTILS);
 
-  await mimicToken.transfer(farming.address, tokens("90000000"), {
+  await MIM.transfer(FARM.address, Token("90000000"), {
     from: config.rich_MIM,
   });
-  await jusdToken.transfer(swap.address, tokens("9000000"), {
+
+  await JUSD.transfer(SWAP.address, Token("9000000"), {
     from: config.rich_JUSD,
   });
-  await cjusdToken.transfer(auto.address, tokens("90000000"), {
+
+  await cJUSD.transfer(AUTO.address, Token("90000000"), {
     from: config.rich_cJUSD,
   });
-  // await jusdToken.transfer(
-  //   config.mode === "development" ? accounts[1] : config.testerAddress,
-  //   tokens("1000000"),
-  //   from: config.rich_JUSD,
-  // );
 
-  /**
-   *
-   * Add Whitelisted
-   */
-  await farming.addWhitelisted(TokenAddress.DAI);
-  await farming.addWhitelisted(TokenAddress.USDC);
-  await farming.addWhitelisted(TokenAddress.USDT);
-  await farming.addWhitelisted(jusdToken.address);
+  /* ==>  Add Whitelisted to Contracts  */
+  await FARM.addWhitelisted(TokenAddress.DAI);
+  await FARM.addWhitelisted(TokenAddress.USDC);
+  await FARM.addWhitelisted(TokenAddress.USDT);
+  await FARM.addWhitelisted(TokenAddress.JUSD);
 
-  await swap.addWhitelisted(TokenAddress.DAI);
-  await swap.addWhitelisted(TokenAddress.USDC);
-  await swap.addWhitelisted(TokenAddress.USDT);
+  await SWAP.addWhitelisted(TokenAddress.DAI);
+  await SWAP.addWhitelisted(TokenAddress.USDC);
+  await SWAP.addWhitelisted(TokenAddress.USDT);
 };

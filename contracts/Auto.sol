@@ -39,9 +39,9 @@ contract Auto is Ownable {
         address _Swap
     ) public {
         /* Initial Token with token address */
-        MIM = ERC20Burnable(_MIM);
+        MIM = ERC20(_MIM);
         JUSD = ERC20(_JUSD);
-        cJUSD = ERC20Burnable(_cJUSD);
+        cJUSD = ERC20(_cJUSD);
 
         /* Initial Farm and Swap Contract with token address */
         SwapContract = Swap(_Swap);
