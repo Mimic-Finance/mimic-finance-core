@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 
 import { useFarm } from "hooks/useContracts";
-import { useUSDC, useBUSD, useDAI, useUSDT, useJUSD } from "hooks/useToken";
+import { useUSDC, useDAI, useUSDT, useJUSD } from "hooks/useToken";
 import { useWhitelisted } from "hooks/useFunctions";
 import { useState, useEffect } from "react";
 import Web3 from "web3";
@@ -25,7 +25,6 @@ const Dashboard = () => {
   /**
    * Stable Coin contract
    */
-  const BUSD = useBUSD(Farm.address);
   const DAI = useDAI(Farm.address);
   const USDT = useUSDT(Farm.address);
   const USDC = useUSDC(Farm.address);
@@ -41,7 +40,6 @@ const Dashboard = () => {
 
   const summaryTVD = () => {
     const sum =
-      fromWei(BUSD.balance) +
       fromWei(DAI.balance) +
       fromWei(JUSD.balance) +
       USDT.balance / Math.pow(10, 6) / 1000000 +
@@ -66,11 +64,6 @@ const Dashboard = () => {
         Total value deposited from <u>Farming contract</u>
       </Text>
       <StatGroup>
-        <Stat className="stat-box">
-          <StatLabel>BUSD</StatLabel>
-          <StatNumber>$ {fromWei(BUSD.balance)} M</StatNumber>
-        </Stat>
-
         <Stat className="stat-box">
           <StatLabel>USDT</StatLabel>
           <StatNumber>

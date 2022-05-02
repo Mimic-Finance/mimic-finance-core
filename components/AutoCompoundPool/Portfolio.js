@@ -19,11 +19,15 @@ const Portfolio = () => {
     const _balance = await ERC20Utils.methods
       .balanceOf(CJUSD.address, account)
       .call();
-    const _cJUSDPrice = await Swap.methods.cJUSDPrice().call();
-    const _cJUSDBuyPrice = await AutoCompound.methods
-      .cJUSDBuyPrice(account)
-      .call();
-    const _reward = (_cJUSDPrice - _cJUSDBuyPrice) * _balance;
+    // const _cJUSDPrice = await Swap.methods.cJUSDPrice().call();
+
+    // const _cJUSDBuyPrice = await AutoCompound.methods
+    //   .cJUSDBuyPrice(account)
+    //   .call();
+
+    const _cJUSDPrice = 1.1; //to do fix later
+    const _cJUSDBuyPrice = 1; //to do fix later
+    const _reward = 200; //to do fix later
     setBalance(Web3.utils.fromWei(_balance, "ether"));
     setReward(parseFloat(Web3.utils.fromWei(_reward.toString(), "ether")));
   }, [account, AutoCompound, ERC20Utils]);

@@ -47,19 +47,19 @@ module.exports = async (deployer, network, accounts) => {
   await DAI.transfer(accounts[0], Token("100000"), {
     from: config.rich_DAI,
   });
-  await DAI.transfer(accounts[0], Token("100000"), {
+  await DAI.transfer(accounts[1], Token("100000"), {
     from: config.rich_DAI,
   });
-  await USDT.transfer(accounts[0], Token("100000"), {
+  await USDT.transfer(accounts[0], "100000000000", {
     from: config.rich_USDT,
   });
-  await USDT.transfer(accounts[0], Token("100000"), {
+  await USDT.transfer(accounts[1], "100000000000", {
     from: config.rich_USDT,
   });
-  await USDC.transfer(accounts[0], Token("100000"), {
+  await USDC.transfer(accounts[0], "100000000000", {
     from: config.rich_USDC,
   });
-  await USDC.transfer(accounts[0], Token("100000"), {
+  await USDC.transfer(accounts[1], "100000000000", {
     from: config.rich_USDC,
   });
 
@@ -76,12 +76,12 @@ module.exports = async (deployer, network, accounts) => {
   const SWAP = await _SWAP.deployed();
 
   await deployer.deploy(
-    Auto,
-    jusdToken.address,
-    mimicToken.address,
-    farming.address,
-    cjusdToken.address,
-    swap.address
+    _AUTO,
+    TokenAddress.JUSD,
+    TokenAddress.MIM,
+    FARM.address,
+    TokenAddress.cJUSD,
+    SWAP.address
   );
   const AUTO = await _AUTO.deployed();
 

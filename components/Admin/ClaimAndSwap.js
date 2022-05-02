@@ -31,8 +31,8 @@ const ClaimAndSwap = () => {
     setWhitelisted(getWhitelisted);
     handleGetMIMBalance();
     handleGetJUSDBalance();
-    getMimPrice();
-    getcjusdPrice();
+    // getMimPrice();
+    // getcjusdPrice();
   }, [getWhitelisted]);
 
   const getMimPrice = async () => {
