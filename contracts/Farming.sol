@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.6.6;
+pragma solidity 0.7.6;
 
 import "./Mimic.sol";
 import "./JUSD.sol";
 
-import "./Dex.sol";
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
@@ -19,8 +18,6 @@ contract Farming is Ownable {
     ERC20 public MIM;
     ERC20 public JUSD;
 
-    //Dex
-    Dex public DEX;
 
     mapping(address => mapping(address => uint256)) public stakingBalance;
     mapping(address => mapping(address => uint256)) public updateTime;
@@ -29,12 +26,10 @@ contract Farming is Ownable {
 
     constructor(
         address _MIM,
-        address _JUSD,
-        address _DEX
+        address _JUSD
     ) public {
         MIM = ERC20(_MIM);
         JUSD = ERC20(_JUSD);
-        DEX = Dex(_DEX);
     }
 
     //Stake Tokens

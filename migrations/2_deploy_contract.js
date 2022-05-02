@@ -10,9 +10,6 @@ const cJUSD = artifacts.require("cJUSD");
 const Auto = artifacts.require("Auto");
 const ERC20Utils = artifacts.require("ERC20Utils");
 
-// DEX
-const Dex = artifacts.require("Dex");
-const ERC20Mock = artifacts.require("ERC20Mock");
 
 //Stable Coin
 const BUSD = artifacts.require("BUSD");
@@ -30,18 +27,18 @@ module.exports = async function (deployer, network, accounts) {
    * (at Mainnet)
    */
   const busd = await BUSD.at(TokenAddress.BUSD);
-  await busd.transfer(accounts[0], "100000000000000000000000", {
+  await busd.transfer(accounts[0], tokens("100000"), {
     from: config.rich_account,
   });
-  await busd.transfer(accounts[1], "100000000000000000000000", {
+  await busd.transfer(accounts[1], tokens("100000"), {
     from: config.rich_account,
   });
 
   const dai = await DAI.at(TokenAddress.DAI);
-  await dai.transfer(accounts[0], "100000000000000000000000", {
+  await dai.transfer(accounts[0], tokens("100000"), {
     from: config.rich_account,
   });
-  await dai.transfer(accounts[1], "100000000000000000000000", {
+  await dai.transfer(accounts[1], tokens("100000"), {
     from: config.rich_account,
   });
   const usdc = await USDC.at(TokenAddress.USDC);
@@ -59,27 +56,8 @@ module.exports = async function (deployer, network, accounts) {
     from: config.rich_account,
   });
 
-  /**
-   *
-   * Deploy DEX
-   * Dex.sol
-   * ERC20Mock.sol
-   *
-   */
-  const usdc_mock = await ERC20Mock.at(config.USDC_TESTNET);
 
-  // Create Dex Contract with 10 ether from the deployer account
-  await deployer.deploy(Dex, {
-    from: accounts[0],
-    value: "10000000000000000000",
-  });
 
-  const dex = await Dex.deployed();
-
-  // Transfer USDC from unlocked account to Dex Contract
-  await usdc_mock.transfer(dex.address, 100000000000, {
-    from: config.rich_account,
-  });
 
   /**
    *
@@ -88,8 +66,8 @@ module.exports = async function (deployer, network, accounts) {
    * Mimic.sol
    * Farming.sol
    * Swap.sol (Mock Swap Feature)
-   * Faucet.sol
    */
+
   await deployer.deploy(JUSDToken);
   const jusdToken = await JUSDToken.deployed();
 
@@ -99,13 +77,9 @@ module.exports = async function (deployer, network, accounts) {
   await deployer.deploy(
     Farming,
     mimicToken.address,
-    jusdToken.address,
-    dex.address
+    jusdToken.address
   );
   const farming = await Farming.deployed();
-
-  // await deployer.deploy(Faucet, jusdToken.address);
-  // const faucet = await Faucet.deployed();
 
   await deployer.deploy(cJUSD);
   const cjusdToken = await cJUSD.deployed();
@@ -129,14 +103,13 @@ module.exports = async function (deployer, network, accounts) {
   const auto = await Auto.deployed();
 
   await deployer.deploy(ERC20Utils);
-  const erc20utils = await ERC20Utils.deployed();
 
-  await mimicToken.transfer(farming.address, "99000000000000000000000000");
-  await jusdToken.transfer(swap.address, "9000000000000000000000000");
-  await cjusdToken.transfer(auto.address, "90000000000000000000000000");
+  await mimicToken.transfer(farming.address, tokens("99000000"));
+  await jusdToken.transfer(swap.address, tokens("9000000"));
+  await cjusdToken.transfer(auto.address, tokens("90000000"));
   await jusdToken.transfer(
     config.mode === "development" ? accounts[1] : config.testerAddress,
-    "1000000000000000000000000"
+    tokens("1000000")
   );
 
   /**
