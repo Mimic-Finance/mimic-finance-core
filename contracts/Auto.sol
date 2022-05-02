@@ -129,6 +129,7 @@ contract Auto is Ownable {
     }
 
     function withdraw(uint256 _amount) public {
+        require(depositbalance[msg.sender] > 0);
         /* Transfer cJUSD to Auto Compound */
         CJUSD.safeTransferFrom(msg.sender, address(this), _amount);
         CJUSD.approve(cJUSDToJUSDAddress,_amount);

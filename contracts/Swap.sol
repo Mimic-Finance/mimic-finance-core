@@ -24,7 +24,6 @@ contract Swap is Ownable {
 
     address[] public whitelisted;
     mapping(address => mapping(address => uint256)) public swapbalance;
-    mapping(uint256 => mapping(address => uint256)) public liquidity;
 
     constructor(
         address _JUSD,
@@ -88,6 +87,10 @@ contract Swap is Ownable {
     }
 
     function getMintBalance(address _token, address _account)public view returns (uint256){
-        return swapbalance[_token][_account];
+        if(swapbalance[_token][_account] > 0){
+            return swapbalance[_token][_account];
+        } else{
+            return 0;
+        }
     }
 }
