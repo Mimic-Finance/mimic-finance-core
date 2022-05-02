@@ -14,14 +14,12 @@ import {
   Input,
   Button,
   InputGroup,
-  Text,
   Spinner,
   InputRightElement,
   useToast,
 } from "@chakra-ui/react";
 
 import Portfolio from "./Portfolio";
-import Toast from "../Utils/Toast/Toast";
 
 const Stake = () => {
   const toast = useToast();

@@ -22,8 +22,6 @@ import { useFarm, useERC20Utils } from "hooks/useContracts";
 import { useWhitelisted } from "hooks/useFunctions";
 import { useState, useEffect } from "react";
 
-import Toast from "components/Utils/Toast/Toast";
-
 const Whitelisted = () => {
   const getWhitelisted = useWhitelisted();
   const [whitelisted, setWhitelisted] = useState([]);
