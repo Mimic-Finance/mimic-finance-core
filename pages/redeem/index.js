@@ -195,7 +195,7 @@ const Redeem = () => {
       // => Approve <<<
       // => approve with coin that user select
 
-      await coinContract.methods
+      await JUSD.methods
         .approve(Swap.address, _amount)
         .send({ from: account })
         .on("transactionHash", (hash) => {
