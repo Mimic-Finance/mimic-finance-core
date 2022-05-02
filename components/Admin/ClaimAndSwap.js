@@ -134,11 +134,11 @@ const ClaimAndSwap = () => {
     setClaimAddress(e.target.value);
   };
 
-  const handleClaimAndSwap = async () => {
+  const handleClaimMIM = async () => {
     setSendTxStatus(true);
     setWaitTx(true);
     await AutoCompound.methods
-      .claimAndSwap(claimAddress)
+      .claimMIM(claimAddress)
       .send({ from: account })
       .on("transactionHash", (hash) => {
         const claimCheck = setInterval(async () => {
@@ -201,7 +201,7 @@ const ClaimAndSwap = () => {
             mt={3}
             w={"100%"}
             onClick={() => {
-              handleClaimAndSwap();
+              handleClaimMIM();
             }}
           >
             {wait_tx && send_tx_status ? (
