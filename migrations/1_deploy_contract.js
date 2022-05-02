@@ -96,11 +96,11 @@ module.exports = async function (deployer, network, accounts) {
   await cjusdToken.transfer(auto.address, tokens("90000000"), {
     from: config.rich_cJUSD,
   });
-  await jusdToken.transfer(
-    config.mode === "development" ? accounts[1] : config.testerAddress,
-    tokens("1000000"),
-    from: config.rich_JUSD,
-  );
+  // await jusdToken.transfer(
+  //   config.mode === "development" ? accounts[1] : config.testerAddress,
+  //   tokens("1000000"),
+  //   from: config.rich_JUSD,
+  // );
 
   /**
    *
@@ -114,5 +114,4 @@ module.exports = async function (deployer, network, accounts) {
   await swap.addWhitelisted(TokenAddress.DAI);
   await swap.addWhitelisted(TokenAddress.USDC);
   await swap.addWhitelisted(TokenAddress.USDT);
-
 };
