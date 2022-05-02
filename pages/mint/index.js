@@ -227,7 +227,7 @@ const Mint = () => {
 
         <Container maxW={"4xl"} pt={5}>
           <Box className="row">
-            <Box className="col-md-7">
+            <Box className="col-md-12">
               <Center>
                 <Box w={450} pt={6}>
                   <Box
@@ -347,11 +347,11 @@ const Mint = () => {
                 </Box>
               </Center>
             </Box>
-            <Box className="col-md-5" pt={6}>
+            {/* <Box className="col-md-5" pt={6}>
               <Box className="swap-box " style={{ textAlign: "center" }} p={5}>
                 Guide Box
               </Box>
-            </Box>
+            </Box> */}
           </Box>
         </Container>
       </div>
