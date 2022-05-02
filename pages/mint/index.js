@@ -213,16 +213,16 @@ const Mint = () => {
     <>
       <div className={styles.container}>
         <Head>
-          <title>Mimic Finance | Swap</title>
+          <title>Mimic Finance | Mint JUSD</title>
           <meta name="description" content="Dai Faucet" />
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
         <Text fontSize="4xl" fontWeight="bold" pt={5} align="center">
-          Mint JUSD
+          Mint
         </Text>
         <Text fontSize="md" align="center" pt={0}>
-          Mimic Finance Decentralize Exchange
+          Mint JUSD with any Stable coin
         </Text>
 
         <Container maxW={"4xl"} pt={5}>
