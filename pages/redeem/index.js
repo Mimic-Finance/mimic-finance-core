@@ -174,18 +174,7 @@ const Redeem = () => {
 
     // => set amount with decimals
     if (redeemTo !== null) {
-      // => get decimals of token
-      const decimals = await ERC20Utils.methods
-        .decimals(redeemTo.toString())
-        .call();
-      const _amount = 0;
-      if (decimals == 6) {
-        // decimal = 6
-        _amount = redeemValue * Math.pow(10, 6);
-      } else {
-        // decimal = 18
-        _amount = Web3.utils.toWei(redeemValue.toString());
-      }
+      const _amount = Web3.utils.toWei(redeemValue.toString());
 
       console.log("approve value => ", _amount);
 
@@ -214,7 +203,7 @@ const Redeem = () => {
 
               // => Check Allowance value <<<
               const allowance = await ERC20Utils.methods
-                .allowance(redeemTo, account, Swap.address)
+                .allowance(JUSD.address, account, Swap.address)
                 .call();
               console.log("Allowance ===> ", allowance);
 
@@ -246,7 +235,7 @@ const Redeem = () => {
                   title: "Error",
                   description:
                     "Please set approve value = " +
-                    mintValue +
+                    redeemValue +
                     " on your wallet",
                   status: "error",
                   duration: 1500,
