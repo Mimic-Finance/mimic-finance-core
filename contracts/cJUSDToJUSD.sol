@@ -5,7 +5,7 @@ pragma abicoder v2;
 import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
 import '@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol';
 
-contract JUSDTocJUSD {
+contract cJUSDToJUSD {
     // For the scope of these swap examples,
     // we will detail the design considerations when using
     // `exactInput`, `exactInputSingle`, `exactOutput`, and  `exactOutputSingle`.
@@ -27,17 +27,17 @@ contract JUSDTocJUSD {
         // msg.sender must approve this contract
 
         // Transfer the specified amount of DAI to this contract.
-        TransferHelper.safeTransferFrom(JUSD, msg.sender, address(this), amountIn);
+        TransferHelper.safeTransferFrom(CJUSD, msg.sender, address(this), amountIn);
 
         // Approve the router to spend DAI.
-        TransferHelper.safeApprove(JUSD, address(swapRouter), amountIn);
+        TransferHelper.safeApprove(CJUSD, address(swapRouter), amountIn);
 
         // Naively set amountOutMinimum to 0. In production, use an oracle or other data source to choose a safer value for amountOutMinimum.
         // We also set the sqrtPriceLimitx96 to be 0 to ensure we swap our exact input amount.
         ISwapRouter.ExactInputSingleParams memory params =
             ISwapRouter.ExactInputSingleParams({
-                tokenIn: JUSD,
-                tokenOut: CJUSD,
+                tokenIn: CJUSD,
+                tokenOut: JUSD,
                 fee: poolFee,
                 recipient: msg.sender,
                 deadline: block.timestamp,

@@ -22,6 +22,7 @@ const _AUTO = artifacts.require("Auto");
 const _ERC20UTILS = artifacts.require("ERC20Utils");
 const _MIMTOJUSD = artifacts.require("MIMToJUSD");
 const _JUSDTOCJUSD = artifacts.require("JUSDTocJUSD");
+const _CJUSDToJUSD = artifacts.require("cJUSDToJUSD");
 
 /**==================================================================
  *                         Utils Functions
@@ -77,19 +78,30 @@ module.exports = async (deployer, network, accounts) => {
   );
   const SWAP = await _SWAP.deployed();
 
+  await deployer.deploy(_MIMTOJUSD);
+  const MIMTOJUSD = await _MIMTOJUSD.deployed();
+
+  await deployer.deploy(_JUSDTOCJUSD);
+  const JUSDTOCJUSD = await _JUSDTOCJUSD;
+
+  await deployer.deploy(_CJUSDToJUSD);
+  const CJUSDTOJUSD = await _CJUSDToJUSD;
+
   await deployer.deploy(
     _AUTO,
     TokenAddress.JUSD,
     TokenAddress.MIM,
     FARM.address,
     TokenAddress.cJUSD,
-    SWAP.address
+    SWAP.address,
+    JUSDTOCJUSD.address,
+    MIMTOJUSD.address,
+    CJUSDTOJUSD.address
   );
   const AUTO = await _AUTO.deployed();
 
   await deployer.deploy(_ERC20UTILS);
-  await deployer.deploy(_MIMTOJUSD);
-  await deployer.deploy(_JUSDTOCJUSD);
+
 
   await MIM.transfer(FARM.address, Token("90000000"), {
     from: config.rich_MIM,
