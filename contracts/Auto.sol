@@ -137,8 +137,10 @@ contract Auto is Ownable {
         FarmContract.unstakeTokens( swapbalance , JUSDAddress);
         /* Return JUSD to user */
         JUSD.safeTransfer(msg.sender, swapbalance);
-        uint256 remain = stakingBalance.sub(swapbalance);
-        stakingBalance = remain;
+        uint256 TVDremain = stakingBalance.sub(swapbalance);
+        uint256 remain = depositbalance[msg.sender].sub(swapbalance);
+        stakingBalance = TVDremain;
+        depositbalance[msg.sender] = remain;
     }
 
     function getStakingBalance() public view returns (uint256) {
