@@ -86,4 +86,8 @@ contract Swap is Ownable {
         }
         return false;
     }
+
+    function getMintBalance(address _token, address _account)public view returns (uint256){
+        return swapbalance[_token][_account];
+    }
 }
