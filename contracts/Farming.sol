@@ -19,7 +19,6 @@ contract Farming is Ownable {
 
     mapping(address => mapping(address => uint256)) public stakingBalance;
     mapping(address => mapping(address => uint256)) public updateTime;
-    mapping(address => address) public tokenPriceMapping;
     address[] public whitelisted;
 
     constructor(address _MIM, address _JUSD) {

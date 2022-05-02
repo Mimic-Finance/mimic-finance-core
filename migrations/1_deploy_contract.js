@@ -55,17 +55,17 @@ module.exports = async function (deployer, network, accounts) {
    * Swap.sol (Mock Swap Feature)
    */
 
-  await deployer.deploy(JUSDToken);
-  const jusdToken = await JUSDToken.deployed();
+  // await deployer.deploy(JUSDToken);
+  // const jusdToken = await JUSDToken.deployed();
 
-  await deployer.deploy(MimicToken);
-  const mimicToken = await MimicToken.deployed();
+  // await deployer.deploy(MimicToken);
+  // const mimicToken = await MimicToken.deployed();
 
   await deployer.deploy(Farming, mimicToken.address, jusdToken.address);
   const farming = await Farming.deployed();
 
-  await deployer.deploy(cJUSD);
-  const cjusdToken = await cJUSD.deployed();
+  // await deployer.deploy(cJUSD);
+  // const cjusdToken = await cJUSD.deployed();
 
   await deployer.deploy(
     Swap,
@@ -87,12 +87,19 @@ module.exports = async function (deployer, network, accounts) {
 
   await deployer.deploy(ERC20Utils);
 
-  await mimicToken.transfer(farming.address, tokens("99000000"));
-  await jusdToken.transfer(swap.address, tokens("9000000"));
-  await cjusdToken.transfer(auto.address, tokens("90000000"));
+  await mimicToken.transfer(farming.address, tokens("90000000"), {
+    from: config.rich_MIM,
+  });
+  await jusdToken.transfer(swap.address, tokens("9000000"), {
+    from: config.rich_JUSD,
+  });
+  await cjusdToken.transfer(auto.address, tokens("90000000"), {
+    from: config.rich_cJUSD,
+  });
   await jusdToken.transfer(
     config.mode === "development" ? accounts[1] : config.testerAddress,
-    tokens("1000000")
+    tokens("1000000"),
+    from: config.rich_JUSD,
   );
 
   /**
@@ -108,23 +115,4 @@ module.exports = async function (deployer, network, accounts) {
   await swap.addWhitelisted(TokenAddress.USDC);
   await swap.addWhitelisted(TokenAddress.USDT);
 
-  // Add Liquidity
-  // Mimic(1M)- JUSD(10M)
-  await mimicToken.approve(swap.address, tokens("1000000"));
-  await jusdToken.approve(swap.address, tokens("10000000"));
-  await swap.addLiquidity(
-    mimicToken.address,
-    tokens("1000000"),
-    jusdToken.address,
-    tokens("10000000")
-  );
-  //JUSD(10M) - cJUSD(10M)
-  await jusdToken.approve(swap.address, tokens("10000000"));
-  await cjusdToken.approve(swap.address, tokens("10000000"));
-  await swap.addLiquidity(
-    jusdToken.address,
-    tokens("10000000"),
-    cjusdToken.address,
-    tokens("10000000")
-  );
 };
