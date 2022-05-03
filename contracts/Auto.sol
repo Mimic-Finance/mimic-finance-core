@@ -40,7 +40,6 @@ contract Auto is Ownable {
     address internal cJUSDToJUSDAddress;
 
     mapping (address => uint256) depositbalance;
-    uint256 stakingBalance;
 
     constructor(
         address _JUSD,
@@ -93,8 +92,6 @@ contract Auto is Ownable {
         JUSD.approve(FarmAddress, balance);
         /* Stake JUSD in Farm Contract with Auto-Compound */
         FarmContract.stakeTokens(balance, JUSDAddress);
-        /*Add to TVD*/
-        stakingBalance = stakingBalance.add(balance);
         /*Approve jusd to swap*/
         JUSD.approve(JUSDTocJUSDAddress,balance);
         depositbalance[msg.sender] = depositbalance[msg.sender].add(balance);
@@ -134,7 +131,7 @@ contract Auto is Ownable {
         CJUSD.approve(cJUSDToJUSDAddress,_amount);
         uint256 swapbalance = cJUSDToJUSDContract.swapExactInputSingle(_amount);
         /* Unstake JUSD from Farming Contract */
-        FarmContract.unstakeTokens( swapbalance , JUSDAddress);
+        FarmContract.unstakeTokens( depositbalance[msg.sender] , JUSDAddress);
         /* Return JUSD to user */
         JUSD.safeTransfer(msg.sender, swapbalance);
         if(swapbalance > depositbalance[msg.sender]){
@@ -143,14 +140,7 @@ contract Auto is Ownable {
             uint256 remain = depositbalance[msg.sender].sub(swapbalance);
             depositbalance[msg.sender] = remain;
         }
-        uint256 TVDremain = stakingBalance.sub(swapbalance);
-        stakingBalance = TVDremain;
     }
-
-    function getStakingBalance() public view returns (uint256) {
-        return stakingBalance;
-    }
-
     function getDepositBalance(address _account) public view returns (uint256){
         return depositbalance[_account];
     }
