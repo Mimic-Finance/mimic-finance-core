@@ -54,9 +54,6 @@ contract Swap is Ownable {
         uint256 decimals = ERC20(_token).decimals();
         uint256 balance = _amount;
         ERC20(_token).safeTransferFrom(msg.sender, address(this), balance);
-        swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].add(
-            _amount
-        );
         if (decimals == 18) {
             JUSD.safeTransfer(msg.sender, _amount);
         } else if (decimals != 18) {
@@ -64,12 +61,22 @@ contract Swap is Ownable {
             uint256 deci = _amount.mul(10**remain);
             JUSD.safeTransfer(msg.sender, deci);
         }
+        swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].add(_amount);
     }
 
     function redeemBack(uint256 _amount, address _token) public {
         require(swapbalance[_token][msg.sender] <= _amount);
+        uint256 decimals = ERC20(_token).decimals();
         JUSD.safeTransferFrom(msg.sender, address(this), _amount);
-        ERC20(_token).safeTransfer(msg.sender, _amount);
+        if (decimals == 18) {
+            ERC20(_token).safeTransfer(msg.sender, _amount);
+            swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].sub(_amount);
+        } else if (decimals != 18) {
+            uint256 remain = 18 - decimals;
+            uint256 deci = _amount.div(10**remain);
+            ERC20(_token).safeTransfer(msg.sender, deci);
+            swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].sub(deci);
+        }
     }
 
     function addWhitelisted(address _token) public onlyOwner {
