@@ -16,8 +16,8 @@ const Portfolio = () => {
   const [reward, setReward] = useState(0);
 
   const getBalanceAndReward = useCallback(async () => {
-    const _balance = await ERC20Utils.methods
-      .balanceOf(CJUSD.address, account)
+    const _balance = await AutoCompound.methods
+      .getDepositBalance(account)
       .call();
     // const _cJUSDPrice = await Swap.methods.cJUSDPrice().call();
 
