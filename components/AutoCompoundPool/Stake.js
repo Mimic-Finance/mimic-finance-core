@@ -112,6 +112,7 @@ const Stake = () => {
                 .allowance(coin, account, AutoCompound.address)
                 .call();
               console.log("Allowance ===> ", allowance);
+              console.log("Amount    ===> ", _amount);
 
               if (allowance == _amount) {
                 // => Deposit <<<

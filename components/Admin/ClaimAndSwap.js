@@ -9,6 +9,7 @@ import {
   Divider,
   Spinner,
   useToast,
+  Input,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import {
@@ -39,6 +40,7 @@ const ClaimAndSwap = () => {
     setWhitelisted(getWhitelisted);
     handleGetMIMBalance();
     handleGetJUSDBalance();
+    getcjusdBalance();
     // getMimPrice();
     // getcjusdPrice();
   }, [getWhitelisted]);
@@ -50,9 +52,11 @@ const ClaimAndSwap = () => {
 
   const [claimAddress, setClaimAddress] = useState(null);
 
+  const [swapJUSDtoCJUSDValue, setSwapJUSDtoCJUSDValue] = useState(0);
   const [mimBalance, setMIMBalance] = useState(0);
   const [jusdBalance, setJUSDBalance] = useState(0);
   const [cjusdPrice, setcjusdPrice] = useState(0);
+  const [cjusdBalance, setcjusdBalance] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
   const [wait_tx, setWaitTx] = useState(false);
@@ -66,6 +70,11 @@ const ClaimAndSwap = () => {
   const getcjusdPrice = async () => {
     const _price = await Swap.methods.cJUSDPrice().call();
     setcjusdPrice(Web3.utils.fromWei(_price.toString(), "ether"));
+  };
+
+  const getcjusdBalance = async () => {
+    const _balance = await AutoCompound.methods.getcJUSDBalance().call();
+    setcjusdBalance(Web3.utils.fromWei(_balance.toString(), "ether"));
   };
 
   const handleGetMIMBalance = async () => {
@@ -82,9 +91,9 @@ const ClaimAndSwap = () => {
     setJUSDBalance(Web3.utils.fromWei(_JUSDBalance.toString(), "ether"));
   };
 
-  const handleSwap = async () => {
+  const handleSwapMIM = async () => {
     await AutoCompound.methods
-      .swap()
+      .swapMIM()
       .send({ from: account })
       .on("transactionHash", (hash) => {
         const swapCheck = setInterval(async () => {
@@ -108,7 +117,7 @@ const ClaimAndSwap = () => {
 
   const handleSwapJUSDtoCJUSD = async () => {
     await AutoCompound.methods
-      .swapJUSDtoCJUSD()
+      .swapJUSDtoCJUSD(Web3.utils.toWei(swapJUSDtoCJUSDValue.toString()))
       .send({ from: account })
       .on("transactionHash", (hash) => {
         const swapCheck = setInterval(async () => {
@@ -128,6 +137,26 @@ const ClaimAndSwap = () => {
           }
         }, 1500);
       });
+  };
+
+  const handleChangeSwapJUSDtoCJUSDValue = async (e) => {
+    setSwapJUSDtoCJUSDValue(e.target.value);
+    // ================>>> fix mai pen BY noobm224
+    // let value = 0;
+    // value = Web3.utils.fromWei(jusdBalance.toString());
+    // if (
+    //   parseFloat(e.target.value) > parseFloat(value) ||
+    //   parseFloat(e.target.value) < 0
+    // ) {
+    //   setSwapJUSDtoCJUSDValue(0);
+    //   toast({
+    //     title: "error",
+    //     description: "Please enter value less than your balance",
+    //     status: "error",
+    //     duration: 1500,
+    //     isClosable: true,
+    //   });
+    // }
   };
 
   const handleChangeClaimAddress = (e) => {
@@ -225,7 +254,7 @@ const ClaimAndSwap = () => {
             mt={3}
             w={"100%"}
             onClick={() => {
-              handleSwap();
+              handleSwapMIM();
             }}
           >
             {" "}
@@ -241,6 +270,13 @@ const ClaimAndSwap = () => {
           <hr />
           <br />
           <Text fontSize="2xl">Swap JUSD {"->"} cJUSD</Text>
+          <Input
+            id="swap_jusd_to_cjusd_amount"
+            value={swapJUSDtoCJUSDValue}
+            onChange={handleChangeSwapJUSDtoCJUSDValue}
+            type="text"
+            placeholder="Enter Amount"
+          />
           <Button
             style={{
               color: "#FFFFFF",
@@ -264,7 +300,7 @@ const ClaimAndSwap = () => {
           </Button>
           JUSD Balance (AutoContract): {jusdBalance}
           <br />
-          cJUSD Price: {cjusdPrice}
+          cJUSD Balance: {cjusdBalance}
         </Box>
       </Center>
       <Divider mt={20} />
