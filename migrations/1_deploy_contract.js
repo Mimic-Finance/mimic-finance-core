@@ -20,9 +20,8 @@ const _FARM = artifacts.require("Farming");
 const _SWAP = artifacts.require("Swap");
 const _AUTO = artifacts.require("Auto");
 const _ERC20UTILS = artifacts.require("ERC20Utils");
-const _MIMTOJUSD = artifacts.require("MIMToJUSD");
-const _JUSDTOCJUSD = artifacts.require("JUSDTocJUSD");
-const _CJUSDToJUSD = artifacts.require("cJUSDToJUSD");
+const _Manager = artifacts.require("Manager");
+const _Uniswap = artifacts.require("Uniswap");
 
 /**==================================================================
  *                         Utils Functions
@@ -67,25 +66,24 @@ module.exports = async (deployer, network, accounts) => {
   });
 
   /* ==>  Deploy Platfrom Contract  */
-  await deployer.deploy(_FARM, TokenAddress.MIM, TokenAddress.JUSD);
+
+  await deployer.deploy(_Manager);
+  const MANAGER = await _Manager.deployed();
+
+  await deployer.deploy(_FARM, TokenAddress.MIM, TokenAddress.JUSD , MANAGER.address);
   const FARM = await _FARM.deployed();
 
   await deployer.deploy(
     _SWAP,
     TokenAddress.JUSD,
     TokenAddress.MIM,
-    TokenAddress.cJUSD
+    TokenAddress.cJUSD,
+    MANAGER.address
   );
   const SWAP = await _SWAP.deployed();
 
-  await deployer.deploy(_MIMTOJUSD);
-  const MIMTOJUSD = await _MIMTOJUSD.deployed();
-
-  await deployer.deploy(_JUSDTOCJUSD);
-  const JUSDTOCJUSD = await _JUSDTOCJUSD;
-
-  await deployer.deploy(_CJUSDToJUSD);
-  const CJUSDTOJUSD = await _CJUSDToJUSD;
+  await deployer.deploy(_Uniswap);
+  const UNISWAP = await _Uniswap;
 
   await deployer.deploy(
     _AUTO,
@@ -94,14 +92,12 @@ module.exports = async (deployer, network, accounts) => {
     FARM.address,
     TokenAddress.cJUSD,
     SWAP.address,
-    JUSDTOCJUSD.address,
-    MIMTOJUSD.address,
-    CJUSDTOJUSD.address
+    MANAGER.address,
+    UNISWAP.address
   );
   const AUTO = await _AUTO.deployed();
 
   await deployer.deploy(_ERC20UTILS);
-
 
   await MIM.transfer(FARM.address, Token("90000000"), {
     from: config.rich_MIM,
@@ -120,12 +116,12 @@ module.exports = async (deployer, network, accounts) => {
   })
 
   /* ==>  Add Whitelisted to Contracts  */
-  await FARM.addWhitelisted(TokenAddress.DAI);
-  await FARM.addWhitelisted(TokenAddress.USDC);
-  await FARM.addWhitelisted(TokenAddress.USDT);
-  await FARM.addWhitelisted(TokenAddress.JUSD);
+  await MANAGER.addWhitelisted(TokenAddress.DAI);
+  await MANAGER.addWhitelisted(TokenAddress.USDC);
+  await MANAGER.addWhitelisted(TokenAddress.USDT);
+  await MANAGER.addWhitelisted(TokenAddress.JUSD);
 
-  await SWAP.addWhitelisted(TokenAddress.DAI);
-  await SWAP.addWhitelisted(TokenAddress.USDC);
-  await SWAP.addWhitelisted(TokenAddress.USDT);
+  await MANAGER.addMintWhitelisted(TokenAddress.DAI);
+  await MANAGER.addMintWhitelisted(TokenAddress.USDC);
+  await MANAGER.addMintWhitelisted(TokenAddress.USDT);
 };

@@ -5,6 +5,7 @@ pragma solidity 0.7.6;
 import "./Token/JUSD.sol";
 import "./Token/Mimic.sol";
 import "./Token/cJUSD.sol";
+import "./Manager.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -17,80 +18,49 @@ contract Swap is Ownable {
     ERC20 public JUSD;
     ERC20 public MIM;
     ERC20 public cJUSD;
+    Manager internal MintManager;
 
     address JUSDAddress;
     address cJUSDAddress;
     address MimicAddress;
 
-    address[] public whitelisted;
     mapping(address => mapping(address => uint256)) public swapbalance;
 
     constructor(
         address _JUSD,
         address _MIM,
-        address _cJUSD
+        address _cJUSD,
+        address _Manager
     ) public {
         JUSD = ERC20(_JUSD);
         MIM = ERC20(_MIM);
         cJUSD = ERC20(_cJUSD);
+        MintManager = Manager(_Manager);
 
         JUSDAddress = _JUSD;
         cJUSDAddress = _cJUSD;
         MimicAddress = _MIM;
     }
 
-    function swapToJUSD(uint256 _amount, uint256 _decimals) public {
-        if (_decimals != 18) {
-            uint256 remain = 18 - _decimals;
-            uint256 balance = _amount.mul(10**remain);
-            JUSD.safeTransfer(msg.sender, balance);
-        } else if (_decimals == 18) {
-            JUSD.safeTransfer(msg.sender, _amount);
-        }
+    function swapToJUSD(uint256 _amount, address _token) public {
+        uint256 balance = MintManager.checkDecimals(_token,_amount);
+        JUSD.safeTransfer(msg.sender,balance);
     }
 
     function JUSDMinter(uint256 _amount, address _token) public {
-        require(_amount > 0 && checkWhitelisted(_token));
-        uint256 decimals = ERC20(_token).decimals();
-        uint256 balance = _amount;
-        ERC20(_token).safeTransferFrom(msg.sender, address(this), balance);
-        if (decimals == 18) {
-            JUSD.safeTransfer(msg.sender, _amount);
-        } else if (decimals != 18) {
-            uint256 remain = 18 - decimals;
-            uint256 deci = _amount.mul(10**remain);
-            JUSD.safeTransfer(msg.sender, deci);
-        }
-        swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].add(_amount);
+        require(_amount > 0 && MintManager.checkMintWhitelisted(_token));
+        ERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
+        uint256 balance = MintManager.checkDecimals(_token , _amount);
+        JUSD.safeTransfer(msg.sender, balance);
+        swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].add(balance);
     }
 
     function redeemBack(uint256 _amount, address _token) public {
         require(swapbalance[_token][msg.sender] <= _amount);
-        uint256 decimals = ERC20(_token).decimals();
         JUSD.safeTransferFrom(msg.sender, address(this), _amount);
-        if (decimals == 18) {
-            ERC20(_token).safeTransfer(msg.sender, _amount);
-            swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].sub(_amount);
-        } else if (decimals != 18) {
-            uint256 remain = 18 - decimals;
-            uint256 deci = _amount.div(10**remain);
-            ERC20(_token).safeTransfer(msg.sender, deci);
-            swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].sub(deci);
-        }
-    }
-
-    function addWhitelisted(address _token) public onlyOwner {
-        require(!checkWhitelisted(_token));
-        whitelisted.push(_token);
-    }
-
-    function checkWhitelisted(address _token) public view returns (bool) {
-        for (uint256 i = 0; i < whitelisted.length; i++) {
-            if (whitelisted[i] == _token) {
-                return true;
-            }
-        }
-        return false;
+        uint256 balance = MintManager.checkDecimals(_token , _amount);
+        ERC20(_token).safeTransfer(msg.sender,balance);
+        swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].sub(balance);
     }
 
     function getMintBalance(address _token, address _account)
@@ -98,10 +68,6 @@ contract Swap is Ownable {
         view
         returns (uint256)
     {
-        if (swapbalance[_token][_account] > 0) {
-            return swapbalance[_token][_account];
-        } else {
-            return 0;
-        }
+        return swapbalance[_token][_account];
     }
 }
