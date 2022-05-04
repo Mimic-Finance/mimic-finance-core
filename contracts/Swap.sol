@@ -52,13 +52,13 @@ contract Swap is Ownable {
         ERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
         uint256 balance = MintManager.checkDecimals(_token , _amount);
         JUSD.safeTransfer(msg.sender, balance);
-        swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].add(balance);
+        swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].add(_amount);
     }
 
     function redeemBack(uint256 _amount, address _token) public {
         require(swapbalance[_token][msg.sender] <= _amount);
         JUSD.safeTransferFrom(msg.sender, address(this), _amount);
-        uint256 balance = MintManager.checkDecimals(_token , _amount);
+        uint256 balance = MintManager.decimalsBack(_token , _amount);
         ERC20(_token).safeTransfer(msg.sender,balance);
         swapbalance[_token][msg.sender] = swapbalance[_token][msg.sender].sub(balance);
     }

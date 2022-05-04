@@ -77,4 +77,15 @@ contract Manager is Ownable {
         return _amount;
     } 
     }
+    function decimalsBack(address _token , uint256 _amount) public view returns(uint256){
+        uint256 decimals  = ERC20(_token).decimals();
+        if(decimals == 18){
+            return _amount;
+        }
+        else if (decimals != 18) {
+            uint256 remain = 18 - decimals;
+            uint256 deci = _amount.div(10**remain);
+            return deci;
+    }
+    }
 }
