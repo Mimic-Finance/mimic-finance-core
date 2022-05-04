@@ -66,38 +66,6 @@ contract Manager is Ownable {
         return false;
     }
 
- function checkRewardByAddress(address _account, address _token, uint256 stakingBalance , uint256 updateTime)
-        public
-        view
-        returns (uint256)
-    {
-        uint256 reward = calculateRewards(_account, _token, stakingBalance , updateTime);
-        return reward;
-    }
-
-function calculateTime(address _account, address _token, uint256 updateTime)
-        public
-        view
-        returns (uint256)
-    {
-        uint256 time = block.timestamp;
-        uint256 totalTime = time.sub(updateTime);
-        return totalTime;
-    }
-
-function calculateRewards(address _account, address _token , uint256 stakingBalance , uint256 updateTime)
-        public
-        view
-        returns (uint256)
-    {
-        uint256 decimals = (ERC20(_token).decimals());
-        uint256 expo = 10**decimals;
-        uint256 time = calculateTime(_account, _token, updateTime).mul(1e18);
-        uint256 rate = 86400;
-        uint256 timeRate = time.div(rate);
-        uint256 reward = stakingBalance.mul(timeRate).div(expo);
-        return reward;
-    }
 
     function checkDecimals(address _token , uint256 _amount) public view returns(uint256) {
     uint256 decimals = ERC20(_token).decimals();
