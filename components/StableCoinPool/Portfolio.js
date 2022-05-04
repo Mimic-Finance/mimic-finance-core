@@ -1,10 +1,5 @@
-import {
-  Box,
-  Text,
-  Grid,
-  GridItem,
-} from "@chakra-ui/react";
-import { useFarm, useERC20Utils } from "hooks/useContracts";
+import { Box, Text, Grid, GridItem } from "@chakra-ui/react";
+import { useFarm, useManager, useERC20Utils } from "hooks/useContracts";
 import useAccount from "hooks/useAccount";
 import { useState, useEffect, useCallback } from "react";
 import Web3 from "web3";
@@ -12,6 +7,7 @@ import Web3 from "web3";
 const Portfolio = ({ token, symbol }) => {
   const account = useAccount();
   const Farm = useFarm();
+  const Manager = useManager();
   const ERC20Utils = useERC20Utils();
 
   const [balance, setBalance] = useState(0);
@@ -59,7 +55,8 @@ const Portfolio = ({ token, symbol }) => {
                   {parseFloat(balance).toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
-                  })} {symbol}
+                  })}{" "}
+                  {symbol}
                 </Box>
               </GridItem>
               <GridItem colSpan={6} style={{ textAlign: "center" }}>
@@ -71,7 +68,8 @@ const Portfolio = ({ token, symbol }) => {
                   {parseFloat(reward).toLocaleString("en-US", {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2,
-                  })} MIM
+                  })}{" "}
+                  MIM
                 </Box>
               </GridItem>
               {/* <GridItem colSpan={3} style={{ textAlign: "center" }}>
@@ -91,7 +89,6 @@ const Portfolio = ({ token, symbol }) => {
         </Box>
       )}
     </>
-
   );
 };
 
