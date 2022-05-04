@@ -99,11 +99,11 @@ module.exports = async (deployer, network, accounts) => {
 
   await deployer.deploy(_ERC20UTILS);
 
-  await MIM.transfer(FARM.address, Token("90000000"), {
+  await MIM.transfer(FARM.address, Token("590000000"), {
     from: config.rich_MIM,
   });
 
-  await JUSD.transfer(SWAP.address, Token("9000000"), {
+  await JUSD.transfer(SWAP.address, Token("600000000"), {
     from: config.rich_JUSD,
   });
 
@@ -111,7 +111,7 @@ module.exports = async (deployer, network, accounts) => {
     from: config.rich_JUSD,
   });
 
-  await cJUSD.transfer(AUTO.address,Token("90000000"),{
+  await cJUSD.transfer(AUTO.address,Token("600000000"),{
     from: config.rich_cJUSD,
   })
 
