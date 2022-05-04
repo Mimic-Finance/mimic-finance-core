@@ -28,7 +28,7 @@ contract Auto is Ownable {
     Uniswap internal UniContract;
     Manager internal PoolManager;
 
-    uint24 public constant mimicFee = 500;
+    uint24 public constant mimicFee = 3000;
     uint24 public constant jusdFee = 500;
 
 
