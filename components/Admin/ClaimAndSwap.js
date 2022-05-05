@@ -10,6 +10,10 @@ import {
   Spinner,
   useToast,
   Input,
+  StatGroup,
+  Stat,
+  StatLabel,
+  StatNumber,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import {
@@ -199,108 +203,140 @@ const ClaimAndSwap = () => {
         Claim $MIM reward and Swap to any token
       </Text>
 
+      <Text fontSize={"xl"} mt={10}>
+        Tokens Balance from <u>Auto-compound Contract</u>
+      </Text>
+      <StatGroup>
+        <Stat className="stat-box">
+          <StatLabel>MIM</StatLabel>
+          <StatNumber>
+            {parseFloat(mimBalance).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </StatNumber>
+        </Stat>
+        <Stat className="stat-box">
+          <StatLabel>JUSD</StatLabel>
+          <StatNumber>
+            {parseFloat(jusdBalance).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </StatNumber>
+        </Stat>
+        <Stat className="stat-box">
+          <StatLabel>cJUSD</StatLabel>
+          <StatNumber>
+            {parseFloat(cjusdBalance).toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </StatNumber>
+        </Stat>
+      </StatGroup>
+
       <Center>
-        <Box width={"50%"}>
-          <Grid pt={10} templateColumns="repeat(10, 1fr)" gap={0}>
-            <GridItem colSpan={10}>
-              <Text fontSize="2xl">Claim MIM Farm {"->"} Auto</Text>
-              <Select
-                onChange={handleChangeClaimAddress}
-                placeholder="Choose Pool"
-              >
-                {whitelisted &&
-                  whitelisted.map((token) => {
-                    return (
-                      <>
-                        <option key={token.address} value={token.address}>
-                          {token.symbol}
-                        </option>
-                      </>
-                    );
-                  })}
-              </Select>
-            </GridItem>
-          </Grid>
-          <Button
-            style={{
-              color: "#FFFFFF",
-              background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
-            }}
-            disabled={claimAddress == null || (wait_tx && send_tx_status)}
-            mt={3}
-            w={"100%"}
-            onClick={() => {
-              handleClaimMIM();
-            }}
-          >
-            {wait_tx && send_tx_status ? (
-              <>
-                <Spinner size={"sm"} mr={2} /> Waiting ...
-              </>
-            ) : (
-              "Claim MIM"
-            )}
-          </Button>
-          Mim Balance (AutoContract): {mimBalance}
+        <Box className="d-flex" pt={10}>
+          <Box width={"33.33%"} mr={8}>
+            <Grid templateColumns="repeat(10, 1fr)" gap={0}>
+              <GridItem colSpan={10}>
+                <Text fontSize="xl" mb={3}>
+                  Claim MIM Farm {"->"} Auto
+                </Text>
+                <Select
+                  onChange={handleChangeClaimAddress}
+                  placeholder="Choose Pool"
+                >
+                  {<option value={JUSD.address}>JUSD</option>}
+                </Select>
+              </GridItem>
+            </Grid>
+            <Button
+              style={{
+                color: "#FFFFFF",
+                background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
+              }}
+              disabled={claimAddress == null || (wait_tx && send_tx_status)}
+              mt={3}
+              w={"100%"}
+              onClick={() => {
+                handleClaimMIM();
+              }}
+            >
+              {wait_tx && send_tx_status ? (
+                <>
+                  <Spinner size={"sm"} mr={2} /> Waiting ...
+                </>
+              ) : (
+                "Claim MIM"
+              )}
+            </Button>
+          </Box>
           <hr />
           <br />
-          <Text fontSize="2xl">Swap MIM {"->"} JUSD</Text>
-          <Button
-            style={{
-              color: "#FFFFFF",
-              background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
-            }}
-            disabled={claimAddress == null || (wait_tx && send_tx_status)}
-            mt={3}
-            w={"100%"}
-            onClick={() => {
-              handleSwapMIM();
-            }}
-          >
-            {" "}
-            {wait_tx && send_tx_status ? (
-              <>
-                <Spinner size={"sm"} mr={2} /> Waiting ...
-              </>
-            ) : (
-              "Swap MIM to JUSD"
-            )}
-          </Button>
-          JUSD Balance (AutoContract) {jusdBalance}
+          <Box width={"33.33%"} mr={8}>
+            <Text fontSize="xl" mb={3}>
+              Swap MIM {"->"} JUSD
+            </Text>
+            <Button
+              style={{
+                margin: "52px 0px 0px 0px",
+                color: "#FFFFFF",
+                background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
+              }}
+              disabled={claimAddress == null || (wait_tx && send_tx_status)}
+              mt={3}
+              w={"100%"}
+              onClick={() => {
+                handleSwapMIM();
+              }}
+            >
+              {" "}
+              {wait_tx && send_tx_status ? (
+                <>
+                  <Spinner size={"sm"} mr={2} /> Waiting ...
+                </>
+              ) : (
+                "Swap MIM to JUSD"
+              )}
+            </Button>
+          </Box>
           <hr />
           <br />
-          <Text fontSize="2xl">Swap JUSD {"->"} cJUSD</Text>
-          <Input
-            id="swap_jusd_to_cjusd_amount"
-            value={swapJUSDtoCJUSDValue}
-            onChange={handleChangeSwapJUSDtoCJUSDValue}
-            type="text"
-            placeholder="Enter Amount"
-          />
-          <Button
-            style={{
-              color: "#FFFFFF",
-              background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
-            }}
-            disabled={claimAddress == null || (wait_tx && send_tx_status)}
-            mt={3}
-            w={"100%"}
-            onClick={() => {
-              handleSwapJUSDtoCJUSD();
-            }}
-          >
-            {" "}
-            {wait_tx && send_tx_status ? (
-              <>
-                <Spinner size={"sm"} mr={2} /> Waiting ...
-              </>
-            ) : (
-              "Swap JUSD to cJUSD"
-            )}
-          </Button>
-          JUSD Balance (AutoContract): {jusdBalance}
-          <br />
-          cJUSD Balance: {cjusdBalance}
+          <Box width={"33.33%"}>
+            <Text fontSize="xl" mb={3}>
+              Swap JUSD {"->"} cJUSD
+            </Text>
+            <Input
+              id="swap_jusd_to_cjusd_amount"
+              value={swapJUSDtoCJUSDValue}
+              onChange={handleChangeSwapJUSDtoCJUSDValue}
+              type="text"
+              placeholder="Enter Amount"
+            />
+            <Button
+              style={{
+                color: "#FFFFFF",
+                background: "linear-gradient(90deg ,#576cea 0%, #da65d1 100%)",
+              }}
+              disabled={claimAddress == null || (wait_tx && send_tx_status)}
+              mt={3}
+              w={"100%"}
+              onClick={() => {
+                handleSwapJUSDtoCJUSD();
+              }}
+            >
+              {" "}
+              {wait_tx && send_tx_status ? (
+                <>
+                  <Spinner size={"sm"} mr={2} /> Waiting ...
+                </>
+              ) : (
+                "Swap JUSD to cJUSD"
+              )}
+            </Button>
+          </Box>
         </Box>
       </Center>
       <Divider mt={20} />

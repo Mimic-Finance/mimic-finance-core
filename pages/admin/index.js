@@ -11,7 +11,9 @@ const Admin = () => {
       <AdminContextProvider>
         <Box style={{ textAlign: "center" }}>
           <Text fontSize="4xl">Admin Panel</Text>
-          <Text>{account}</Text>
+          <Text fontSize="lg">
+            <u>Wallet Address:</u> {account}
+          </Text>
         </Box>
 
         <Container maxW="5xl" pt={7}>
