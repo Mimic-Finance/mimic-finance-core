@@ -7,20 +7,30 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 
-import { useFarm } from "hooks/useContracts";
+import { useFarm, useAutoCompound } from "hooks/useContracts";
 import { useUSDC, useDAI, useUSDT, useJUSD } from "hooks/useToken";
 import { useWhitelisted } from "hooks/useFunctions";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Web3 from "web3";
 
 const Dashboard = () => {
   const getWhitelisted = useWhitelisted();
   const [whitelisted, setWhitelisted] = useState([]);
+  const [autoCompoundTVD, setAutoCompoundTVD] = useState(0);
   const Farm = useFarm();
+  const AutoCompound = useAutoCompound();
+
+  const loadTVD = useCallback(async () => {
+    const _autoCompoundTVD = await Farm.methods
+      .getStakingBalance(JUSD.address, AutoCompound.address)
+      .call();
+    setAutoCompoundTVD(Web3.utils.fromWei(_autoCompoundTVD.toString()));
+  }, [AutoCompound]);
 
   useEffect(() => {
+    loadTVD();
     setWhitelisted(getWhitelisted);
-  }, [getWhitelisted]);
+  }, [loadTVD, getWhitelisted]);
 
   /**
    * Stable Coin contract
@@ -57,6 +67,18 @@ const Dashboard = () => {
         <Stat className="stat-box">
           <StatLabel>Total whitelisted</StatLabel>
           <StatNumber>{whitelisted.length} Tokens</StatNumber>
+        </Stat>
+      </StatGroup>
+
+      <Text ml={3} mt={3}>
+        Total value deposited from <u>Auto-compound contract</u>
+      </Text>
+      <StatGroup>
+        <Stat className="stat-box">
+          <StatLabel>Summary of Total value deposited</StatLabel>
+          <StatNumber>
+            $ {parseFloat(autoCompoundTVD).toLocaleString("en-US")}
+          </StatNumber>
         </Stat>
       </StatGroup>
 
