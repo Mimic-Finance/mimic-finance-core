@@ -29,7 +29,7 @@ const Portfolio = () => {
       const _reward = 0;
       if (_CJUSD_Balance && balance > 0) {
         _reward =
-          parseFloat(Web3.utils.fromWei(_CJUSD_Balance.toString())) *
+          parseFloat(Web3.utils.fromWei(_CJUSD_Balance.toString())) /
             parseFloat(response.data.price) -
           parseFloat(balance);
 
