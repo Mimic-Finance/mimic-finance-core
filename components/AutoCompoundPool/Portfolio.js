@@ -4,37 +4,53 @@ import { useAutoCompound, useERC20Utils, useSwap } from "hooks/useContracts";
 import useAccount from "hooks/useAccount";
 import { useCJUSD } from "hooks/useToken";
 import Web3 from "web3";
+import axios from "axios";
 
 const Portfolio = () => {
   const account = useAccount();
-  const ERC20Utils = useERC20Utils();
   const AutoCompound = useAutoCompound();
   const CJUSD = useCJUSD();
-  const Swap = useSwap();
 
   const [balance, setBalance] = useState(0);
   const [reward, setReward] = useState(0);
 
-  const getBalanceAndReward = useCallback(async () => {
+  const handleGetBalance = useCallback(async () => {
     const _balance = await AutoCompound.methods
       .getDepositBalance(account)
       .call();
-    // const _cJUSDPrice = await Swap.methods.cJUSDPrice().call();
-
-    // const _cJUSDBuyPrice = await AutoCompound.methods
-    //   .cJUSDBuyPrice(account)
-    //   .call();
-
-    const _cJUSDPrice = 1.1; //to do fix later
-    const _cJUSDBuyPrice = 1; //to do fix later
-    const _reward = 200; //to do fix later
     setBalance(Web3.utils.fromWei(_balance, "ether"));
-    setReward(parseFloat(Web3.utils.fromWei(_reward.toString(), "ether")));
-  }, [account, AutoCompound, ERC20Utils]);
+  }, [account, AutoCompound]);
+
+  const handleGetReward = useCallback(
+    async (_CJUSD_Balance) => {
+      const response = await axios.get(
+        "https://api-mimic.kmutt.me/api/v1/price/0xd7D49e3c39e88517F9E240d5B5de0aF8fb8b3619"
+      );
+      const _reward = 0;
+      if (_CJUSD_Balance && balance > 0) {
+        _reward =
+          parseFloat(Web3.utils.fromWei(_CJUSD_Balance.toString())) *
+            parseFloat(response.data.price) -
+          parseFloat(balance);
+
+        if (_reward < 0) {
+          _reward = 0;
+        }
+      }
+      setReward(_reward);
+    },
+    [balance]
+  );
 
   useEffect(() => {
-    getBalanceAndReward();
-  }, [getBalanceAndReward]);
+    handleGetBalance();
+  }, [handleGetBalance]);
+
+  useEffect(() => {
+    if (CJUSD.balance > 0) {
+      handleGetReward(CJUSD.balance);
+    }
+  }, [CJUSD.balance, handleGetReward]);
 
   return (
     <>
@@ -75,18 +91,6 @@ const Portfolio = () => {
                   JUSD
                 </Box>
               </GridItem>
-              {/* <GridItem colSpan={3} style={{ textAlign: "center" }}>
-                <Box mb={3}>
-                  <b>Totals</b>
-                </Box>
-    
-                <Box>
-                  {(parseFloat(balance) + parseFloat(reward)).toLocaleString(
-                    "en-US",
-                    { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-                  )}
-                </Box>
-              </GridItem> */}
             </Grid>
           </Box>
         </Box>
