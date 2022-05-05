@@ -95,7 +95,10 @@ const Dashboard = () => {
         <Stat className="stat-box">
           <StatLabel>Summary of Total value deposited</StatLabel>
           <StatNumber>
-            $ {parseFloat(autoCompoundTVD).toLocaleString("en-US")}
+            ${" "}
+            {displayMillion(parseFloat(autoCompoundTVD)).toLocaleString(
+              "en-US"
+            )}
           </StatNumber>
         </Stat>
       </StatGroup>
