@@ -1,4 +1,5 @@
 import useContract from "../useContract";
+import TokenAddress from "../../constants/TokenAddress.json";
 import CJUSD_ABI from "../../abis/cJUSD.json";
 
 import useAppSelector from "hooks/useAppSelector";
@@ -12,13 +13,14 @@ const useCJUSD = (_account) => {
   }
 
   const abi = CJUSD_ABI.abi;
-  const contract = useContract(abi, CJUSD_ABI.networks[1].address);
+  const contract = useContract(abi, TokenAddress.cJUSD);
   const [balance, setBalance] = useState(false);
 
   const methods = contract.methods;
   const address = contract._address;
 
   const getBalance = useCallback(async () => {
+    console.log(account);
     const _balance = await contract.methods.balanceOf(account).call();
     setBalance(_balance);
   }, [account, contract.methods]);

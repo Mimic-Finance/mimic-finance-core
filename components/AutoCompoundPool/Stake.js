@@ -14,14 +14,12 @@ import {
   Input,
   Button,
   InputGroup,
-  Text,
   Spinner,
   InputRightElement,
   useToast,
 } from "@chakra-ui/react";
 
 import Portfolio from "./Portfolio";
-import Toast from "../Utils/Toast/Toast";
 
 const Stake = () => {
   const toast = useToast();
@@ -114,6 +112,7 @@ const Stake = () => {
                 .allowance(coin, account, AutoCompound.address)
                 .call();
               console.log("Allowance ===> ", allowance);
+              console.log("Amount    ===> ", _amount);
 
               if (allowance == _amount) {
                 // => Deposit <<<
@@ -275,7 +274,7 @@ const Stake = () => {
           "Stake"
         )}
       </Button>
-      <Portfolio/>
+      <Portfolio />
     </>
   );
 };

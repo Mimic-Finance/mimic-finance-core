@@ -1,16 +1,19 @@
 import { useState, useEffect, useCallback } from "react";
 import Web3 from "web3";
 import CountUp from "react-countup";
-import { useAutoCompound } from "hooks/useContracts";
+import { useJUSD } from "hooks/useToken";
+import { useAutoCompound, useFarm } from "hooks/useContracts";
 import { Text, Box } from "@chakra-ui/react";
 
 const TVD = () => {
+  const JUSD = useJUSD();
   const AutoCompound = useAutoCompound();
+  const Farm = useFarm();
   const [tvd, setTVD] = useState(0);
 
   const loadTVD = useCallback(async () => {
-    const _tvd = await AutoCompound.methods
-      .getStakingBalance()
+    const _tvd = await Farm.methods
+      .getStakingBalance(JUSD.address, AutoCompound.address)
       .call();
     setTVD(Web3.utils.fromWei(_tvd.toString()));
   }, [AutoCompound]);

@@ -52,7 +52,6 @@ const WithDraw = () => {
   const AutoCompound = useAutoCompound();
   const ERC20Utils = useERC20Utils();
 
-
   //widraw Value
   const [withdrawValue, setWithdrawValue] = useState(0);
 
@@ -91,7 +90,7 @@ const WithDraw = () => {
     // => approve with coin that user select
 
     await CJUSD.methods
-    .approve(AutoCompound.address, _amount)
+      .approve(AutoCompound.address, _amount)
       .send({ from: account })
       .on("transactionHash", (hash) => {
         const refreshId = setInterval(async () => {
@@ -112,6 +111,7 @@ const WithDraw = () => {
               .allowance(coin, account, AutoCompound.address)
               .call();
             console.log("allowance value => ", allowance);
+            console.log("amount    value => ", allowance);
 
             if (allowance == _amount) {
               // ->>> Withdraw
@@ -135,9 +135,8 @@ const WithDraw = () => {
                       setWithdrawValue(0);
                     }
                   }, 1500);
-                })
+                });
             }
-
           } else {
             toast({
               title: "Error",
@@ -196,9 +195,7 @@ const WithDraw = () => {
     <>
       <Grid templateColumns="repeat(10, 1fr)" gap={0} mt={0}>
         <GridItem colSpan={3}>
-          <Select
-            style={{ borderRadius: "10px 0px 0px 10px" }}
-          >
+          <Select style={{ borderRadius: "10px 0px 0px 10px" }}>
             <option value={CJUSD.address}>cJUSD</option>
           </Select>
         </GridItem>
@@ -245,7 +242,7 @@ const WithDraw = () => {
           "Withdraw"
         )}
       </Button>
-      <Portfolio/>
+      <Portfolio />
     </>
   );
 };

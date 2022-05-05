@@ -1,6 +1,6 @@
 import useContract from "../useContract";
 import TokenAddress from "../../constants/TokenAddress.json";
-import USDC_ABI from "../../abis/ERC20Mock.json";
+import USDC_ABI from "../../abis/USDC.json";
 
 import useAppSelector from "hooks/useAppSelector";
 

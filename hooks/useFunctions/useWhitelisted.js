@@ -1,17 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
-import { useFarm, useERC20Utils } from "../useContracts";
-import { useCJUSD } from "hooks/useToken";
+import { useManager, useFarm, useERC20Utils } from "../useContracts";
 import useAccount from "hooks/useAccount";
 
 const useWhitelisted = (from, tokenAddress, setCoin, setCoinBalance) => {
   const [whitelisted, setWhitelisted] = useState([]);
   const account = useAccount();
+  const Manager = useManager();
   const Farm = useFarm();
   const ERC20Utils = useERC20Utils();
-  const CJUSD = useCJUSD();
 
   const getWhitelisted = useCallback(async () => {
-    const _whitelisted = await Farm.methods.getWhitelisted().call();
+    const _whitelisted = await Manager.methods.getWhitelisted().call();
     var whitelistWithSymbol = [];
     for (var i = 0; i < _whitelisted.length; i++) {
       if (setCoin && setCoinBalance) {
@@ -32,7 +31,7 @@ const useWhitelisted = (from, tokenAddress, setCoin, setCoinBalance) => {
               .balanceOf(_whitelisted[i], account)
               .call();
             setCoin(_whitelisted[i]);
-          } else if(from == "auto-withdraw") {
+          } else if (from == "auto-withdraw") {
             _coinBalance = await ERC20Utils.methods
               .balanceOf(tokenAddress, account)
               .call();
@@ -50,7 +49,7 @@ const useWhitelisted = (from, tokenAddress, setCoin, setCoinBalance) => {
 
     setWhitelisted(whitelistWithSymbol);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ERC20Utils.methods, Farm.methods]);
+  }, [ERC20Utils.methods, Manager.methods]);
 
   useEffect(() => {
     getWhitelisted();

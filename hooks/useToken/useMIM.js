@@ -1,18 +1,19 @@
 import useContract from "../useContract";
-import MIMIC_ABI from "../../abis/Mimic.json";
+import TokenAddress from "../../constants/TokenAddress.json";
+import MIM_ABI from "../../abis/Mimic.json";
 
 import useAppSelector from "hooks/useAppSelector";
 
 import { useCallback, useEffect, useState } from "react";
 
-const useMIMIC = (_account) => {
+const useMIM = (_account) => {
   const { account } = useAppSelector((state) => state.account);
   if (_account) {
     account = _account;
   }
 
-  const abi = MIMIC_ABI.abi;
-  const contract = useContract(abi, MIMIC_ABI.networks[1].address);
+  const abi = MIM_ABI.abi;
+  const contract = useContract(abi, TokenAddress.MIM);
   const [balance, setBalance] = useState(false);
 
   const methods = contract.methods;
@@ -32,4 +33,4 @@ const useMIMIC = (_account) => {
   return { contract, methods, address, balance };
 };
 
-export default useMIMIC;
+export default useMIM;
