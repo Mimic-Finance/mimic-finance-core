@@ -98,12 +98,13 @@ contract Auto is Ownable {
         FarmContract.claimRewards(_token);
     }
 
-    function swapMIM() public onlyOwner {
+    function swapMIM() public onlyOwner returns(uint256) {
         /* Check Mimic Token balance */
         uint256 MIMbalance = MIM.balanceOf(address(this));
         /* Swap Mimic To JUSD */
         MIM.approve(UniAddress, MIMbalance);
-        UniContract.swapExactInputSingle(MIMbalance , MIMAddress , JUSDAddress , mimicFee);
+        uint256 balance = UniContract.swapExactInputSingle(MIMbalance , MIMAddress , JUSDAddress , mimicFee);
+        return balance;
     }
 
     function swapJUSDtoCJUSD(uint256 _amount) public onlyOwner {
