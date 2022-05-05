@@ -51,11 +51,28 @@ const Dashboard = () => {
 
   const summaryTVD = () => {
     const sum =
-      fromWei(DAI.balance) +
-      fromWei(JUSD.balance) +
-      USDT.balance / Math.pow(10, 6) / 1000000 +
-      USDC.balance / Math.pow(10, 6) / 1000000;
+      (fromWei(DAI.balance) +
+        fromWei(JUSD.balance) +
+        USDT.balance / Math.pow(10, 6) / 1000000 +
+        USDC.balance / Math.pow(10, 6) / 1000000) *
+      1000000;
     return sum;
+  };
+
+  const displayMillion = (n) => {
+    const _n = parseFloat(n);
+    var label = null;
+    var tmp = null;
+    if (_n >= 1000000) {
+      tmp = _n / 1000000;
+      label = tmp.toFixed(2) + " M";
+    } else {
+      label = _n;
+    }
+    return label.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
   };
 
   return (
@@ -92,14 +109,16 @@ const Dashboard = () => {
             USDT
           </Badge>
           <StatNumber>
-            $ {USDT.balance / Math.pow(10, 6) / 1000000} M
+            $ {displayMillion(parseFloat(USDT.balance / Math.pow(10, 6)))}
           </StatNumber>
         </Stat>
         <Stat className="stat-box">
           <Badge variant="outline" colorScheme="yellow">
             DAI
           </Badge>
-          <StatNumber>$ {fromWei(DAI.balance)} M</StatNumber>
+          <StatNumber>
+            $ {displayMillion(parseFloat(fromWei(DAI.balance) * 1000000))}
+          </StatNumber>
         </Stat>
 
         <Stat className="stat-box">
@@ -107,7 +126,7 @@ const Dashboard = () => {
             USDC
           </Badge>
           <StatNumber>
-            $ {USDC.balance / Math.pow(10, 6) / 1000000} M
+            $ {displayMillion(parseFloat(USDC.balance / Math.pow(10, 6)))}
           </StatNumber>
         </Stat>
 
@@ -115,14 +134,16 @@ const Dashboard = () => {
           <Badge variant="outline" colorScheme="pink">
             JUSD
           </Badge>
-          <StatNumber>$ {fromWei(JUSD.balance)} M</StatNumber>
+          <StatNumber>
+            $ {displayMillion(parseFloat(fromWei(JUSD.balance) * 1000000))}
+          </StatNumber>
         </Stat>
       </StatGroup>
 
       <StatGroup>
         <Stat className="stat-box">
           <StatLabel>Summary of Total value deposited</StatLabel>
-          <StatNumber>$ {summaryTVD()} M</StatNumber>
+          <StatNumber>$ {displayMillion(summaryTVD())}</StatNumber>
         </Stat>
       </StatGroup>
 

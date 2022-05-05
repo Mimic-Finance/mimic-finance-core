@@ -4,7 +4,6 @@ import {
   Text,
   Container,
   StatHelpText,
-  StatArrow,
   StatGroup,
   Stat,
   StatLabel,
@@ -27,12 +26,15 @@ import { useFarm } from "hooks/useContracts";
 import useAccount from "hooks/useAccount";
 import CountUp from "react-countup";
 import Web3 from "web3";
+import axios from "axios";
 
 const Rewards = () => {
   const getWhitelisted = useWhitelisted();
   const [whitelisted, setWhitelisted] = useState([]);
   const [total_reward, setTotalReward] = useState(0);
   const [rewards, setReward] = useState([]);
+  const [mimicPrice, setMimicPrice] = useState(null);
+  const [updateTime, setUpdateTime] = useState(null);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
   const [wait_tx, setWaitTx] = useState(false);
@@ -126,6 +128,20 @@ const Rewards = () => {
     }
   }, [getTotalReward, rewards.length]);
 
+  const handleGetPrice = useCallback(async () => {
+    const response = await axios.get(
+      "https://api-mimic.kmutt.me/api/v1/price/0xE948C25B4112806a342Ed1D50E7BF73872B804Ba"
+    );
+    setMimicPrice(response.data.price);
+    setUpdateTime(response.data.updateAt);
+  }, [setMimicPrice, setUpdateTime]);
+
+  useEffect(() => {
+    if (!mimicPrice) {
+      handleGetPrice();
+    }
+  }, [mimicPrice, handleGetPrice]);
+
   return (
     <>
       <div className={styles.container}>
@@ -149,10 +165,19 @@ const Rewards = () => {
           <StatGroup>
             <Stat className="stat-box">
               <StatLabel>MIM Price</StatLabel>
-              <StatNumber>$ 0.17 </StatNumber>
+              <StatNumber>
+                ${" "}
+                {mimicPrice ? (
+                  parseFloat(mimicPrice).toLocaleString("en-US", {
+                    minimumFractionDigits: 4,
+                    maximumFractionDigits: 4,
+                  })
+                ) : (
+                  <Spinner size="sm" />
+                )}
+              </StatNumber>
               <StatHelpText>
-                <StatArrow type="increase" />
-                23.36%
+                {updateTime ? updateTime : <Spinner size="sm" />}
               </StatHelpText>
             </Stat>
             <Stat className="stat-box">
@@ -162,10 +187,14 @@ const Rewards = () => {
               </StatNumber>
               <StatHelpText>
                 ~ ${" "}
-                {(total_reward * 0.17).toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {mimicPrice ? (
+                  (total_reward * mimicPrice).toLocaleString("en-US", {
+                    minimumFractionDigits: 4,
+                    maximumFractionDigits: 4,
+                  })
+                ) : (
+                  <Spinner size="sm" />
+                )}
               </StatHelpText>
             </Stat>
           </StatGroup>
