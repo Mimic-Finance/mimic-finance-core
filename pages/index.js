@@ -119,31 +119,33 @@ const Home = () => {
       <Box>
         <Container maxW="container.xl" pt={10}>
           <Grid templateColumns="repeat(2, 1fr)" gap={5} pt={5}>
-            <Box
-              w="100%"
-              p={{ base: "6", md: "8", lg: "10" }}
-              style={{ borderRadius: 10 }}
-              className="community-box"
-            >
-              <Center>
-                <Image
-                  src="/assets/images/blue-twitter-icon.svg"
-                  alt="mimic_finance"
-                  width={{ base: "40px", md: "60px", lg: "80px" }}
-                  className="community-icon"
-                />
-              </Center>
-              <Text
-                fontWeight="bold"
-                fontSize={{ base: "lg", md: "xl", lg: "2xl" }}
+            <Link href={"https://twitter.com/MimicFinance"} passHref>
+              <Box
+                w="100%"
+                p={{ base: "6", md: "8", lg: "10" }}
+                style={{ borderRadius: 10, cursor: "pointer" }}
+                className="community-box"
               >
-                Twitter
-              </Text>
+                <Center>
+                  <Image
+                    src="/assets/images/blue-twitter-icon.svg"
+                    alt="mimic_finance"
+                    width={{ base: "40px", md: "60px", lg: "80px" }}
+                    className="community-icon"
+                  />
+                </Center>
+                <Text
+                  fontWeight="bold"
+                  fontSize={{ base: "lg", md: "xl", lg: "2xl" }}
+                >
+                  Twitter
+                </Text>
 
-              <Text fontSize={{ base: "xs", md: "sm", lg: "md" }}>
-                @MimicFinance
-              </Text>
-            </Box>
+                <Text fontSize={{ base: "xs", md: "sm", lg: "md" }}>
+                  @MimicFinance
+                </Text>
+              </Box>
+            </Link>
             <Box
               w="100%"
               p={{ base: "6", md: "8", lg: "10" }}
