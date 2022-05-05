@@ -38,7 +38,7 @@ const Home = () => {
                 />
               </Center>
               <Center>
-                <Text className="text-primary home-title">
+                <Text className="text-gradient home-title">
                   Multi <text className="text-normal">Farming</text>
                 </Text>
               </Center>
@@ -133,11 +133,16 @@ const Home = () => {
                   className="community-icon"
                 />
               </Center>
-              <Text fontWeight="bold" fontSize={{ base: "lg", md: "xl", lg: "2xl" }}>
+              <Text
+                fontWeight="bold"
+                fontSize={{ base: "lg", md: "xl", lg: "2xl" }}
+              >
                 Twitter
               </Text>
 
-              <Text fontSize={{ base: "xs", md: "sm", lg: "md" }}>@MimicFinance</Text>
+              <Text fontSize={{ base: "xs", md: "sm", lg: "md" }}>
+                @MimicFinance
+              </Text>
             </Box>
             <Box
               w="100%"
@@ -153,11 +158,16 @@ const Home = () => {
                   className="community-icon"
                 />
               </Center>
-              <Text fontWeight="bold" fontSize={{ base: "lg", md: "xl", lg: "2xl" }}>
+              <Text
+                fontWeight="bold"
+                fontSize={{ base: "lg", md: "xl", lg: "2xl" }}
+              >
                 Telegram
               </Text>
 
-              <Text fontSize={{ base: "xs", md: "sm", lg: "md" }}>@MimicFinance</Text>
+              <Text fontSize={{ base: "xs", md: "sm", lg: "md" }}>
+                @MimicFinance
+              </Text>
             </Box>
           </Grid>
         </Container>

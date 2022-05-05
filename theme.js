@@ -30,8 +30,13 @@ const theme = extendTheme({
       /**
        * Text Color Section
        */
-      ".text-primary": {
-        color: mode(PRIMARY_LIGHT, PRIAMRY_DARK)(props),
+      ".text-gradient": {
+        background: mode(
+          "linear-gradient(180deg ,#576cea 0%, #da65d1 100%)",
+          "linear-gradient(0deg ,#576cea 0%, #da65d1 100%)"
+        )(props),
+        backgroundClip: "text",
+        color: "transparent",
       },
       "text-white": {
         color: mode(PRIAMRY_DARK, PRIAMRY_DARK)(props),
@@ -133,7 +138,7 @@ const theme = extendTheme({
           "2px solid #515151"
         )(props),
         // margin: "0.5rem",
-        padding: "1rem",
+        padding: "1rem 1rem 1rem 2rem",
       },
       ".mint-box": {
         border: mode(
