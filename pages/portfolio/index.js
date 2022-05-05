@@ -18,7 +18,7 @@ import {
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { useWhitelisted } from "hooks/useFunctions";
 import { useState, useEffect, useCallback } from "react";
-import { useJUSD } from "hooks/useToken";
+import { useJUSD, useMIM } from "hooks/useToken";
 import { useFarm } from "hooks/useContracts";
 import useAccount from "hooks/useAccount";
 import CountUp from "react-countup";
@@ -32,17 +32,22 @@ const Portfolio = () => {
   const [rewards, setReward] = useState([]);
 
   const [JUSDBalance, setJUSDBalance] = useState(0);
+  const [MIMBalance, setMIMBalance] = useState(0);
   const [ETHBalance, setETHBalance] = useState(0);
 
   const Farm = useFarm();
   const account = useAccount();
   const JUSD = useJUSD();
+  const MIM = useMIM();
 
   useEffect(() => {
     if (JUSD.balance) {
       setJUSDBalance(Web3.utils.fromWei(JUSD.balance.toString()));
     }
-  }, [JUSD.balance]);
+    if (MIM.balance) {
+      setMIMBalance(Web3.utils.fromWei(MIM.balance.toString()));
+    }
+  }, [JUSD.balance, MIM.balance]);
 
   const getETHBalance = useCallback(async () => {
     const _balance = await web3.eth.getBalance(account);
@@ -120,10 +125,10 @@ const Portfolio = () => {
           risk there is.
         </Text>
 
-        <Container maxW={"5xl"} mt={5}>
+        <Container maxW={"80%"} mt={5}>
           <SimpleGrid minChildWidth={"200px"}>
             <Box className="balance-box" m={3}>
-              <Badge variant="outline" colorScheme="yellow">
+              <Badge variant="outline" colorScheme="gray">
                 ETH Balance
               </Badge>
               <Text fontSize="3xl">
@@ -133,8 +138,18 @@ const Portfolio = () => {
             </Box>
 
             <Box className="balance-box" m={3}>
-              <Badge variant="outline" colorScheme="red">
+              <Badge variant="outline" colorScheme="blue">
                 Mimic Balance
+              </Badge>
+              <Text fontSize="3xl">
+                <CountUp duration={2} end={MIMBalance} separator="," />{" "}
+                <font size="4">MIM</font>
+              </Text>
+            </Box>
+
+            <Box className="balance-box" m={3}>
+              <Badge variant="outline" colorScheme="green">
+                Mimic Reward
               </Badge>
               <Text fontSize="3xl">
                 <CountUp duration={2} end={total_reward} separator="," />{" "}

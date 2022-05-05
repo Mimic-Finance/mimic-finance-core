@@ -3,8 +3,9 @@ import {
   Divider,
   StatGroup,
   Stat,
-  StatLabel,
   StatNumber,
+  StatLabel,
+  Badge,
 } from "@chakra-ui/react";
 
 import { useFarm, useAutoCompound } from "hooks/useContracts";
@@ -87,25 +88,33 @@ const Dashboard = () => {
       </Text>
       <StatGroup>
         <Stat className="stat-box">
-          <StatLabel>USDT</StatLabel>
+          <Badge variant="outline" colorScheme="green">
+            USDT
+          </Badge>
           <StatNumber>
             $ {USDT.balance / Math.pow(10, 6) / 1000000} M
           </StatNumber>
         </Stat>
         <Stat className="stat-box">
-          <StatLabel>DAI</StatLabel>
+          <Badge variant="outline" colorScheme="yellow">
+            DAI
+          </Badge>
           <StatNumber>$ {fromWei(DAI.balance)} M</StatNumber>
         </Stat>
 
         <Stat className="stat-box">
-          <StatLabel>USDC</StatLabel>
+          <Badge variant="outline" colorScheme="blue">
+            USDC
+          </Badge>
           <StatNumber>
             $ {USDC.balance / Math.pow(10, 6) / 1000000} M
           </StatNumber>
         </Stat>
 
         <Stat className="stat-box">
-          <StatLabel>JUSD</StatLabel>
+          <Badge variant="outline" colorScheme="pink">
+            JUSD
+          </Badge>
           <StatNumber>$ {fromWei(JUSD.balance)} M</StatNumber>
         </Stat>
       </StatGroup>

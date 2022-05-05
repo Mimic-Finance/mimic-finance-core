@@ -12,7 +12,7 @@ import {
   Input,
   StatGroup,
   Stat,
-  StatLabel,
+  Badge,
   StatNumber,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
@@ -145,22 +145,6 @@ const ClaimAndSwap = () => {
 
   const handleChangeSwapJUSDtoCJUSDValue = async (e) => {
     setSwapJUSDtoCJUSDValue(e.target.value);
-    // ================>>> fix mai pen BY noobm224
-    // let value = 0;
-    // value = Web3.utils.fromWei(jusdBalance.toString());
-    // if (
-    //   parseFloat(e.target.value) > parseFloat(value) ||
-    //   parseFloat(e.target.value) < 0
-    // ) {
-    //   setSwapJUSDtoCJUSDValue(0);
-    //   toast({
-    //     title: "error",
-    //     description: "Please enter value less than your balance",
-    //     status: "error",
-    //     duration: 1500,
-    //     isClosable: true,
-    //   });
-    // }
   };
 
   const handleChangeClaimAddress = (e) => {
@@ -208,7 +192,9 @@ const ClaimAndSwap = () => {
       </Text>
       <StatGroup>
         <Stat className="stat-box">
-          <StatLabel>MIM</StatLabel>
+          <Badge variant="outline" colorScheme="blue">
+            MIM
+          </Badge>
           <StatNumber>
             {parseFloat(mimBalance).toLocaleString("en-US", {
               minimumFractionDigits: 2,
@@ -217,7 +203,9 @@ const ClaimAndSwap = () => {
           </StatNumber>
         </Stat>
         <Stat className="stat-box">
-          <StatLabel>JUSD</StatLabel>
+          <Badge variant="outline" colorScheme="pink">
+            JUSD
+          </Badge>
           <StatNumber>
             {parseFloat(jusdBalance).toLocaleString("en-US", {
               minimumFractionDigits: 2,
@@ -226,7 +214,9 @@ const ClaimAndSwap = () => {
           </StatNumber>
         </Stat>
         <Stat className="stat-box">
-          <StatLabel>cJUSD</StatLabel>
+          <Badge variant="outline" colorScheme="purple">
+            cJUSD
+          </Badge>
           <StatNumber>
             {parseFloat(cjusdBalance).toLocaleString("en-US", {
               minimumFractionDigits: 2,
