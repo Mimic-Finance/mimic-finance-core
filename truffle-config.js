@@ -1,3 +1,8 @@
+const {
+  infuraProjectId,
+  mnemonic,
+  etherscanApiKey,
+} = require("./secrets.json");
 const config = require("./config.json");
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
@@ -30,5 +35,9 @@ module.exports = {
       },
       evmVersion: "petersburg",
     },
+  },
+  plugins: ["truffle-plugin-verify"],
+  api_keys: {
+    etherscan: etherscanApiKey,
   },
 };

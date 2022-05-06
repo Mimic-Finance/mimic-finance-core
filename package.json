@@ -47,13 +47,14 @@
     "react-ts-tradingview-widgets": "^1.0.10",
     "styled-components": "^5.3.3",
     "sweetalert2": "^11.4.4",
+    "truffle-plugin-verify": "^0.5.25",
     "web3": "1.2.11",
     "web3-eth-contract": "^1.7.3",
     "web3-utils": "^1.7.3"
   },
   "devDependencies": {
     "@openzeppelin/contracts": "3.4.0",
-    "@uniswap/v3-periphery": "^1.4.1" ,
+    "@uniswap/v3-periphery": "^1.4.1",
     "eslint": "8.10.0",
     "eslint-config-next": "12.1.0",
     "ganache-cli": "^6.12.2",
