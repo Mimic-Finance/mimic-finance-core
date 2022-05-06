@@ -45,32 +45,39 @@ module.exports = async (deployer, network, accounts) => {
   const cJUSD = await _cJUSD.at(TokenAddress.cJUSD);
   const MIM = await _MIM.at(TokenAddress.MIM);
 
-  /* ==>  Transfer tokens to accounts[0] (for development)  */
-  await DAI.transfer(accounts[0], Token("100000"), {
-    from: config.rich_DAI,
-  });
-  await DAI.transfer(accounts[1], Token("100000"), {
-    from: config.rich_DAI,
-  });
-  await USDT.transfer(accounts[0], "100000000000", {
-    from: config.rich_USDT,
-  });
-  await USDT.transfer(accounts[1], "100000000000", {
-    from: config.rich_USDT,
-  });
-  await USDC.transfer(accounts[0], "100000000000", {
-    from: config.rich_USDC,
-  });
-  await USDC.transfer(accounts[1], "100000000000", {
-    from: config.rich_USDC,
-  });
+  if (cJUSD.mode === "development") {
+    /* ==>  Transfer tokens to accounts[0] (for development)  */
+    await DAI.transfer(accounts[0], Token("100000"), {
+      from: config.rich_DAI,
+    });
+    await DAI.transfer(accounts[1], Token("100000"), {
+      from: config.rich_DAI,
+    });
+    await USDT.transfer(accounts[0], "100000000000", {
+      from: config.rich_USDT,
+    });
+    await USDT.transfer(accounts[1], "100000000000", {
+      from: config.rich_USDT,
+    });
+    await USDC.transfer(accounts[0], "100000000000", {
+      from: config.rich_USDC,
+    });
+    await USDC.transfer(accounts[1], "100000000000", {
+      from: config.rich_USDC,
+    });
+  }
 
   /* ==>  Deploy Platfrom Contract  */
 
   await deployer.deploy(_Manager);
   const MANAGER = await _Manager.deployed();
 
-  await deployer.deploy(_FARM, TokenAddress.MIM, TokenAddress.JUSD , MANAGER.address);
+  await deployer.deploy(
+    _FARM,
+    TokenAddress.MIM,
+    TokenAddress.JUSD,
+    MANAGER.address
+  );
   const FARM = await _FARM.deployed();
 
   await deployer.deploy(
@@ -99,21 +106,23 @@ module.exports = async (deployer, network, accounts) => {
 
   await deployer.deploy(_ERC20UTILS);
 
-  await MIM.transfer(FARM.address, Token("590000000"), {
-    from: config.rich_MIM,
-  });
+  if (config.mode === "development") {
+    await MIM.transfer(FARM.address, Token("590000000"), {
+      from: config.rich_MIM,
+    });
 
-  await JUSD.transfer(SWAP.address, Token("600000000"), {
-    from: config.rich_JUSD,
-  });
+    await JUSD.transfer(SWAP.address, Token("600000000"), {
+      from: config.rich_JUSD,
+    });
 
-  await JUSD.transfer(AUTO.address, Token("10000000"), {
-    from: config.rich_JUSD,
-  });
+    await JUSD.transfer(AUTO.address, Token("10000000"), {
+      from: config.rich_JUSD,
+    });
 
-  await cJUSD.transfer(AUTO.address,Token("600000000"),{
-    from: config.rich_cJUSD,
-  })
+    await cJUSD.transfer(AUTO.address, Token("600000000"), {
+      from: config.rich_cJUSD,
+    });
+  }
 
   /* ==>  Add Whitelisted to Contracts  */
   await MANAGER.addWhitelisted(TokenAddress.DAI);

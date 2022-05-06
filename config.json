@@ -1,10 +1,10 @@
 {
-  "mode": "development",
+  "mode": "production",
   "ganacheHost": "127.0.0.1",
   "ganachePort": "8545",
   "ganacheNetworkId": "*",
   "networkId": 42,
-  "forkNetworkRPC": "https://kovan.infura.io/v3/a4f7b70c34354ed4b1988216c9c24b48",
+  "forkNetworkRPC": "https://kovan.poa.network",
 
   "accounts": [
     "0xcfc597a8793e0ca94fc8310482d9e11367cfca24",
@@ -28,9 +28,9 @@
   "rich_MIM": "0xCfc597a8793E0ca94FC8310482D9e11367cfCA24",
 
   "deployerAddress": "0xCfc597a8793E0ca94FC8310482D9e11367cfCA24",
-  "testerPrivateKey": "6e8b93d37dbd7f83ea981f157e39c1461e81d68110e44b9a972173bc5494d691",
+  "testerPrivateKey": "34afec3c082278a4478e340f8a17f0f471d2f064d7d2dd03d5d4e1cc87f80f17",
 
   "testerAddress": "0xCfc597a8793E0ca94FC8310482D9e11367cfCA24",
-  "liveHost": "https://kovan.infura.io/v3/a4f7b70c34354ed4b1988216c9c24b48",
+  "liveHost": "https://kovan.poa.network",
   "liveNetworkId": "42"
 }
