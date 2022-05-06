@@ -16,12 +16,7 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
-import {
-  useAutoCompound,
-  useSwap,
-  useMIMToJUSD,
-  useJUSDTocJUSD,
-} from "hooks/useContracts";
+import { useAutoCompound, useSwap } from "hooks/useContracts";
 import { useMIM, useJUSD } from "hooks/useToken";
 import useAccount from "hooks/useAccount";
 import { useWhitelisted } from "hooks/useFunctions";
@@ -35,9 +30,6 @@ const ClaimAndSwap = () => {
   const Swap = useSwap();
   const MIM = useMIM();
   const JUSD = useJUSD();
-  const MIMToJUSD = useMIMToJUSD();
-  const JUSDTocJUSD = useJUSDTocJUSD();
-
   const toast = useToast();
 
   useEffect(() => {
