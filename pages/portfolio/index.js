@@ -125,7 +125,7 @@ const Portfolio = () => {
           risk there is.
         </Text>
 
-        <Container maxW={"80%"} mt={5}>
+        <Container maxW={"50%"} mt={5}>
           <SimpleGrid minChildWidth={"200px"}>
             <Box className="balance-box" m={3}>
               <Badge variant="outline" colorScheme="gray">
@@ -137,6 +137,18 @@ const Portfolio = () => {
               </Text>
             </Box>
 
+            <Box className="balance-box" m={3}>
+              <Badge variant="outline" colorScheme="pink">
+                JUSD Balance
+              </Badge>
+              <Text fontSize="3xl">
+                <CountUp duration={2} end={JUSDBalance} separator="," />{" "}
+                <font size="4">JUSD</font>
+              </Text>
+            </Box>
+          </SimpleGrid>
+
+          <SimpleGrid minChildWidth={"200px"}>
             <Box className="balance-box" m={3}>
               <Badge variant="outline" colorScheme="blue">
                 Mimic Balance
@@ -154,16 +166,6 @@ const Portfolio = () => {
               <Text fontSize="3xl">
                 <CountUp duration={2} end={total_reward} separator="," />{" "}
                 <font size="4">MIM</font>
-              </Text>
-            </Box>
-
-            <Box className="balance-box" m={3}>
-              <Badge variant="outline" colorScheme="pink">
-                JUSD Balance
-              </Badge>
-              <Text fontSize="3xl">
-                <CountUp duration={2} end={JUSDBalance} separator="," />{" "}
-                <font size="4">JUSD</font>
               </Text>
             </Box>
           </SimpleGrid>
