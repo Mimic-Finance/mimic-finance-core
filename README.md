@@ -50,3 +50,35 @@ yarn run dev
 - New RPC URL: `http://localhost:8545/`
 - Chain ID: `1` (fork form Ethereum mainnet)
 - Currency Symbol: `ETH`
+
+
+## Contract address on Kovan Production
+- Manager
+```
+0xA6ab9De71Fb2384123c20DcBf15647E7b631D85B
+```
+
+- Farming
+```
+0x5eaC77877fBf718D9c9d14CE763c57ECd9614B1b
+```
+
+- Swap
+```
+0x61dF446D1fDe127D6b6Ee8B033Df1B4cB74fEd62
+```
+
+- Uniswap
+```
+0x43F62EaBC05D513F04D38607eCe1140eE53677aE
+```
+
+- Auto Compound
+```
+0xd5CbdfDD636219eB809a183cF0C16995D1d73210
+```
+
+- ERC20Utils
+```
+0xE00D095a6f0d8B19C8e581d5C54f0fc839143434
+```
