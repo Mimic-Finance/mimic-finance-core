@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 
 import useAccount from "hooks/useAccount";
-import { useFarm, useERC20Utils } from "hooks/useContracts";
+import { useFarm, useERC20Utils, useManager } from "hooks/useContracts";
 import { useWhitelisted } from "hooks/useFunctions";
 import { useState, useEffect } from "react";
 
@@ -28,6 +28,7 @@ const Whitelisted = () => {
   const [tokenAddress, setTokenAddress] = useState();
   const account = useAccount();
   const Farm = useFarm();
+  const Manager = useManager();
   const ERC20Utils = useERC20Utils();
   const toast = useToast();
 
@@ -43,7 +44,9 @@ const Whitelisted = () => {
     try {
       const _symbol = await ERC20Utils.methods.symbol(tokenAddress).call();
       if (_symbol) {
-        await Farm.methods.addWhitelisted(tokenAddress).send({ from: account });
+        await Manager.methods
+          .addWhitelisted(tokenAddress)
+          .send({ from: account });
         setWhitelisted((prev) => [
           ...prev,
           { address: tokenAddress, symbol: _symbol },
@@ -71,7 +74,7 @@ const Whitelisted = () => {
   const handleRemoveWhitelist = async (token) => {
     try {
       const _symbol = await ERC20Utils.methods.symbol(token).call();
-      await Farm.methods.removeWhitelisted(token).send({ from: account });
+      await Manager.methods.removeWhitelisted(token).send({ from: account });
       setWhitelisted((prev) => prev.filter((item) => item.address !== token));
 
       toast({
