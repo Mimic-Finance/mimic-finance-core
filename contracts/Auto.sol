@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.6;
-pragma abicoder v2;
+pragma solidity 0.8.13;
 
 import "./Token/JUSD.sol";
 import "./Token/Mimic.sol";
@@ -10,14 +9,12 @@ import "./Swap.sol";
 import "./Uniswap.sol";
 import "./Manager.sol";
 
-import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract Auto is Ownable {
     using SafeERC20 for ERC20;
-    using SafeMath for uint256;
     string public name = "Auto-Compound Contract";
 
     ERC20 internal MIM;
@@ -31,7 +28,6 @@ contract Auto is Ownable {
     uint24 public constant mimicFee = 3000;
     uint24 public constant jusdFee = 500;
 
-
     /* Other Contract Address */
     address internal FarmAddress;
     address internal SwapAddress;
@@ -41,6 +37,9 @@ contract Auto is Ownable {
     address internal UniAddress;
 
     mapping (address => uint256) depositbalance;
+
+    event Deposit(address indexed user ,address token , uint256 amount);
+    event Withdraw(address indexed user, uint256 swapbalance);
 
     constructor(
         address _JUSD,
@@ -71,7 +70,7 @@ contract Auto is Ownable {
         MIMAddress = _MIM;
     }
 
-    function deposit(uint256 _amount, address _token) public {
+    function deposit(uint256 _amount, address _token) external {
         require(PoolManager.checkWhitelisted(_token) && _amount > 0);
         /* Transfer any token that in whitelist from user to Auto-Compound Contract */
         ERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
@@ -88,9 +87,10 @@ contract Auto is Ownable {
         FarmContract.stakeTokens(balance, JUSDAddress);
         /*Approve jusd to swap*/
         JUSD.approve(UniAddress,balance);
-        depositbalance[msg.sender] = depositbalance[msg.sender].add(balance);
+        depositbalance[msg.sender] += balance;
         uint256 swapbalance = UniContract.swapExactInputSingle(balance , JUSDAddress , CJUSDAddress , jusdFee);
         CJUSD.safeTransfer(msg.sender,swapbalance);
+        emit Deposit(msg.sender,_token , _amount);
     }
 
     function claimMIM(address _token) public onlyOwner {
@@ -119,7 +119,7 @@ contract Auto is Ownable {
         FarmContract.stakeTokens(_amount, JUSDAddress);
     }
 
-    function withdraw(uint256 _amount) public {
+    function withdraw(uint256 _amount) external {
         require(depositbalance[msg.sender] > 0);
         /* Transfer cJUSD to Auto Compound */
         CJUSD.safeTransferFrom(msg.sender, address(this), _amount);
@@ -132,9 +132,9 @@ contract Auto is Ownable {
         if(swapbalance > depositbalance[msg.sender]){
             depositbalance[msg.sender] = 0;
         } else {
-            uint256 remain = depositbalance[msg.sender].sub(swapbalance);
-            depositbalance[msg.sender] = remain;
+            depositbalance[msg.sender] -= swapbalance;
         }
+        emit Withdraw(msg.sender, swapbalance);
     }
     function getDepositBalance(address _account) public view returns (uint256){
         return depositbalance[_account];
@@ -146,6 +146,4 @@ contract Auto is Ownable {
     function getJUSDBalance() public view returns (uint256) {
         return JUSD.balanceOf(address(this));
     }
-
-   
 }
