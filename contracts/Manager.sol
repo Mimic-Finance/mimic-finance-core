@@ -12,7 +12,7 @@ contract Manager is Ownable {
     address[] public whitelisted;
     address[] public mintWhitelisted;
 
-   function addWhitelisted(address _token) external onlyOwner {
+    function addWhitelisted(address _token) external onlyOwner {
         require(!checkWhitelisted(_token));
         whitelisted.push(_token);
     }
@@ -45,50 +45,60 @@ contract Manager is Ownable {
 
     function checkWhitelisted(address _token) public view returns (bool) {
         uint256 length = whitelisted.length;
-        for (uint256 i = 0; i < length;) {
+        for (uint256 i = 0; i < length; ) {
             if (whitelisted[i] == _token) {
                 return true;
             }
-            unchecked { ++i;}
+            unchecked {
+                ++i;
+            }
         }
         return false;
     }
 
-     function addMintWhitelisted(address _token) external onlyOwner {
+    function addMintWhitelisted(address _token) external onlyOwner {
         require(!checkMintWhitelisted(_token));
         mintWhitelisted.push(_token);
     }
 
     function checkMintWhitelisted(address _token) public view returns (bool) {
         uint256 length = mintWhitelisted.length;
-        for (uint256 i = 0; i < length;) {
+        for (uint256 i = 0; i < length; ) {
             if (mintWhitelisted[i] == _token) {
                 return true;
             }
-            unchecked {++i;}
+            unchecked {
+                ++i;
+            }
         }
         return false;
     }
 
-
-    function checkDecimals(address _token , uint256 _amount) public view returns(uint256) {
-    uint256 decimals = ERC20(_token).decimals();
-    if(decimals != 18){
-        uint256 remain = 18 - decimals;
-        return _amount*(10 ** remain);
-    }
-    else {
-        return _amount;
-    } 
-    }
-    function decimalsBack(address _token , uint256 _amount) public view returns(uint256){
-        uint256 decimals  = ERC20(_token).decimals();
-        if(decimals != 18){
+    function checkDecimals(address _token, uint256 _amount)
+        public
+        view
+        returns (uint256)
+    {
+        uint256 decimals = ERC20(_token).decimals();
+        if (decimals != 18) {
             uint256 remain = 18 - decimals;
-            return _amount/(10**remain);
-        }
-        else  {
+            return _amount * (10**remain);
+        } else {
             return _amount;
+        }
     }
+
+    function decimalsBack(address _token, uint256 _amount)
+        public
+        view
+        returns (uint256)
+    {
+        uint256 decimals = ERC20(_token).decimals();
+        if (decimals != 18) {
+            uint256 remain = 18 - decimals;
+            return _amount / (10**remain);
+        } else {
+            return _amount;
+        }
     }
 }

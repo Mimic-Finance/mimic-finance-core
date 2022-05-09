@@ -2,20 +2,30 @@
 pragma solidity 0.8.13;
 pragma abicoder v2;
 
-import '@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol';
-import '@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol';
+import "@uniswap/v3-periphery/contracts/libraries/TransferHelper.sol";
+import "@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol";
 
 contract Uniswap {
-    ISwapRouter public immutable swapRouter = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    ISwapRouter public immutable swapRouter =
+        ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
 
-    function swapExactInputSingle(uint256 amountIn , address _tokenIn , address _tokenOut , uint24 poolFee) external returns (uint256 amountOut) {
-
-        TransferHelper.safeTransferFrom(_tokenIn, msg.sender, address(this), amountIn);
+    function swapExactInputSingle(
+        uint256 amountIn,
+        address _tokenIn,
+        address _tokenOut,
+        uint24 poolFee
+    ) external returns (uint256 amountOut) {
+        TransferHelper.safeTransferFrom(
+            _tokenIn,
+            msg.sender,
+            address(this),
+            amountIn
+        );
 
         TransferHelper.safeApprove(_tokenIn, address(swapRouter), amountIn);
 
-        ISwapRouter.ExactInputSingleParams memory params =
-            ISwapRouter.ExactInputSingleParams({
+        ISwapRouter.ExactInputSingleParams memory params = ISwapRouter
+            .ExactInputSingleParams({
                 tokenIn: _tokenIn,
                 tokenOut: _tokenOut,
                 fee: poolFee,
@@ -28,4 +38,4 @@ contract Uniswap {
 
         amountOut = swapRouter.exactInputSingle(params);
     }
-    }
+}

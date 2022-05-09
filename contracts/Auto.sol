@@ -18,7 +18,7 @@ contract Auto is Ownable {
     string public name = "Auto-Compound Contract";
 
     ERC20 internal MIM;
-    ERC20 internal JUSD;
+    ERC20 internal JUSDToken;
     ERC20 internal CJUSD;
     Farming internal FarmContract;
     Swap internal SwapContract;
@@ -36,9 +36,9 @@ contract Auto is Ownable {
     address internal CJUSDAddress;
     address internal UniAddress;
 
-    mapping (address => uint256) depositbalance;
+    mapping(address => uint256) depositbalance;
 
-    event Deposit(address indexed user ,address token , uint256 amount);
+    event Deposit(address indexed user, address token, uint256 amount);
     event Withdraw(address indexed user, uint256 swapbalance);
 
     constructor(
@@ -49,10 +49,10 @@ contract Auto is Ownable {
         address _Swap,
         address _Manager,
         address _Uniswap
-    ) public {
+    ) {
         /* Initial Token with token address */
         MIM = ERC20(_MIM);
-        JUSD = ERC20(_JUSD);
+        JUSDToken = ERC20(_JUSD);
         CJUSD = ERC20(_cJUSD);
 
         /* Initial Farm and Swap Contract with token address */
@@ -82,15 +82,20 @@ contract Auto is Ownable {
         }
         uint256 balance = PoolManager.checkDecimals(_token, _amount);
         /* Auto-Compound:: Approve JUSD for spend amount to Farm */
-        JUSD.approve(FarmAddress, balance);
+        JUSDToken.approve(FarmAddress, balance);
         /* Stake JUSD in Farm Contract with Auto-Compound */
         FarmContract.stakeTokens(balance, JUSDAddress);
         /*Approve jusd to swap*/
-        JUSD.approve(UniAddress,balance);
+        JUSDToken.approve(UniAddress, balance);
         depositbalance[msg.sender] += balance;
-        uint256 swapbalance = UniContract.swapExactInputSingle(balance , JUSDAddress , CJUSDAddress , jusdFee);
-        CJUSD.safeTransfer(msg.sender,swapbalance);
-        emit Deposit(msg.sender,_token , _amount);
+        uint256 swapbalance = UniContract.swapExactInputSingle(
+            balance,
+            JUSDAddress,
+            CJUSDAddress,
+            jusdFee
+        );
+        CJUSD.safeTransfer(msg.sender, swapbalance);
+        emit Deposit(msg.sender, _token, _amount);
     }
 
     function claimMIM(address _token) public onlyOwner {
@@ -98,23 +103,33 @@ contract Auto is Ownable {
         FarmContract.claimRewards(_token);
     }
 
-    function swapMIM() public onlyOwner returns(uint256) {
+    function swapMIM() public onlyOwner returns (uint256) {
         /* Check Mimic Token balance */
         uint256 MIMbalance = MIM.balanceOf(address(this));
         /* Swap Mimic To JUSD */
         MIM.approve(UniAddress, MIMbalance);
-        uint256 balance = UniContract.swapExactInputSingle(MIMbalance , MIMAddress , JUSDAddress , mimicFee);
+        uint256 balance = UniContract.swapExactInputSingle(
+            MIMbalance,
+            MIMAddress,
+            JUSDAddress,
+            mimicFee
+        );
         return balance;
     }
 
     function swapJUSDtoCJUSD(uint256 _amount) public onlyOwner {
-        JUSD.approve(UniAddress,_amount);
-        UniContract.swapExactInputSingle(_amount , JUSDAddress , CJUSDAddress , jusdFee);
+        JUSDToken.approve(UniAddress, _amount);
+        UniContract.swapExactInputSingle(
+            _amount,
+            JUSDAddress,
+            CJUSDAddress,
+            jusdFee
+        );
     }
 
     function depositToFarm(uint256 _amount) public onlyOwner {
         /* Auto-Compound:: Approve JUSD for spend amount to Farm */
-        JUSD.approve(FarmAddress, _amount);
+        JUSDToken.approve(FarmAddress, _amount);
         /* Stake JUSD in Farm Contract with Auto-Compound */
         FarmContract.stakeTokens(_amount, JUSDAddress);
     }
@@ -123,27 +138,34 @@ contract Auto is Ownable {
         require(depositbalance[msg.sender] > 0);
         /* Transfer cJUSD to Auto Compound */
         CJUSD.safeTransferFrom(msg.sender, address(this), _amount);
-        CJUSD.approve(UniAddress,_amount);
-        uint256 swapbalance = UniContract.swapExactInputSingle(_amount , CJUSDAddress , JUSDAddress , jusdFee);
+        CJUSD.approve(UniAddress, _amount);
+        uint256 swapbalance = UniContract.swapExactInputSingle(
+            _amount,
+            CJUSDAddress,
+            JUSDAddress,
+            jusdFee
+        );
         /* Unstake JUSD from Farming Contract */
-        FarmContract.unstakeTokens( depositbalance[msg.sender] , JUSDAddress);
+        FarmContract.unstakeTokens(depositbalance[msg.sender], JUSDAddress);
         /* Return JUSD to user */
-        JUSD.safeTransfer(msg.sender, swapbalance);
-        if(swapbalance > depositbalance[msg.sender]){
+        JUSDToken.safeTransfer(msg.sender, swapbalance);
+        if (swapbalance > depositbalance[msg.sender]) {
             depositbalance[msg.sender] = 0;
         } else {
             depositbalance[msg.sender] -= swapbalance;
         }
         emit Withdraw(msg.sender, swapbalance);
     }
-    function getDepositBalance(address _account) public view returns (uint256){
+
+    function getDepositBalance(address _account) public view returns (uint256) {
         return depositbalance[_account];
     }
+
     function getcJUSDBalance() public view returns (uint256) {
         return CJUSD.balanceOf(address(this));
     }
 
     function getJUSDBalance() public view returns (uint256) {
-        return JUSD.balanceOf(address(this));
+        return JUSDToken.balanceOf(address(this));
     }
 }

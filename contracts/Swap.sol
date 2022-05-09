@@ -13,9 +13,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract Swap is Ownable {
     using SafeERC20 for ERC20;
     string public name = "Swap";
-    ERC20 public JUSD;
+    ERC20 public JUSDToken;
     ERC20 public MIM;
-    ERC20 public cJUSD;
+    ERC20 public cJUSDToken;
     Manager internal MintManager;
 
     address JUSDAddress;
@@ -24,7 +24,7 @@ contract Swap is Ownable {
 
     mapping(address => mapping(address => uint256)) public swapbalance;
 
-    event Mint(address indexed user , uint256 amount, address token);
+    event Mint(address indexed user, uint256 amount, address token);
     event Redeem(address indexed user, uint256 amount, address token);
 
     constructor(
@@ -32,10 +32,10 @@ contract Swap is Ownable {
         address _MIM,
         address _cJUSD,
         address _Manager
-    ) public {
-        JUSD = ERC20(_JUSD);
+    ) {
+        JUSDToken = ERC20(_JUSD);
         MIM = ERC20(_MIM);
-        cJUSD = ERC20(_cJUSD);
+        cJUSDToken = ERC20(_cJUSD);
         MintManager = Manager(_Manager);
 
         JUSDAddress = _JUSD;
@@ -44,24 +44,24 @@ contract Swap is Ownable {
     }
 
     function swapToJUSD(uint256 _amount, address _token) external {
-        uint256 balance = MintManager.checkDecimals(_token,_amount);
-        JUSD.safeTransfer(msg.sender,balance);
+        uint256 balance = MintManager.checkDecimals(_token, _amount);
+        JUSDToken.safeTransfer(msg.sender, balance);
     }
 
     function JUSDMinter(uint256 _amount, address _token) external {
         require(_amount > 0 && MintManager.checkMintWhitelisted(_token));
         ERC20(_token).safeTransferFrom(msg.sender, address(this), _amount);
-        uint256 balance = MintManager.checkDecimals(_token , _amount);
-        JUSD.safeTransfer(msg.sender, balance);
+        uint256 balance = MintManager.checkDecimals(_token, _amount);
+        JUSDToken.safeTransfer(msg.sender, balance);
         swapbalance[_token][msg.sender] += _amount;
         emit Mint(msg.sender, _amount, _token);
     }
 
     function redeemBack(uint256 _amount, address _token) external {
         require(swapbalance[_token][msg.sender] <= _amount);
-        JUSD.safeTransferFrom(msg.sender, address(this), _amount);
-        uint256 balance = MintManager.decimalsBack(_token , _amount);
-        ERC20(_token).safeTransfer(msg.sender,balance);
+        JUSDToken.safeTransferFrom(msg.sender, address(this), _amount);
+        uint256 balance = MintManager.decimalsBack(_token, _amount);
+        ERC20(_token).safeTransfer(msg.sender, balance);
         swapbalance[_token][msg.sender] -= balance;
         emit Redeem(msg.sender, _amount, _token);
     }

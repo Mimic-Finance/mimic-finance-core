@@ -70,7 +70,7 @@ module.exports = async (deployer, network, accounts) => {
   await deployer.deploy(_Manager);
   const MANAGER = await _Manager.deployed();
 
-  await deployer.deploy(_FARM, TokenAddress.MIM, TokenAddress.JUSD , MANAGER.address);
+  await deployer.deploy(_FARM, TokenAddress.MIM, MANAGER.address);
   const FARM = await _FARM.deployed();
 
   await deployer.deploy(
