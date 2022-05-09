@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 
 import useAccount from "hooks/useAccount";
-import { useFarm, useERC20Utils, useManager } from "hooks/useContracts";
+import { useERC20Utils, useManager } from "hooks/useContracts";
 import { useWhitelisted } from "hooks/useFunctions";
 import { useState, useEffect } from "react";
 
@@ -27,7 +27,6 @@ const Whitelisted = () => {
   const [whitelisted, setWhitelisted] = useState([]);
   const [tokenAddress, setTokenAddress] = useState();
   const account = useAccount();
-  const Farm = useFarm();
   const Manager = useManager();
   const ERC20Utils = useERC20Utils();
   const toast = useToast();

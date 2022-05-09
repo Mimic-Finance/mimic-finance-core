@@ -21,6 +21,14 @@ const Dashboard = () => {
   const Farm = useFarm();
   const AutoCompound = useAutoCompound();
 
+  /**
+   * Stable Coin contract
+   */
+  const DAI = useDAI(Farm.address);
+  const USDT = useUSDT(Farm.address);
+  const USDC = useUSDC(Farm.address);
+  const JUSD = useJUSD(Farm.address);
+
   const loadTVD = useCallback(async () => {
     const _autoCompoundTVD = await Farm.methods
       .getStakingBalance(JUSD.address, AutoCompound.address)
@@ -32,14 +40,6 @@ const Dashboard = () => {
     loadTVD();
     setWhitelisted(getWhitelisted);
   }, [loadTVD, getWhitelisted]);
-
-  /**
-   * Stable Coin contract
-   */
-  const DAI = useDAI(Farm.address);
-  const USDT = useUSDT(Farm.address);
-  const USDC = useUSDC(Farm.address);
-  const JUSD = useJUSD(Farm.address);
 
   const fromWei = (balance) => {
     if (balance == 0) {
