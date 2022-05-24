@@ -31,7 +31,7 @@ const Home = () => {
         pt={7}
         align="center"
       >
-        Enter any pool with withlisted token
+        Enter any pool with whitelisted token
       </Text>
       <Text
         fontSize={{ base: "lg", md: "xl", lg: "2xl" }}
