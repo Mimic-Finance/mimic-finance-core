@@ -52,7 +52,7 @@
     "web3-utils": "^1.7.3"
   },
   "devDependencies": {
-    "@openzeppelin/contracts": "3.4.0",
+    "@openzeppelin/contracts": "4.6.0",
     "@uniswap/v3-periphery": "^1.4.1" ,
     "eslint": "8.10.0",
     "eslint-config-next": "12.1.0",

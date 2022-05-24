@@ -70,7 +70,7 @@ module.exports = async (deployer, network, accounts) => {
   await deployer.deploy(_Manager);
   const MANAGER = await _Manager.deployed();
 
-  await deployer.deploy(_FARM, TokenAddress.MIM, TokenAddress.JUSD , MANAGER.address);
+  await deployer.deploy(_FARM, TokenAddress.MIM, MANAGER.address);
   const FARM = await _FARM.deployed();
 
   await deployer.deploy(
@@ -99,21 +99,21 @@ module.exports = async (deployer, network, accounts) => {
 
   await deployer.deploy(_ERC20UTILS);
 
-  await MIM.transfer(FARM.address, Token("590000000"), {
+  await MIM.transfer(FARM.address, Token("20000"), {
     from: config.rich_MIM,
   });
 
-  await JUSD.transfer(SWAP.address, Token("600000000"), {
+  await JUSD.transfer(SWAP.address, Token("20000000"), {
     from: config.rich_JUSD,
   });
 
-  await JUSD.transfer(AUTO.address, Token("10000000"), {
+  await JUSD.transfer(AUTO.address, Token("20000000"), {
     from: config.rich_JUSD,
   });
 
-  await cJUSD.transfer(AUTO.address,Token("600000000"),{
-    from: config.rich_cJUSD,
-  })
+  // await cJUSD.transfer(AUTO.address,Token("600000000"),{
+  //   from: config.rich_cJUSD,
+  // })
 
   /* ==>  Add Whitelisted to Contracts  */
   await MANAGER.addWhitelisted(TokenAddress.DAI);

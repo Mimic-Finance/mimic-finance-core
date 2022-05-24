@@ -15,51 +15,29 @@ import {
   Badge,
   StatNumber,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
-import {
-  useAutoCompound,
-  useSwap,
-  useMIMToJUSD,
-  useJUSDTocJUSD,
-} from "hooks/useContracts";
+import { useState, useEffect, useCallback } from "react";
+import { useAutoCompound } from "hooks/useContracts";
 import { useMIM, useJUSD } from "hooks/useToken";
 import useAccount from "hooks/useAccount";
-import { useWhitelisted } from "hooks/useFunctions";
 import Web3 from "web3";
 
 const ClaimAndSwap = () => {
-  const getWhitelisted = useWhitelisted();
-  const [whitelisted, setWhitelisted] = useState([]);
   const account = useAccount();
   const AutoCompound = useAutoCompound();
-  const Swap = useSwap();
   const MIM = useMIM();
   const JUSD = useJUSD();
-  const MIMToJUSD = useMIMToJUSD();
-  const JUSDTocJUSD = useJUSDTocJUSD();
-
   const toast = useToast();
 
   useEffect(() => {
-    setWhitelisted(getWhitelisted);
     handleGetMIMBalance();
     handleGetJUSDBalance();
     getcjusdBalance();
-    // getMimPrice();
-    // getcjusdPrice();
-  }, [getWhitelisted]);
-
-  const getMimPrice = async () => {
-    const _price = await Swap.methods.mimicPrice().call();
-    console.log(_price);
-  };
+  }, [getcjusdBalance, handleGetJUSDBalance, handleGetMIMBalance]);
 
   const [claimAddress, setClaimAddress] = useState(null);
-
   const [swapJUSDtoCJUSDValue, setSwapJUSDtoCJUSDValue] = useState(0);
   const [mimBalance, setMIMBalance] = useState(0);
   const [jusdBalance, setJUSDBalance] = useState(0);
-  const [cjusdPrice, setcjusdPrice] = useState(0);
   const [cjusdBalance, setcjusdBalance] = useState(0);
 
   const [send_tx_status, setSendTxStatus] = useState(false);
@@ -71,29 +49,24 @@ const ClaimAndSwap = () => {
     return status;
   };
 
-  const getcjusdPrice = async () => {
-    const _price = await Swap.methods.cJUSDPrice().call();
-    setcjusdPrice(Web3.utils.fromWei(_price.toString(), "ether"));
-  };
-
-  const getcjusdBalance = async () => {
+  const getcjusdBalance = useCallback(async () => {
     const _balance = await AutoCompound.methods.getcJUSDBalance().call();
     setcjusdBalance(Web3.utils.fromWei(_balance.toString(), "ether"));
-  };
+  }, [AutoCompound]);
 
-  const handleGetMIMBalance = async () => {
+  const handleGetMIMBalance = useCallback(async () => {
     const _mimBalance = await MIM.methods
       .balanceOf(AutoCompound.address)
       .call();
     setMIMBalance(Web3.utils.fromWei(_mimBalance.toString(), "ether"));
-  };
+  }, [MIM, AutoCompound]);
 
-  const handleGetJUSDBalance = async () => {
+  const handleGetJUSDBalance = useCallback(async () => {
     const _JUSDBalance = await JUSD.methods
       .balanceOf(AutoCompound.address)
       .call();
     setJUSDBalance(Web3.utils.fromWei(_JUSDBalance.toString(), "ether"));
-  };
+  }, [JUSD, AutoCompound]);
 
   const handleSwapMIM = async () => {
     await AutoCompound.methods

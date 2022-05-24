@@ -21,18 +21,6 @@ const Dashboard = () => {
   const Farm = useFarm();
   const AutoCompound = useAutoCompound();
 
-  const loadTVD = useCallback(async () => {
-    const _autoCompoundTVD = await Farm.methods
-      .getStakingBalance(JUSD.address, AutoCompound.address)
-      .call();
-    setAutoCompoundTVD(Web3.utils.fromWei(_autoCompoundTVD.toString()));
-  }, [AutoCompound]);
-
-  useEffect(() => {
-    loadTVD();
-    setWhitelisted(getWhitelisted);
-  }, [loadTVD, getWhitelisted]);
-
   /**
    * Stable Coin contract
    */
@@ -40,6 +28,18 @@ const Dashboard = () => {
   const USDT = useUSDT(Farm.address);
   const USDC = useUSDC(Farm.address);
   const JUSD = useJUSD(Farm.address);
+
+  const loadTVD = useCallback(async () => {
+    const _autoCompoundTVD = await Farm.methods
+      .getStakingBalance(JUSD.address, AutoCompound.address)
+      .call();
+    setAutoCompoundTVD(Web3.utils.fromWei(_autoCompoundTVD.toString()));
+  }, [AutoCompound.address, Farm.methods, JUSD.address]);
+
+  useEffect(() => {
+    loadTVD();
+    setWhitelisted(getWhitelisted);
+  }, [loadTVD, getWhitelisted]);
 
   const fromWei = (balance) => {
     if (balance == 0) {

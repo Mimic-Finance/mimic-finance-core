@@ -16,7 +16,7 @@ const TVD = () => {
       .getStakingBalance(JUSD.address, AutoCompound.address)
       .call();
     setTVD(Web3.utils.fromWei(_tvd.toString()));
-  }, [AutoCompound]);
+  }, [AutoCompound.address, Farm.methods, JUSD.address]);
 
   useEffect(() => {
     loadTVD();
