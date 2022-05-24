@@ -54,7 +54,7 @@ const Rewards = () => {
   const account = useAccount();
 
   const getImage = (address) => {
-    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
+    return `/assets/images/tokens${address}.png`;
   };
 
   const getReward = useCallback(async () => {

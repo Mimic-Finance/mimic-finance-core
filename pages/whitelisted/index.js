@@ -26,7 +26,7 @@ const WhitelistedPage = () => {
   }, [getWhitelisted]);
 
   const getImage = (address) => {
-    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
+    return `/assets/images/tokens/${address}.png`;
 
     //return `/assets/images/logo-box.png`;
   };

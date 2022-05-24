@@ -31,7 +31,7 @@ const StableCoinAutoCompound = () => {
   const [poolInfo, setPoolInfo] = useState(OpenAutoCompoundPool[0]);
 
   const getImage = (address) => {
-    return `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
+    return `/assets/images/tokens/${address}.png`;
   };
 
   const getSymbol = useCallback(async () => {
