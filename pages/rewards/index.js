@@ -54,7 +54,7 @@ const Rewards = () => {
   const account = useAccount();
 
   const getImage = (address) => {
-    return `/assets/images/tokens${address}.png`;
+    return `/assets/images/tokens/${address}.png`;
   };
 
   const getReward = useCallback(async () => {
